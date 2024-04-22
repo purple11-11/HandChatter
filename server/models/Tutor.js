@@ -34,7 +34,7 @@ const Student = function (Sequelize, DataTypes) {
             },
         },
         {
-            tableName: "Tutor",
+            tableName: "tutor",
             freezeTableName: true,
             timestamps: true,
         }
