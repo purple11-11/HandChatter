@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(serverPrefix, indexRouter);
 
 sequelize
-    .sync()
+    .sync({ force: false })
     .then(() => {
         server.listen(PORT, () => {
             console.log(`http://localhost:${PORT}`);
