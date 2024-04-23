@@ -1,5 +1,5 @@
-const model = require("../models/Tutor");
-const model = require("../models/Student");
+const Tutor = require("../models/Tutor");
+const Student = require("../models/Student");
 
 // GET /api
 exports.getIndex = (req, res) => {
@@ -11,38 +11,38 @@ exports.signUp = (req, res) => {
 };
 
 // POST /api
-exports.signUpTutor = (req, res) => {
-    model.Tutor.create({
-        id: req.body.id,
-        nickname: req.body.nickname,
-        password: req.body.password,
-        email: req.body.email,
-        description: req.body.description,
-        auth: req.body.auth,
-        authority: req.body.authority,
-    })
-        .then((result) => {
-            console.log(result);
-            res.end("회원가입 성공");
-        })
-        .catch((err) => {
-            console.log("회원가입 실패", err);
-            res.status(500).send("회원가입 실패");
+exports.CreateTutor = async (req, res) => {
+    try {
+        const result = await Tutor.create({
+            id: req.body.id,
+            nickname: req.body.nickname,
+            password: req.body.password,
+            email: req.body.email,
+            description: req.body.description,
+            auth: req.body.auth,
+            authority: req.body.authority,
         });
+        console.log(result);
+        res.end("회원가입 성공");
+    } catch (err) {
+        console.log("회원가입 실패", err);
+        res.status(500).send("회원가입 실패");
+    }
 };
-exports.signUpStudent = (req, res) => {
-    model.Student.create({
-        id: req.body.id,
-        nickname: req.body.nickname,
-        password: req.body.password,
-        email: req.body.email,
-    })
-        .then((result) => {
-            console.log(result);
-            res.end("회원가입 성공");
-        })
-        .catch((err) => {
-            console.log("회원가입 실패", err);
-            res.status(500).send("회원가입 실패");
+
+exports.CreateStudent = async (req, res) => {
+    try {
+        const result = await Student.create({
+            id: req.body.id,
+            nickname: req.body.nickname,
+            password: req.body.password,
+            email: req.body.email,
         });
+
+        console.log(result);
+        res.end("회원가입 성공");
+    } catch (err) {
+        console.log("회원가입 실패", err);
+        res.status(500).send("회원가입 실패");
+    }
 };
