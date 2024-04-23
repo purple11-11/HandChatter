@@ -1,4 +1,5 @@
-const model = require("../models");
+const model = require("../models/Tutor");
+const model = require("../models/Student");
 
 // GET /api
 exports.getIndex = (req, res) => {
