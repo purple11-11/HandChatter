@@ -1,5 +1,4 @@
-const Tutor = require("../models/Tutor");
-const Student = require("../models/Student");
+const model = require("../models");
 
 // GET /api
 exports.getIndex = (req, res) => {
@@ -13,7 +12,7 @@ exports.signUp = (req, res) => {
 // POST /api
 exports.CreateTutor = async (req, res) => {
     try {
-        const result = await Tutor.create({
+        const result = await model.Tutor.create({
             id: req.body.id,
             nickname: req.body.nickname,
             password: req.body.password,
@@ -32,7 +31,7 @@ exports.CreateTutor = async (req, res) => {
 
 exports.CreateStudent = async (req, res) => {
     try {
-        const result = await Student.create({
+        const result = await model.Student.create({
             id: req.body.id,
             nickname: req.body.nickname,
             password: req.body.password,
