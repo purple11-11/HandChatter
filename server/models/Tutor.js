@@ -1,6 +1,6 @@
-const Student = function (Sequelize, DataTypes) {
+const Tutor = function (Sequelize, DataTypes) {
     return Sequelize.define(
-        "Student",
+        "Tutor",
         {
             tutor_idx: {
                 type: DataTypes.INTEGER,
