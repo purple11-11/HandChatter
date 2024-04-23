@@ -12,6 +12,10 @@ const Tutor = function (Sequelize, DataTypes) {
                 type: DataTypes.STRING(20),
                 allowNull: false,
             },
+            nickname: {
+                type: DataTypes.STRING(10),
+                allowNull: false,
+            },
             password: {
                 type: DataTypes.STRING,
                 allowNull: false,
