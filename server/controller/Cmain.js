@@ -10,7 +10,7 @@ exports.signUp = (req, res) => {
 };
 
 // POST /api
-exports.CreateTutor = async (req, res) => {
+exports.createTutor = async (req, res) => {
     try {
         const result = await model.Tutor.create({
             id: req.body.id,
@@ -29,7 +29,7 @@ exports.CreateTutor = async (req, res) => {
     }
 };
 
-exports.CreateStudent = async (req, res) => {
+exports.createStudent = async (req, res) => {
     try {
         const result = await model.Student.create({
             id: req.body.id,
