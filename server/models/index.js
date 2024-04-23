@@ -12,8 +12,8 @@ const db = {};
 
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-const TutorModel = require("./Tutor")(sequelize, Sequelize);
-const StudentModel = require("./Student")(sequelize, Sequelize);
+const TutorModel = require("../models/Tutor")(sequelize, Sequelize);
+const StudentModel = require("../models/Student")(sequelize, Sequelize);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
