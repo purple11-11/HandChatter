@@ -15,43 +15,89 @@ exports.getIndex = (req, res) => {
     res.send("response from api server [GET /api]");
 };
 
-// GET /api
+// GET /api/signUp
 exports.signUp = (req, res) => {
     res.send("회원가입 페이지");
     // res.render("join", {isLogin: false})
 };
 
-// POST /api
-exports.createTutor = async (req, res) => {
-    console.log(typeof hashPW(req.body.password));
+// GET /api/checkStudentId
+// GET /api/checkTutorId
+exports.checkId = async (req, res) => {
+    const { id } = req.query;
+    if (!id) return;
+
+    let isDuplicateTutor, isDuplicateStudent;
     try {
-        const result = await Tutor.create({
-            id: req.body.id,
-            nickname: req.body.nickname,
-            password: hashPW(req.body.password),
-            email: req.body.email,
-            description: req.body.description,
-            auth: req.body.auth,
-            authority: req.body.authority,
+        [isDuplicateTutor, isDuplicateStudent] = await Promise.all([
+            Tutor.findOne({ where: { id } }),
+            Student.findOne({ where: { id } }),
+        ]);
+    } catch (error) {
+        console.error("checkNickname Error:", error);
+        // 오류 처리
+        return;
+    }
+
+    const available = !isDuplicateTutor && !isDuplicateStudent;
+    res.send({ available });
+};
+
+// GET /api/checkTutorNickname
+// GET /api/checkStudentNickname
+exports.checkNickname = async (req, res) => {
+    const { nickname } = req.query;
+    if (!nickname) return;
+
+    let isDuplicateTutor, isDuplicateStudent;
+    try {
+        [isDuplicateTutor, isDuplicateStudent] = await Promise.all([
+            Tutor.findOne({ where: { nickname } }),
+            Student.findOne({ where: { nickname } }),
+        ]);
+    } catch (error) {
+        console.error("checkNickname Error:", error);
+        // 오류 처리
+        return;
+    }
+
+    const available = !isDuplicateTutor && !isDuplicateStudent;
+    res.send({ available });
+};
+
+// POST /api/tutor
+exports.createTutor = async (req, res) => {
+    const { id, nickname, password, email, auth } = req.body;
+    if (!id | !nickname | !password | !email | !auth) return;
+    try {
+        await Tutor.create({
+            id,
+            nickname,
+            password: hashPW(password),
+            email,
+            auth,
         });
         // console.log(result);
-        res.end("회원가입 성공");
+        res.send("회원가입 성공");
     } catch (err) {
         console.log("회원가입 실패", err);
         res.status(500).send("회원가입 실패");
     }
 };
 
+// POST /api/student
 exports.createStudent = async (req, res) => {
+    const { id, nickname, password, email } = req.body;
+
+    if (!id | !nickname | !password | !email) return;
     try {
-        const result = await Student.create({
-            id: req.body.id,
-            nickname: req.body.nickname,
-            password: hashPW(req.body.password),
-            email: req.body.email,
+        await Student.create({
+            id,
+            nickname,
+            password: hashPW(password),
+            email,
         });
 
-        console.log(result);
         res.end("회원가입 성공");
     } catch (err) {
         console.log("회원가입 실패", err);
