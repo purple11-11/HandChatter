@@ -21,76 +21,48 @@ exports.signUp = (req, res) => {
     // res.render("join", {isLogin: false})
 };
 
-// GET /api/checkTutorId
-exports.checkTutorId = async (req, res) => {
-    const { id } = req.query;
-    if (!id) return;
-
-    const isDuplicate = await Tutor.findOne({
-        where: {
-            id,
-        },
-    });
-    if (isDuplicate) {
-        res.send({ available: false });
-    } else {
-        res.send({ available: true });
-    }
-};
-
 // GET /api/checkStudentId
-exports.checkStudentId = async (req, res) => {
+// GET /api/checkTutorId
+exports.checkId = async (req, res) => {
     const { id } = req.query;
-
     if (!id) return;
 
-    const isDuplicate = await Student.findOne({
-        where: {
-            id,
-        },
-    });
-
-    if (isDuplicate) {
-        res.send({ available: false });
-    } else {
-        res.send({ available: true });
+    let isDuplicateTutor, isDuplicateStudent;
+    try {
+        [isDuplicateTutor, isDuplicateStudent] = await Promise.all([
+            Tutor.findOne({ where: { id } }),
+            Student.findOne({ where: { id } }),
+        ]);
+    } catch (error) {
+        console.error("checkNickname Error:", error);
+        // 오류 처리
+        return;
     }
+
+    const available = !isDuplicateTutor && !isDuplicateStudent;
+    res.send({ available });
 };
 
 // GET /api/checkTutorNickname
-exports.checkTutorNickname = async (req, res) => {
-    const { nickname } = req.query;
-
-    if (!nickname) return;
-
-    const isDuplicate = await Tutor.findOne({
-        where: {
-            nickname,
-        },
-    });
-    if (isDuplicate) {
-        res.send({ available: false });
-    } else {
-        res.send({ available: true });
-    }
-};
-
 // GET /api/checkStudentNickname
-exports.checkStudentNickname = async (req, res) => {
+exports.checkNickname = async (req, res) => {
     const { nickname } = req.query;
     if (!nickname) return;
 
-    const isDuplicate = await Student.findOne({
-        where: {
-            nickname,
-        },
-    });
-
-    if (isDuplicate) {
-        res.send({ available: false });
-    } else {
-        res.send({ available: true });
+    let isDuplicateTutor, isDuplicateStudent;
+    try {
+        [isDuplicateTutor, isDuplicateStudent] = await Promise.all([
+            Tutor.findOne({ where: { nickname } }),
+            Student.findOne({ where: { nickname } }),
+        ]);
+    } catch (error) {
+        console.error("checkNickname Error:", error);
+        // 오류 처리
+        return;
     }
+
+    const available = !isDuplicateTutor && !isDuplicateStudent;
+    res.send({ available });
 };
 
 // POST /api/tutor
