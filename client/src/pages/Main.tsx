@@ -1,5 +1,3 @@
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -45,7 +43,6 @@ export default function Main() {
     };
     return (
         <>
-            <Header />
             <section></section>
             <section>
                 <div>
@@ -73,7 +70,6 @@ export default function Main() {
                     </ul>
                 </div>
             </section>
-            <Footer />
         </>
     );
 }
