@@ -21,15 +21,39 @@ router.get("/", controller.getIndex);
 /**
  * @swagger
  * paths:
- *  /api/signUp:
+ *  /api/signUpTutor:
  *    get:
- *      summary: "회원가입 페이지"
- *      description: "회원가입 페이지 렌더링"
+ *      summary: "튜터 회원가입 페이지"
+ *      description: "튜터 회원가입 페이지 렌더링"
  *      responses:
  *        "200":
- *          description: "{isLogin: false}로 보낼 예정(아직 작업x)"
+ *          description: "{isLogin: false}"
  */
-router.get("/signUp", controller.signUp);
+router.get("/signUpTutor", controller.signUpTutor);
+/**
+ * @swagger
+ * paths:
+ *  /api/signUpStudent:
+ *    get:
+ *      summary: "학생 회원가입 페이지"
+ *      description: "학생 회원가입 페이지 렌더링"
+ *      responses:
+ *        "200":
+ *          description: "{isLogin: false}"
+ */
+router.get("/signUpStudent", controller.signUpStudent);
+/**
+ * @swagger
+ * paths:
+ *  /api/login:
+ *    get:
+ *      summary: "로그인 페이지"
+ *      description: "로그인 페이지 렌더링"
+ *      responses:
+ *        "200":
+ *          description: "{isLogin: false}"
+ */
+router.get("/login", controller.login);
 /**
  * @swagger
  * /api/checkTutorId?id={id}:
@@ -194,5 +218,67 @@ router.post("/tutor", controller.createTutor);
  *        description: "회원가입 성공"
  */
 router.post("/student", controller.createStudent);
+/**
+ * @swagger
+ *
+ * /api/loginTutor:
+ *  post:
+ *    summary: "튜터 로그인"
+ *    description: "[로그인]POST 방식으로 튜터 로그인."
+ *    tags: [Tutors]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "튜터 로그인"
+ *        schema:
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: string
+ *                description: "튜터 id"
+ *              password:
+ *                type: string
+ *                description: "튜터 비밀번호"
+ *    responses:
+ *      "200":
+ *        description: "{isLogin: true}   //로그인 성공"
+ *      "400":
+ *        description: "비밀번호가 일치하지 않습니다. 다시 시도해주세요.  //아이디는 있지만 비밀번호 불일치"
+ *      "403":
+ *        description: "존재하지 않는 아이디입니다. 다시 시도해주세요.   // user 못찾았을 때,"
+ */
+router.post("/loginTutor", controller.loginTutor);
+/**
+ * @swagger
+ *
+ * /api/loginStudents:
+ *  post:
+ *    summary: "학생 로그인"
+ *    description: "[로그인]POST 방식으로 학생 로그인."
+ *    tags: [Students]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "학생 로그인"
+ *        schema:
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: string
+ *                description: "학생 id"
+ *              password:
+ *                type: string
+ *                description: "학생 비밀번호"
+ *    responses:
+ *      "200":
+ *        description: "{isLogin: true}  //로그인 성공"
+ *      "400":
+ *        description: "비밀번호가 일치하지 않습니다. 다시 시도해주세요.  //아이디는 있지만 비밀번호 불일치"
+ *      "403":
+ *        description: "존재하지 않는 아이디입니다. 다시 시도해주세요.   // user 못찾았을 때,"
+ */
+router.post("/loginStudent", controller.loginStudent);
 
 module.exports = router;

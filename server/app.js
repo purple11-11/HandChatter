@@ -6,6 +6,7 @@ const { sequelize } = require("./models");
 const indexRouter = require("./routes");
 const serverPrefix = "/api";
 const cors = require("cors");
+const session = require("express-session");
 const server = http.createServer(app);
 const { swaggerUi, specs } = require("./swagger/swagger");
 const socketHadnler = require("./sockets");
@@ -18,6 +19,16 @@ const PORT = process.env.PORT;
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(
+    session({
+        secret: "secretKey",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+        },
+    })
+);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // route 설정
@@ -27,7 +38,7 @@ sequelize
     .sync({ force: false })
     .then(() => {
         server.listen(PORT, () => {
-            console.log(`http://localhost:${PORT}`);
+            console.log(`http://localhost:${PORT}/api`);
         });
     })
     .catch((err) => console.log(err));
