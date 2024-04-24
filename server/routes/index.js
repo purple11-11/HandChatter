@@ -16,6 +16,7 @@ const controller = require("../controller/Cmain");
  */
 
 // GET /api
+
 router.get("/", controller.getIndex);
 /**
  * @swagger
@@ -57,20 +58,22 @@ router.get("/login", controller.login);
  * @swagger
  * /api/checkTutorId?id={id}:
  *  get:
- *    summary: "특정 튜터id조회 Query 방식"
+ *    summary: "특정 튜터 id조회 Query 방식"
  *    description: "요청 경로에 값을 담아 서버에 보낸다."
  *    tags: [Tutors]
  *    parameters:
  *      - in: query
- *        name: query
+ *        name: id
  *        required: true
  *        description: "튜터 아이디 중복검사"
- *        schema:
- *            type: object
- *            properties:
- *              id:
- *                type: string
- *                description: "튜터 id"
+ *        content:
+ *          application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                  type: string
+ *                  description: "튜터 id"
  *    responses:
  *      "200":
  *        description: "{available} // true or false"
@@ -85,7 +88,7 @@ router.get("/checkTutorId", controller.checkId);
  *    tags: [Students]
  *    parameters:
  *      - in: query
- *        name: query
+ *        name: id
  *        required: true
  *        description: "학생 아이디 중복검사"
  *        schema:
@@ -108,7 +111,7 @@ router.get("/checkStudentId", controller.checkId);
  *    tags: [Tutors]
  *    parameters:
  *      - in: query
- *        name: query
+ *        name: nickname
  *        required: true
  *        description: "튜터 닉네임 중복검사"
  *        schema:
@@ -131,32 +134,20 @@ router.get("/checkTutorNickname", controller.checkNickname);
  *    tags: [Students]
  *    parameters:
  *      - in: query
- *        name: query
+ *        name: nickname
  *        required: true
- *        description: "학생 닉네임 중복검사"
+ *        description: "튜터 닉네임 중복확인"
  *        schema:
  *            type: object
  *            properties:
  *              nickname:
  *                type: string
- *                description: "학생 닉네임"
+ *                description: "튜터 닉네임"
  *    responses:
  *      "200":
  *        description: "{available} // true or false"
  */
 router.get("/checkStudentNickname", controller.checkNickname);
-/**
- * @swagger
- * paths:
- *  /api/404:
- *    get:
- *      summary: "404 페이지"
- *      description: "404 페이지 렌더링"
- */
-router.get("*", (req, res) => {
-    // res.render("404");
-    res.send("404page");
-});
 
 // POST /api
 /**

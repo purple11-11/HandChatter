@@ -8,7 +8,7 @@ const options = {
             version: "1.0.0",
             description: "Test API with express",
         },
-        host: `http://localhost:${process.env.PORT}`,
+        host: `localhost:${process.env.PORT}`,
         basePath: "/",
     },
     apis: ["./routes/*.js"],
