@@ -276,8 +276,6 @@ router.post("/loginTutor", controller.loginTutor);
  *        description: "{isLogin: true}  //로그인 성공"
  *      "400":
  *        description: "비밀번호가 일치하지 않습니다. 다시 시도해주세요.  //아이디는 있지만 비밀번호 불일치"
- *      "403":
- *        description: "존재하지 않는 아이디입니다. 다시 시도해주세요.   // user 못찾았을 때,"
  */
 router.post("/loginStudent", controller.loginStudent);
 
