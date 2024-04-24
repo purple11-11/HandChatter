@@ -1,3 +1,4 @@
+const { Model } = require("sequelize");
 const { Tutor, Student } = require("../models");
 
 const bcrypt = require("bcrypt");
@@ -6,21 +7,30 @@ const saltRound = 10;
 function hashPW(pw) {
     return bcrypt.hashSync(pw, saltRound);
 }
-// function comparePW(inputpw, hashedpw) {
-//     return bcrypt.compareSync(inputpw, hashedpw);
-// }
+function comparePW(inputpw, hashedpw) {
+    return bcrypt.compareSync(inputpw, hashedpw);
+}
 
 // GET /api
 exports.getIndex = (req, res) => {
     res.send("response from api server [GET /api]");
 };
 
-// GET /api/signUp
-exports.signUp = (req, res) => {
+// GET /api/signUpTutor
+exports.signUpTutor = (req, res) => {
     res.send("회원가입 페이지");
-    // res.render("join", {isLogin: false})
+    // res.render("signUpTutor", {isLogin: false})
 };
-
+// GET /api/signUpStudent
+exports.signUpStudent = (req, res) => {
+    res.send("회원가입 페이지");
+    // res.render("signUpStudent", {isLogin: false})
+};
+//GET /api/login
+exports.login = (req, res) => {
+    res.send("로그인 페이지");
+    res.render("login", { isLogin: false });
+};
 // GET /api/checkStudentId
 // GET /api/checkTutorId
 exports.checkId = async (req, res) => {
@@ -102,5 +112,67 @@ exports.createStudent = async (req, res) => {
     } catch (err) {
         console.log("회원가입 실패", err);
         res.status(500).send("회원가입 실패");
+    }
+};
+
+// POST /api/loginTutor
+exports.loginTutor = async (req, res) => {
+    const { id, password } = req.body;
+    if (!id || !password) return;
+
+    try {
+        const resultTutor = await Tutor.findOne({
+            where: {
+                id,
+            },
+        });
+        // console.log(resultId);
+        if (resultTutor) {
+            // user가 있을 때
+            // 비밀번호 비교
+            const loginResult = comparePW(password, resultTutor.password);
+            if (loginResult) {
+                req.session.tutor = resultTutor.id;
+                console.log("dd", req.session.tutor);
+                console.log(">>>", req.session);
+                console.log("***", req.sessionID);
+                res.send({ isLogin: true });
+            } else {
+                // 아이디는 있지만 비밀번호 불일치
+                res.send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+            }
+        } else {
+            // user 못찾았을 때,
+            res.send("존재하지 않는 아이디입니다. 다시 시도해주세요.");
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+// POST /api/loginStudent
+exports.loginStudent = async (req, res) => {
+    const { id, password } = req.body;
+    if (!id || !password) return;
+
+    try {
+        const resultStudent = await Student.findOne({
+            where: {
+                id,
+            },
+        });
+        // console.log(resultId);
+        if (!resultStudent) return res.send("아이디가 일치하지 않습니다. 다시 시도해주세요.");
+
+        // user가 있을 때
+        const loginResult = comparePW(password, resultStudent.password);
+        if (!loginResult) {
+            //비밀번호 틀렸을 때
+            return res.send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+        } else {
+            req.session.Student = resultStudent.id;
+            return res.send({ isLogin: true });
+        }
+    } catch (err) {
+        console.log(err);
     }
 };
