@@ -15,12 +15,12 @@ function App() {
         <>
             <Header />
             <Routes>
-                <Route path="/" element={<Main />} />
+                <Route path="/api" element={<Main />} />
                 {/* <Route path="/login" element={<Login />} /> */}
                 {/* <Route path="/signup" element={<SignUp />} /> */}
                 {/* <Route path="/personal-learning" element={<PersonalLearning />} /> */}
                 {/* <Route path="/quiz" element={<Quiz />} /> */}
-                <Route path="/Mypage" element={<Mypage />} />
+                <Route path="/api/mypage" element={<Mypage />} />
             </Routes>
             <Footer />
         </>
