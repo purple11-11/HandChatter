@@ -16,7 +16,6 @@ const controller = require("../controller/Cmain");
  */
 
 // GET /api
-
 router.get("/", controller.getIndex);
 /**
  * @swagger
@@ -146,6 +145,18 @@ router.get("/checkTutorNickname", controller.checkNickname);
  *        description: "{available} // true or false"
  */
 router.get("/checkStudentNickname", controller.checkNickname);
+/**
+ * @swagger
+ * paths:
+ *  /api/404:
+ *    get:
+ *      summary: "404 페이지"
+ *      description: "404 페이지 렌더링"
+ */
+router.get("*", (req, res) => {
+    // res.render("404");
+    res.send("404page");
+});
 
 // POST /api
 /**
