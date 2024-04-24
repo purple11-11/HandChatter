@@ -30,7 +30,7 @@ const Student = function (Sequelize, DataTypes) {
             freezeTableName: true,
             timestamps: true,
         }
-    );
-};
+    )
+}
 
-module.exports = Student;
+module.exports = Student

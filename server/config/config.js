@@ -1,5 +1,5 @@
-const dotenv = require("dotenv");
-dotenv.config();
+const dotenv = require("dotenv")
+dotenv.config()
 
 // local
 const development = {
@@ -8,7 +8,7 @@ const development = {
     database: "handchatter",
     host: "127.0.0.1",
     dialect: "mysql",
-};
+}
 
 // ssh
 // const production = {
@@ -19,5 +19,5 @@ const development = {
 //     dialect: "mysql",
 // };
 
-module.exports = { development };
+module.exports = { development }
 //module.exports = { development, production };
