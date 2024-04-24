@@ -145,19 +145,8 @@ router.get("/checkTutorNickname", controller.checkNickname);
  *        description: "{available} // true or false"
  */
 router.get("/checkStudentNickname", controller.checkNickname);
-/**
- * @swagger
- * paths:
- *  /api/404:
- *    get:
- *      summary: "404 페이지"
- *      description: "404 페이지 렌더링"
- */
-router.get("*", (req, res) => {
-    // res.render("404");
-    res.send("404page");
-});
 
+router.get("/logout", controller.logout);
 // POST /api
 /**
  * @swagger
@@ -289,5 +278,18 @@ router.post("/loginTutor", controller.loginTutor);
  *        description: "비밀번호가 일치하지 않습니다. 다시 시도해주세요.  //아이디는 있지만 비밀번호 불일치"
  */
 router.post("/loginStudent", controller.loginStudent);
+
+/**
+ * @swagger
+ * paths:
+ *  /api/404:
+ *    get:
+ *      summary: "404 페이지"
+ *      description: "404 페이지 렌더링"
+ */
+router.get("*", (req, res) => {
+    // res.render("404");
+    res.send("404page");
+});
 
 module.exports = router;

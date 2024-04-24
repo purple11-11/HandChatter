@@ -161,13 +161,14 @@ exports.loginStudent = async (req, res) => {
             },
         });
         // console.log(resultId);
-        if (!resultStudent) return res.send("아이디가 일치하지 않습니다. 다시 시도해주세요.");
+        if (!resultStudent)
+            return res.status(400).res.send("아이디가 일치하지 않습니다. 다시 시도해주세요.");
 
         // user가 있을 때
         const loginResult = comparePW(password, resultStudent.password);
         if (!loginResult) {
             //비밀번호 틀렸을 때
-            return res.send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
+            return res.status(400).res.send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
         } else {
             req.session.Student = resultStudent.id;
             return res.send({ isLogin: true });
@@ -175,4 +176,14 @@ exports.loginStudent = async (req, res) => {
     } catch (err) {
         console.log(err);
     }
+};
+exports.logout = (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("세션 삭제 실패:", err);
+            return res.status(500).send("서버에러");
+        }
+        res.clearCookie("sessionID");
+        res.redirect("/api");
+    });
 };
