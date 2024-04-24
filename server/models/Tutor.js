@@ -18,7 +18,7 @@ const Tutor = function (Sequelize, DataTypes) {
             },
             password: {
                 type: DataTypes.STRING,
-                allowNull: false,
+                allowNull: true,
             },
             email: {
                 type: DataTypes.STRING(50),
@@ -35,6 +35,10 @@ const Tutor = function (Sequelize, DataTypes) {
             authority: {
                 type: DataTypes.TINYINT, //튜터로 임명할지 안할지에 대한 권한 여부, 관리자가 관리(0/1로 담김)
                 allowNull: false,
+            },
+            provider: {
+                type: DataTypes.STRING(20),
+                allowNull: true,
             },
         },
         {

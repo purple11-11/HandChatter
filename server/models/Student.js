@@ -18,11 +18,15 @@ const Student = function (Sequelize, DataTypes) {
             },
             password: {
                 type: DataTypes.STRING,
-                allowNull: false,
+                allowNull: true,
             },
             email: {
                 type: DataTypes.STRING(50),
-                allowNull: false,
+                allowNull: null,
+            },
+            provider: {
+                type: DataTypes.STRING(20),
+                allowNull: true,
             },
         },
         {
@@ -30,7 +34,7 @@ const Student = function (Sequelize, DataTypes) {
             freezeTableName: true,
             timestamps: true,
         }
-    )
-}
+    );
+};
 
-module.exports = Student
+module.exports = Student;
