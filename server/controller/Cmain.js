@@ -68,7 +68,7 @@ exports.checkNickname = async (req, res) => {
 // POST /api/tutor
 exports.createTutor = async (req, res) => {
     const { id, nickname, password, email, auth } = req.body;
-    if (!id | !nickname | !password | !email | !auth) return;
+    if (!id || !nickname || !password || !email || !auth) return;
     try {
         await Tutor.create({
             id,
@@ -89,7 +89,7 @@ exports.createTutor = async (req, res) => {
 exports.createStudent = async (req, res) => {
     const { id, nickname, password, email } = req.body;
 
-    if (!id | !nickname | !password | !email) return;
+    if (!id || !nickname || !password || !email) return;
     try {
         await Student.create({
             id,
