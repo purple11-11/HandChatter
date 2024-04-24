@@ -3,7 +3,7 @@ dotenv.config();
 
 // local
 const development = {
-    username: "sesac",
+    username: "user",
     password: process.env.DB_PASSWORD,
     database: "handchatter",
     host: "127.0.0.1",
