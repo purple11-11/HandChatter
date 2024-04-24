@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 
 const Header = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // 메뉴 토글 상태를 관리하는 state
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen); // 메뉴 토글 상태를 반전시킵니다.
+        setIsMenuOpen(!isMenuOpen);
     };
 
     return (
