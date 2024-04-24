@@ -7,6 +7,7 @@ const indexRouter = require("./routes");
 const serverPrefix = "/api";
 const cors = require("cors");
 const server = http.createServer(app);
+const { swaggerUi, specs } = require("./swagger/swagger");
 const socketHadnler = require("./sockets");
 
 // socketHadnler(server);
@@ -17,6 +18,7 @@ const PORT = process.env.PORT;
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // route 설정
 app.use(serverPrefix, indexRouter);
