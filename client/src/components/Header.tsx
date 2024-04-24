@@ -19,6 +19,9 @@ export default function Header() {
                     <li>
                         <Link to="/signup">회원가입</Link>
                     </li>
+                    <li>
+                        <Link to="/mypage">-----님</Link>
+                    </li>
                 </ul>
             </nav>
         </header>

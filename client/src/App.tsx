@@ -5,6 +5,7 @@ import Main from "./pages/Main";
 // import SignUp from "./pages/SignUp";
 // import PersonalLearning from "./pages/PersonalLearning";
 // import Quiz from "./pages/Quiz";
+import Mypage from "./pages/Mypage";
 import "./styles/index.scss";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
             {/* <Route path="/signup" element={<SignUp />} /> */}
             {/* <Route path="/personal-learning" element={<PersonalLearning />} /> */}
             {/* <Route path="/quiz" element={<Quiz />} /> */}
+            <Route path="/Mypage" element={<Mypage />} />
         </Routes>
     );
 }
