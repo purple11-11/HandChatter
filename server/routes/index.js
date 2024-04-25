@@ -163,7 +163,7 @@ router.get("/logout", controller.logout);
  * /api/tutor:
  *  post:
  *    summary: "튜터 회원가입"
- *    description: "POST 방식으로 튜터를 등록한다."
+ *    description: "[회원가입]POST 방식으로 튜터을 등록한다."
  *    tags: [Tutors]
  *    parameters:
  *      - in: body
@@ -188,7 +188,6 @@ router.get("/logout", controller.logout);
  *              auth:
  *                type: string
  *                description: "튜터 자격 정보 파일"
- *
  *    responses:
  *      "200":
  *        description: "회원가입 성공"
@@ -261,7 +260,7 @@ router.post("/loginTutor", controller.loginTutor);
 /**
  * @swagger
  *
- * /api/loginStudents:
+ * /api/loginStudent:
  *  post:
  *    summary: "학생 로그인"
  *    description: "[로그인]POST 방식으로 학생 로그인."
@@ -290,12 +289,143 @@ router.post("/loginStudent", controller.loginStudent);
 
 /**
  * @swagger
- * paths:
- *  /api/404:
- *    get:
- *      summary: "404 페이지"
- *      description: "404 페이지 렌더링"
+ *
+ * /api/tutor:
+ *  delete:
+ *    summary: "튜터 회원 탈퇴"
+ *    description: "[회원 탈퇴] DELETE 방식으로 튜터 계정을 삭제한다."
+ *    tags: [Tutors]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "튜터 회원 탈퇴"
+ *        application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: string
+ *              description: "튜터 ID"
+ *            password:
+ *              type: string
+ *              description: "튜터 비밀번호"
+ *    responses:
+ *      '200':
+ *        description: "회원 탈퇴 성공"
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ *                  description: "회원 탈퇴 성공 여부"
+ *                msg:
+ *                  type: string
+ *                  description: "메시지"
+ *      '400':
+ *        description: "Bad Request"
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: "오류 메시지"
+ *      '401':
+ *        description: "Unauthorized"
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: "권한 없음"
+ *      '500':
+ *        description: "Internal Server Error"
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: "서버 오류"
  */
+router.delete("/tutor", controller.deleteTutor);
+/**
+ * @swagger
+ *
+ * /api/student:
+ *  delete:
+ *    summary: "학생 회원 탈퇴"
+ *    description: "[회원 탈퇴] DELETE 방식으로 학생 계정을 삭제한다."
+ *    tags: [Students]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "학생 회원 탈퇴"
+ *        application/json:
+ *        schema:
+ *          type: object
+ *          properties:
+ *            id:
+ *              type: string
+ *              description: "학생 ID"
+ *            password:
+ *              type: string
+ *              description: "학생 비밀번호"
+ *    responses:
+ *      '200':
+ *        description: "회원 탈퇴 성공"
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                success:
+ *                  type: boolean
+ *                  description: "회원 탈퇴 성공 여부"
+ *                msg:
+ *                  type: string
+ *                  description: "메시지"
+ *      '400':
+ *        description: "Bad Request"
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: "오류 메시지"
+ *      '401':
+ *        description: "Unauthorized"
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: "권한 없음"
+ *      '500':
+ *        description: "Internal Server Error"
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: "서버 오류"
+ */
+router.delete("/student", controller.deleteStudent);
+
 router.get("*", (req, res) => {
     // res.render("404");
     res.send("404page");

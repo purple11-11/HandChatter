@@ -14,7 +14,6 @@ const passport = require("passport");
 const passportConfig = require("./passport");
 passportConfig(passport);
 const server = http.createServer(app);
-
 const { swaggerUi, specs } = require("./modules/swagger/swagger");
 const socketHadnler = require("./modules/sockets");
 // socketHandler(server);

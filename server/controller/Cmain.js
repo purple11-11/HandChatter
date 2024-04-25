@@ -168,8 +168,8 @@ exports.loginStudent = async (req, res) => {
             //비밀번호 틀렸을 때
             return res.send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
         } else {
-            req.session.Student = resultStudent.id;
-            const studentId = req.session.Student;
+            req.session.student = resultStudent.id;
+            const studentId = req.session.student;
             return res.send({ isLogin: true, studentId: studentId });
         }
     } catch (err) {
@@ -178,15 +178,79 @@ exports.loginStudent = async (req, res) => {
 };
 exports.logout = (req, res) => {
     try {
-        req.session.destroy((err) => {
-            if (err) {
-                console.error("세션 삭제 실패:", err);
-                return res.status(500).send("서버에러");
-            }
-            res.clearCookie("sessionID");
-            res.redirect("/api");
-        });
+        if (req.session && (req.session.tutor || req.session.student)) {
+            req.session.destroy(() => {
+                res.send({ msg: "로그아웃 되었습니다." });
+            });
+        } else {
+            res.send({ msf: "이미 세션이 만료되었습니다." });
+        }
     } catch (err) {
-        console.log(err);
+        console.log("logout error >> ", err);
+        res.status(500).send("server error!");
+    }
+};
+
+// DELETE /api/tutor
+exports.deleteTutor = async (req, res) => {
+    const { id, password } = req.body;
+
+    console.log("tutor_id ::", id, "tutor_password ::", password);
+    try {
+        if (!req.session.tutor) return res.send("탈퇴 권한이 없습니다. 로그인 후 이용해주세요.");
+        console.log(req.session.tutor);
+        if (id !== req.session.tutor) return res.send("아이디를 정확하게 입력해주세요.");
+        if (!password) return res.send("비밀번호를 입력해주세요.");
+
+        const isTutor = await Tutor.findOne({
+            where: { id },
+        });
+        if (!comparePW(password, isTutor.password))
+            return res.send("비밀번호가 일치하지 않습니다.");
+        if (isTutor && comparePW(password, isTutor.password)) {
+            await Tutor.destroy({ where: { id } });
+            await req.session.destroy((err) => {
+                if (err) {
+                    console.error("세션 삭제 실패:", err);
+                    return res.status(500).send("서버에러");
+                }
+                return res.send({ success: true, msg: "회원 탈퇴" });
+            });
+        }
+    } catch (err) {
+        console.log("deleteTutor controller err::", err);
+        res.status(500).send("server error!");
+    }
+};
+
+// DELETE /api/student
+exports.deleteStudent = async (req, res) => {
+    const { id, password } = req.body;
+
+    console.log("student_id ::", id, "student_password ::", password);
+    try {
+        if (!req.session.student) return res.send("탈퇴 권한이 없습니다. 로그인 후 이용해주세요.");
+        console.log(req.session.student);
+        if (id !== req.session.student) return res.send("아이디를 정확하게 입력해주세요.");
+        if (!password) return res.send("비밀번호를 입력해주세요.");
+
+        const isStudent = await Student.findOne({
+            where: { id },
+        });
+        if (!comparePW(password, isStudent.password))
+            return res.send("비밀번호가 일치하지 않습니다.");
+        if (isStudent && comparePW(password, isStudent.password)) {
+            await Student.destroy({ where: { id } });
+            await req.session.destroy((err) => {
+                if (err) {
+                    console.error("세션 삭제 실패:", err);
+                    return res.status(500).send("서버에러");
+                }
+                return res.send({ success: true, msg: "회원 탈퇴" });
+            });
+        }
+    } catch (err) {
+        console.log("deleteTutor controller err::", err);
+        res.status(500).send("server error!");
     }
 };
