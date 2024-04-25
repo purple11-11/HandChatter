@@ -27,6 +27,7 @@ const Tutor = function (Sequelize, DataTypes) {
             description: {
                 type: DataTypes.STRING(255), //강사 소개
                 allowNull: false,
+                defaultValue: "강사 소개글을 입력해주세요.",
             },
             auth: {
                 type: DataTypes.STRING(255), // 자격증 사진 저장
@@ -35,6 +36,7 @@ const Tutor = function (Sequelize, DataTypes) {
             authority: {
                 type: DataTypes.TINYINT, //튜터로 임명할지 안할지에 대한 권한 여부, 관리자가 관리(0/1로 담김)
                 allowNull: false,
+                defaultValue: false,
             },
         },
         {

@@ -16,6 +16,8 @@ passportConfig(passport);
 const server = http.createServer(app);
 const socketHandler = require("./sockets");
 // socketHandler(server);
+const { swaggerUi, specs } = require("./swagger/swagger");
+
 
 // body-parser 설정
 app.use(cors());
@@ -35,6 +37,7 @@ app.use(
 // passport 설정
 app.use(passport.initialize());
 app.use(passport.session()); //(req.session 객체는 express-session에서 생성하는 것이므로 passport 미들웨어는 express-session 미들웨어보다 뒤에 연결해야 합니다.)
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // route 설정
 app.use(serverPrefix, indexRouter);
@@ -44,7 +47,7 @@ sequelize
     .sync({ force: false })
     .then(() => {
         server.listen(PORT, () => {
-            console.log(`http://localhost:${PORT}`);
+            console.log(`http://localhost:${PORT}/api`);
         });
     })
     .catch((err) => console.log(err));
