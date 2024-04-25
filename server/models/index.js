@@ -14,12 +14,12 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 
 const TutorModel = require("../models/Tutor")(sequelize, Sequelize);
 const StudentModel = require("../models/Student")(sequelize, Sequelize);
-const LevelModel = require("../models/Level")(sequelize, Sequelize);
+const LevelModel = require("./Level")(sequelize, Sequelize);
 const FavoritesModel = require("../models/Favorites")(sequelize, Sequelize);
-const MessageModel = require("../models/Message")(sequelize, Sequelize);
-const ReviewModel = require("../models/Review")(sequelize, Sequelize);
+const MessageModel = require("./Message")(sequelize, Sequelize);
+const ReviewModel = require("./Review")(sequelize, Sequelize);
 
-// 1 대 N 관계설정
+// 1 대 N 관계설정 (외래키)
 // 강사 : 레벨
 TutorModel.hasMany(LevelModel, {
     onDelete: "CASCADE",
