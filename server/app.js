@@ -18,7 +18,6 @@ const socketHandler = require("./sockets");
 // socketHandler(server);
 const { swaggerUi, specs } = require("./swagger/swagger");
 
-
 // body-parser 설정
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
