@@ -18,11 +18,19 @@ const Student = function (Sequelize, DataTypes) {
             },
             password: {
                 type: DataTypes.STRING,
-                allowNull: false,
+                allowNull: true,
             },
             email: {
                 type: DataTypes.STRING(50),
-                allowNull: false,
+                allowNull: true,
+            },
+            provider: {
+                type: DataTypes.STRING(20),
+                allowNull: true,
+            },
+            profile_img: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
             },
         },
         {
