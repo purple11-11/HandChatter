@@ -14,9 +14,10 @@ const passport = require("passport");
 const passportConfig = require("./passport");
 passportConfig(passport);
 const server = http.createServer(app);
-const socketHandler = require("./sockets");
+
+const { swaggerUi, specs } = require("./modules/swagger/swagger");
+const socketHadnler = require("./modules/sockets");
 // socketHandler(server);
-const { swaggerUi, specs } = require("./swagger/swagger");
 
 
 // body-parser 설정
@@ -38,6 +39,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session()); //(req.session 객체는 express-session에서 생성하는 것이므로 passport 미들웨어는 express-session 미들웨어보다 뒤에 연결해야 합니다.)
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // route 설정
 app.use(serverPrefix, indexRouter);
