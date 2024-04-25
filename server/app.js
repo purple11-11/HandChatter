@@ -8,12 +8,9 @@ const serverPrefix = "/api";
 const cors = require("cors");
 const session = require("express-session");
 const server = http.createServer(app);
-const { swaggerUi, specs } = require("./swagger/swagger");
-const socketHadnler = require("./sockets");
-
-// socketHadnler(server);
-dotenv.config();
-const PORT = process.env.PORT;
+const { swaggerUi, specs } = require("./modules/swagger/swagger");
+const socketHadnler = require("./modules/sockets");
+// socketHandler(server);
 
 // body-parser 설정
 app.use(cors());
@@ -30,6 +27,7 @@ app.use(
     })
 );
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // route 설정
 app.use(serverPrefix, indexRouter);
