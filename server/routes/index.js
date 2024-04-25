@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controller/Cmain");
+const multer = require("../modules/multer/multer");
 
 /**
  * @swagger
@@ -191,7 +192,7 @@ router.get("/logout", controller.logout);
  *      "200":
  *        description: "회원가입 성공"
  */
-router.post("/tutor", controller.createTutor);
+router.post("/tutor", multer.single(""), controller.createTutor);
 /**
  * @swagger
  *

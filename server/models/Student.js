@@ -22,17 +22,21 @@ const Student = function (Sequelize, DataTypes) {
             },
             email: {
                 type: DataTypes.STRING(50),
-                allowNull: null,
+                allowNull: true,
             },
             provider: {
                 type: DataTypes.STRING(20),
+                allowNull: true,
+            },
+            profile_img: {
+                type: DataTypes.STRING(255),
                 allowNull: true,
             },
         },
         {
             tableName: "student",
             freezeTableName: true,
-            timestamps: true,
+            timestamps: false,
         }
     );
 };

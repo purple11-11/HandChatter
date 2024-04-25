@@ -38,11 +38,19 @@ const Tutor = function (Sequelize, DataTypes) {
                 allowNull: false,
                 defaultValue: false,
             },
+            profile_img: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            des_video: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
         },
         {
             tableName: "tutor",
             freezeTableName: true,
-            timestamps: true,
+            timestamps: false,
         }
     );
 };
