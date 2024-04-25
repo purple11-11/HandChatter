@@ -24,7 +24,7 @@ exports.signUpTutor = (req, res) => {
 exports.signUpStudent = (req, res) => {
     res.send({ isLogin: false });
 };
-//GET /api/login
+// GET /api/login
 exports.login = (req, res) => {
     res.send({ isLogin: false });
 };
@@ -32,7 +32,7 @@ exports.login = (req, res) => {
 // GET /api/checkTutorId
 exports.checkId = async (req, res) => {
     const { id } = req.query;
-    if (!id) return;
+    if (!id) return res.send("빈칸을 입력해주세요.");
 
     let isDuplicateTutor, isDuplicateStudent;
     try {
@@ -54,7 +54,7 @@ exports.checkId = async (req, res) => {
 // GET /api/checkStudentNickname
 exports.checkNickname = async (req, res) => {
     const { nickname } = req.query;
-    if (!nickname) return;
+    if (!nickname) return res.send("빈칸을 입력해주세요.");
 
     let isDuplicateTutor, isDuplicateStudent;
     try {
@@ -72,10 +72,68 @@ exports.checkNickname = async (req, res) => {
     res.send({ available });
 };
 
+// GET /api/searchId
+exports.searchId = async (req, res) => {
+    let searchEmailStudent, searchEmailTutor;
+    try {
+        const { email } = req.query;
+        if (!email) return res.send("빈칸을 입력해주세요.");
+
+        [searchEmailTutor, searchEmailStudent] = await Promise.all([
+            Tutor.findOne({ where: { email } }),
+            Student.findOne({ where: { email } }),
+        ]);
+
+        if (!searchEmailTutor && !searchEmailStudent) {
+            res.send("존재하지 않는 이메일입니다. 다시 입력해주세요.");
+        } else if (searchEmailStudent) {
+            const studentId = searchEmailStudent.id;
+            res.send(`회원님의 아이디는 ${studentId}입니다.`);
+        } else if (searchEmailTutor) {
+            const tutorId = searchEmailTutor.id;
+            res.send(`회원님의 아이디는 ${tutorId}입니다.`);
+        } else return;
+    } catch (err) {
+        console.log("seachId controller ::", err);
+        res.status(500).send("server error!!!");
+    }
+};
+
+// GET /api/searchPassword
+exports.searchPassword = async (req, res) => {
+    let searchIdStudent, searchIdTutor;
+    try {
+        const { id, email } = req.query;
+        if (!email || !id) return res.send("빈칸을 입력해주세요.");
+
+        [searchIdTutor, searchIdStudent] = await Promise.all([
+            Tutor.findOne({ where: { id, email } }),
+            Student.findOne({ where: { id, email } }),
+        ]);
+
+        if (!searchIdTutor && !searchIdStudent) {
+            res.send("유효하지 않은 값입니다. 다시 입력해주세요.");
+        } else if (searchIdStudent) {
+            res.send(`<script>
+            alert('새로운 비밀번호를 입력해주세요').
+            res.redirect('/inputPassword')
+            </script>`);
+        } else if (searchIdTutor) {
+            res.send(`<script>
+            alert('새로운 비밀번호를 입력해주세요').
+            res.redirect('/inputPassword')
+            </script>`);
+        } else return;
+    } catch (err) {
+        console.log("seachPassword controller ::", err);
+        res.status(500).send("server error!!!");
+    }
+};
+
 // POST /api/tutor
 exports.createTutor = async (req, res) => {
     const { id, nickname, password, email, auth } = req.body;
-    if (!id || !nickname || !password || !email || !auth) return;
+    if (!id || !nickname || !password || !email || !auth) return res.send("빈칸을 입력해주세요.");
     try {
         await Tutor.create({
             id,
@@ -96,7 +154,7 @@ exports.createTutor = async (req, res) => {
 exports.createStudent = async (req, res) => {
     const { id, nickname, password, email } = req.body;
 
-    if (!id || !nickname || !password || !email) return;
+    if (!id || !nickname || !password || !email) return res.send("빈칸을 입력해주세요.");
     try {
         await Student.create({
             id,
@@ -115,7 +173,7 @@ exports.createStudent = async (req, res) => {
 // POST /api/loginTutor
 exports.loginTutor = async (req, res) => {
     const { id, password } = req.body;
-    if (!id || !password) return;
+    if (!id || !password) return res.send("빈칸을 입력해주세요.");
 
     try {
         const resultTutor = await Tutor.findOne({
@@ -151,7 +209,7 @@ exports.loginTutor = async (req, res) => {
 // POST /api/loginStudent
 exports.loginStudent = async (req, res) => {
     const { id, password } = req.body;
-    if (!id || !password) return;
+    if (!id || !password) return res.send("빈칸을 입력해주세요.");
 
     try {
         const resultStudent = await Student.findOne({
