@@ -43,7 +43,7 @@ app.use(serverPrefix, indexRouter);
 app.use("/auth", authRouter);
 
 sequelize
-    .sync({ force: true })
+    .sync({ force: false })
     .then(() => {
         server.listen(PORT, () => {
             console.log(`http://localhost:${PORT}/api`);
