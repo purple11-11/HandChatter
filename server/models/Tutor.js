@@ -50,7 +50,7 @@ const Tutor = function (Sequelize, DataTypes) {
         {
             tableName: "tutor",
             freezeTableName: true,
-            timestamps: true,
+            timestamps: false,
         }
     );
 };

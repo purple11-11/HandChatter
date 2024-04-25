@@ -18,7 +18,6 @@ const socketHandler = require("./sockets");
 // socketHandler(server);
 const { swaggerUi, specs } = require("./swagger/swagger");
 
-
 // body-parser 설정
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -44,7 +43,7 @@ app.use(serverPrefix, indexRouter);
 app.use("/auth", authRouter);
 
 sequelize
-    .sync({ force: false })
+    .sync({ force: true })
     .then(() => {
         server.listen(PORT, () => {
             console.log(`http://localhost:${PORT}/api`);
