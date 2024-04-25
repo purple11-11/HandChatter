@@ -22,7 +22,7 @@ const Student = function (Sequelize, DataTypes) {
             },
             email: {
                 type: DataTypes.STRING(50),
-                allowNull: false,
+                allowNull: true,
             },
             provider: {
                 type: DataTypes.STRING(20),
