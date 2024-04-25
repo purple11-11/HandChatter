@@ -18,18 +18,15 @@ exports.getIndex = (req, res) => {
 
 // GET /api/signUpTutor
 exports.signUpTutor = (req, res) => {
-    res.send("회원가입 페이지");
-    // res.render("signUpTutor", {isLogin: false})
+    res.send({ isLogin: false });
 };
 // GET /api/signUpStudent
 exports.signUpStudent = (req, res) => {
-    res.send("회원가입 페이지");
-    // res.render("signUpStudent", {isLogin: false})
+    res.send({ isLogin: false });
 };
 //GET /api/login
 exports.login = (req, res) => {
-    res.send("로그인 페이지");
-    res.render("login", { isLogin: false });
+    res.send({ isLogin: false });
 };
 // GET /api/checkStudentId
 // GET /api/checkTutorId
@@ -90,7 +87,7 @@ exports.createTutor = async (req, res) => {
         // console.log(result);
         res.send("회원가입 성공");
     } catch (err) {
-        console.log("회원가입 실패", err);
+        console.log("회원가입 실패 err:", err);
         res.status(500).send("회원가입 실패");
     }
 };

@@ -19,133 +19,138 @@ const controller = require("../controller/Cmain");
 
 router.get("/", controller.getIndex);
 /**
- * @swagger
- * paths:
- *  /api/signUpTutor:
- *    get:
- *      summary: "튜터 회원가입 페이지"
- *      description: "튜터 회원가입 페이지 렌더링"
- *      responses:
- *        "200":
- *          description: "{isLogin: false}"
+ * 회원가입: 튜터
+ * 사용자가 튜터로 회원가입할 때 호출됩니다.
+ *
+ * @param {Object} req - 요청 객체
+ * @param {Object} res - 응답 객체
+ * @returns {Object} isLogin: false - 로그인 상태를 나타내는 객체
  */
 router.get("/signUpTutor", controller.signUpTutor);
 /**
- * @swagger
- * paths:
- *  /api/signUpStudent:
- *    get:
- *      summary: "학생 회원가입 페이지"
- *      description: "학생 회원가입 페이지 렌더링"
- *      responses:
- *        "200":
- *          description: "{isLogin: false}"
+ * 회원가입: 학생
+ * 사용자가 학생으로 회원가입할 때 호출됩니다.
+ *
+ * @param {Object} req - 요청 객체
+ * @param {Object} res - 응답 객체
+ * @returns {Object} isLogin: false - 로그인 상태를 나타내는 객체
  */
 router.get("/signUpStudent", controller.signUpStudent);
 /**
- * @swagger
- * paths:
- *  /api/login:
- *    get:
- *      summary: "로그인 페이지"
- *      description: "로그인 페이지 렌더링"
- *      responses:
- *        "200":
- *          description: "{isLogin: false}"
+ * 로그인 처리
+ * 사용자의 로그인을 처리합니다.
+ *
+ * @param {Object} req - 요청 객체
+ * @param {Object} res - 응답 객체
+ * @returns {Object} isLogin: false - 로그인 상태를 나타내는 객체
  */
 router.get("/login", controller.login);
 /**
  * @swagger
- * /api/checkTutorId?id={id}:
- *  get:
- *    summary: "특정 튜터 id조회 Query 방식"
- *    description: "요청 경로에 값을 담아 서버에 보낸다."
- *    tags: [Tutors]
- *    parameters:
- *      - in: query
- *        name: id
- *        required: true
- *        description: "튜터 아이디 중복검사"
- *        content:
- *          application/json:
+ * /api/checkTutorId:
+ *   get:
+ *     summary: 튜터 아이디 중복 확인
+ *     description: 클라이언트가 제공한 아이디가 튜터와 학생 중에 중복되는지 확인합니다.
+ *     tags: [Id]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 확인할 아이디
+ *     responses:
+ *       '200':
+ *         description: 중복 여부에 따른 응답
+ *         content:
+ *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                  type: string
- *                  description: "튜터 id"
- *    responses:
- *      "200":
- *        description: "{available} // true or false"
+ *                 available:
+ *                   type: boolean
+ *                   description: 아이디의 중복 여부
  */
 router.get("/checkTutorId", controller.checkId);
 /**
  * @swagger
- * /api/checkStudentId?id={id}:
- *  get:
- *    summary: "특정 학생id조회 Query 방식"
- *    description: "요청 경로에 값을 담아 서버에 보낸다."
- *    tags: [Students]
- *    parameters:
- *      - in: query
- *        name: id
- *        required: true
- *        description: "학생 아이디 중복검사"
- *        schema:
- *            type: object
- *            properties:
- *              id:
- *                type: string
- *                description: "학생 id"
- *    responses:
- *      "200":
- *        description: "{available} // true or false"
+ * /api/checkStudentId:
+ *   get:
+ *     summary: 학생 아이디 중복 확인
+ *     description: 클라이언트가 제공한 아이디가 튜터와 학생 중에 중복되는지 확인합니다.
+ *     tags: [Id]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 확인할 아이디
+ *     responses:
+ *       '200':
+ *         description: 중복 여부에 따른 응답
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 available:
+ *                   type: boolean
+ *                   description: 아이디의 중복 여부
  */
 router.get("/checkStudentId", controller.checkId);
 /**
  * @swagger
- * /api/checkTutorNickname?nickname={nickname}:
- *  get:
- *    summary: "특정 튜터nickname조회 Query 방식"
- *    description: "요청 경로에 값을 담아 서버에 보낸다."
- *    tags: [Tutors]
- *    parameters:
- *      - in: query
- *        name: nickname
- *        required: true
- *        description: "튜터 닉네임 중복검사"
- *        schema:
- *            type: object
- *            properties:
- *              nickname:
- *                type: string
- *                description: "튜터 nickname"
- *    responses:
- *      "200":
- *        description: "{available} // true or false"
+ * /api/checkTutorNickname:
+ *   get:
+ *     summary: 닉네임 중복 확인
+ *     description: 클라이언트가 제공한 닉네임이 튜터와 학생 중에서 중복되는지 확인합니다.
+ *     tags: [Nickname]
+ *     parameters:
+ *       - in: query
+ *         name: nickname
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 확인할 닉네임
+ *     responses:
+ *       '200':
+ *         description: 중복 여부에 따른 응답
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 available:
+ *                   type: boolean
+ *                   description: 닉네임의 중복 여부
  */
 router.get("/checkTutorNickname", controller.checkNickname);
 /**
  * @swagger
- * /api/checkStudentNickname?nickname={nickname}:
- *  get:
- *    summary: "특정 학생nickname조회 Query 방식"
- *    description: "요청 경로에 값을 담아 서버에 보낸다."
- *    tags: [Students]
- *    parameters:
- *      - in: query
- *        name: nickname
- *        required: true
- *        description: "튜터 닉네임 중복확인"
- *        schema:
- *            type: object
- *            properties:
- *              nickname:
- *                type: string
- *                description: "튜터 닉네임"
- *    responses:
- *      "200":
- *        description: "{available} // true or false"
+ * /api/checkStudentNickname:
+ *   get:
+ *     summary: 닉네임 중복 확인
+ *     description: 클라이언트가 제공한 닉네임이 튜터와 학생 중에서 중복되는지 확인합니다.
+ *     tags: [Nickname]
+ *     parameters:
+ *       - in: query
+ *         name: nickname
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 확인할 닉네임
+ *     responses:
+ *       '200':
+ *         description: 중복 여부에 따른 응답
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 available:
+ *                   type: boolean
+ *                   description: 닉네임의 중복 여부
  */
 router.get("/checkStudentNickname", controller.checkNickname);
 
