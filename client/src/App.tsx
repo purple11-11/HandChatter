@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Main from "./pages/Main";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-// import Login from "./pages/Login";
-// import SignUp from "./pages/SignUp";
 // import PersonalLearning from "./pages/PersonalLearning";
 // import Quiz from "./pages/Quiz";
 import Mypage from "./pages/Mypage";
 import "./styles/index.scss";
+import Signin from "./pages/account/Signin";
+import Signup from "./pages/account/Signup";
 
 function App() {
     return (
@@ -16,8 +16,9 @@ function App() {
             <Header />
             <Routes>
                 <Route path="/api" element={<Main />} />
-                {/* <Route path="/login" element={<Login />} /> */}
-                {/* <Route path="/signup" element={<SignUp />} /> */}
+                <Route path="/api/login" element={<Signin />} />
+                {/*  <Route path="/api/student" element={<Signup role={"student"} />} /> */}
+                {/* <Route path="/api/tutor" element={<Signup role={"tutor"} />} /> */}
                 {/* <Route path="/personal-learning" element={<PersonalLearning />} /> */}
                 {/* <Route path="/quiz" element={<Quiz />} /> */}
                 <Route path="/api/mypage" element={<Mypage />} />

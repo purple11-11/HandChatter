@@ -24,10 +24,10 @@ const Header = () => {
                             <Link to="/quiz">퀴즈</Link>
                         </li>
                         <li>
-                            <Link to="/login">로그인</Link>
+                            <Link to="/api/login">로그인</Link>
                         </li>
                         <li>
-                            <Link to="/signup">회원가입</Link>
+                            <Link to="/api/student">회원가입</Link>
                         </li>
                         <li>
                             <Link to="/api/mypage" onClick={toggleMenu}>

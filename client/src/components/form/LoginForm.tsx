@@ -15,13 +15,14 @@ export default function LoginForm({ role }: Props) {
                         <input type="password" placeholder="Password" name="pw" />
                         <button>로그인</button>
                     </form>
-
-                    <div className="social_login">
-                        <button>
-                            <img src={kakaoLogo} alt="카카오 로그인 버튼" width={25} />
-                            카카오톡 로그인
-                        </button>
-                    </div>
+                    {role === "student" && (
+                        <div className="social_login">
+                            <button>
+                                <img src={kakaoLogo} alt="카카오 로그인 버튼" width={25} />
+                                카카오톡 로그인
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </>
