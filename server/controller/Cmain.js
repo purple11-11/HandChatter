@@ -133,10 +133,12 @@ exports.loginTutor = async (req, res) => {
             const loginResult = comparePW(password, resultTutor.password);
             if (loginResult) {
                 req.session.tutor = resultTutor.id;
+                const tutorId = req.session.tutor;
+                console.log(req.session.tutor);
                 console.log("dd", req.session.tutor);
                 console.log(">>>", req.session);
                 console.log("***", req.sessionID);
-                res.send({ isLogin: true });
+                res.send({ isLogin: true, tutorId: tutorId });
             } else {
                 // 아이디는 있지만 비밀번호 불일치
                 res.send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
@@ -161,7 +163,7 @@ exports.loginStudent = async (req, res) => {
             },
         });
         // console.log(resultId);
-        if (!resultStudent) return res.send("아이디가 일치하지 않습니다. 다시 시도해주세요.");
+        if (!resultStudent) return res.send("존재하지 않는 아이디입니다. 다시 시도해주세요.");
 
         // user가 있을 때
         const loginResult = comparePW(password, resultStudent.password);
@@ -170,8 +172,23 @@ exports.loginStudent = async (req, res) => {
             return res.send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
         } else {
             req.session.Student = resultStudent.id;
-            return res.send({ isLogin: true });
+            const studentId = req.session.Student;
+            return res.send({ isLogin: true, studentId: studentId });
         }
+    } catch (err) {
+        console.log(err);
+    }
+};
+exports.logout = (req, res) => {
+    try {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("세션 삭제 실패:", err);
+                return res.status(500).send("서버에러");
+            }
+            res.clearCookie("sessionID");
+            res.redirect("/api");
+        });
     } catch (err) {
         console.log(err);
     }
