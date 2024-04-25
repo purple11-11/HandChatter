@@ -19,7 +19,6 @@ const { swaggerUi, specs } = require("./modules/swagger/swagger");
 const socketHadnler = require("./modules/sockets");
 // socketHandler(server);
 
-
 // body-parser 설정
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));

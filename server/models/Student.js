@@ -22,7 +22,7 @@ const Student = function (Sequelize, DataTypes) {
             },
             email: {
                 type: DataTypes.STRING(50),
-                allowNull: true,
+                allowNull: false,
             },
             provider: {
                 type: DataTypes.STRING(20),
@@ -36,7 +36,7 @@ const Student = function (Sequelize, DataTypes) {
         {
             tableName: "student",
             freezeTableName: true,
-            timestamps: true,
+            timestamps: false,
         }
     );
 };
