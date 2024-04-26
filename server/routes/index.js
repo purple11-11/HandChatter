@@ -154,6 +154,106 @@ router.get("/checkTutorNickname", controller.checkNickname);
  *                   description: 닉네임의 중복 여부
  */
 router.get("/checkStudentNickname", controller.checkNickname);
+/**
+ * @swagger
+ * /api/searchId:
+ *   get:
+ *     summary: 사용자 이메일로 ID 검색
+ *     description: 사용자의 이메일로 등록된 ID를 검색합니다.
+ *     tags:
+ *       - Tutors
+ *       - Students
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         required: true
+ *         description: 검색할 사용자 이메일
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: ID 검색 결과
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "회원님의 아이디는 ABC123입니다."
+ *       '400':
+ *         description: 빈칸을 입력했을 때 발생하는 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "빈칸을 입력해주세요."
+ *       '404':
+ *         description: 존재하지 않는 이메일일 때 발생하는 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "존재하지 않는 이메일입니다. 다시 입력해주세요."
+ *       '500':
+ *         description: 서버 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Internal Server Error"
+ */
+router.get("/searchId", controller.searchId);
+/**
+ * @swagger
+ * /api/searchPassword:
+ *   get:
+ *     summary: 사용자 ID와 이메일로 비밀번호 재설정 링크 전송
+ *     description: 사용자의 ID와 이메일을 받아 새로운 비밀번호를 설정할 수 있는 링크를 전송합니다.
+ *     tags:
+ *       - Tutors
+ *       - Students
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         description: 사용자 ID
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: email
+ *         required: true
+ *         description: 사용자 이메일
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: 비밀번호 재설정 링크 전송 결과
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *               example: "<script>alert('새로운 비밀번호를 입력해주세요').res.redirect('/inputPassword')</script>"
+ *       '400':
+ *         description: 빈칸을 입력했을 때 발생하는 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "빈칸을 입력해주세요."
+ *       '404':
+ *         description: 유효하지 않은 값일 때 발생하는 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "유효하지 않은 값입니다. 다시 입력해주세요."
+ *       '500':
+ *         description: 서버 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Internal Server Error"
+ */
+router.get("/searchPassword", controller.searchPassword);
 
 router.get("/logout", controller.logout);
 // POST /api
