@@ -281,6 +281,132 @@ exports.deleteTutor = async (req, res) => {
     }
 };
 
+// PATCH /api/tutorProfile
+exports.editTutorProfile = async (req, res) => {
+    try {
+        const { id, changeDefaultImg, nickname, password, level, price, desVideo, description } =
+            req.body;
+        if (!nickname || !price) return res.send("빈칸을 입력해주세요.");
+        // desVideo 유효성 검사 해야하나?
+        let defaultImg = "./uploads/default.jpg";
+        const realPrice = Number(price);
+        await Tutor.update(
+            {
+                profile_img: defaultImg,
+                nickname,
+                password,
+                level,
+                price: realPrice,
+                des_video: desVideo,
+                description,
+            },
+            {
+                where: {
+                    id,
+                },
+            }
+        );
+
+        return res.send({ result: true });
+    } catch (error) {
+        console.log(error);
+        res.send({ error: error.message });
+    }
+};
+
+//PATCH / api / editTutorPassword;
+exports.editTutorPassword = async (req, res) => {
+    const { id, password, newPassword1, newPassword2 } = req.body;
+    try {
+        const tutor = await Tutor.findOne({
+            where: {
+                id,
+            },
+        });
+        if (tutor) {
+            const checkPassword = comparePW(password, tutor.password);
+            if (!checkPassword) {
+                return res.send("유효한 비밀번호를 입력해주세요.");
+            } else if (newPassword1 !== newPassword2) {
+                res.send("비밀번호가 일치하지 않습니다.");
+            } else {
+                await Tutor.update(
+                    {
+                        password: hashPW(newPassword1),
+                    },
+                    {
+                        where: { id },
+                    }
+                );
+                res.send({ result: true });
+            }
+        } else throw new Error("Invaild ID");
+    } catch (error) {
+        console.log({});
+        res.send({ error: error.message });
+    }
+};
+
+// PATCH /api/studentProfile
+exports.editStudentProfile = async (req, res) => {
+    try {
+        const { id, changeDefaultImg, nickname, password } = req.body;
+        if (!nickname) return res.send("빈칸을 입력해주세요.");
+
+        let defaultImg = "./uploads/default.jpg";
+
+        await Student.update(
+            {
+                profile_img: defaultImg,
+                nickname,
+                password,
+            },
+            {
+                where: {
+                    id,
+                },
+            }
+        );
+
+        return res.send({ result: true });
+    } catch (error) {
+        console.log(error);
+        res.send({ error: error.message });
+    }
+};
+//PATCH / api / editStudentPassword;
+exports.editStudentPassword = async (req, res) => {
+    const { id, password, newPassword1, newPassword2 } = req.body;
+    try {
+        const student = await Student.findOne({
+            where: {
+                id,
+            },
+        });
+        if (student) {
+            const checkPassword = comparePW(password, student.password);
+            if (!checkPassword) {
+                return res.send("유효한 비밀번호를 입력해주세요.");
+            } else if (newPassword1 !== newPassword2) {
+                res.send("비밀번호가 일치하지 않습니다.");
+            } else {
+                await Student.update(
+                    {
+                        password: hashPW(newPassword1),
+                    },
+                    {
+                        where: { id },
+                    }
+                );
+                res.send({ result: true });
+            }
+        } else throw new Error("Invaild ID");
+    } catch (error) {
+        console.log({ error: error.message });
+        res.send({ error: error.message });
+    }
+};
+
 // DELETE /api/student
 exports.deleteStudent = async (req, res) => {
     const { id, password } = req.body;
