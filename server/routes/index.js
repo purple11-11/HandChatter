@@ -17,8 +17,13 @@ const multer = require("../modules/multer/multer");
  */
 
 // GET /api
-
+// 메인페이지 - 강사 정보 조회
 router.get("/", controller.getIndex);
+
+// GET /api/tutors/:tutorIdx
+// 강사 상세페이지 - 강사 상세 조회
+router.get("/tutors/:tutorIdx", controller.getTutorDetail);
+
 /**
  * 회원가입: 튜터
  * 사용자가 튜터로 회원가입할 때 호출됩니다.
