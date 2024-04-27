@@ -35,12 +35,6 @@ export default function LoginForm({ role, login }: Props) {
         <>
             <div className="login_wrapper">
                 <div className="basic_login">
-                    {/* <form
-                        name="login_form"
-                        onSubmit={handleSubmit(() => {
-                            console.log("test submit");
-                        })}
-                    > */}
                     <form name="login_form" onSubmit={handleSubmit(onSubmit)}>
                         <label htmlFor="id">ID</label>
                         <input
