@@ -10,12 +10,16 @@ export interface SignupData {
     authDocument: File | null;
     [key: string]: string | File | null; // 인덱스 시그니처
 }
+export interface SigninData {
+    id: string;
+    pw: string;
+}
 
 export interface InputProps {
     labelText?: string;
     type: string;
     name: string;
-    value: string;
+    value?: string;
     handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     btnText?: string;
     onClick?: () => Promise<void>;

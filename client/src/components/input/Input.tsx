@@ -14,13 +14,9 @@ export default function Input({
         <>
             <div className={`sign_up ${name}`}>
                 <label htmlFor={name}>{labelText}</label>
+                {/* TODO: <PasswordInput type="password" {...register("pw", { required: true })} /> */}
                 {type === "password" ? (
-                    <PasswordInput
-                        type={type}
-                        name={name}
-                        value={value}
-                        handleChange={handleChange}
-                    />
+                    <PasswordInput type="password" />
                 ) : (
                     <input
                         type={type}
