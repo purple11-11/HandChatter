@@ -14,14 +14,10 @@ export default function Signip() {
 
     // axios
     const login = async (role: string, id: string, pw: string): Promise<void> => {
-        console.log("Signin.tsx login");
-
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/login${
                 role === "student" ? "Student" : "Tutor"
             }`;
-
-            console.log("Signin.tsx", url, id, pw);
 
             await axios({
                 method: "post",
@@ -31,12 +27,9 @@ export default function Signip() {
                     password: pw,
                 },
             }).then((res) => {
-                console.log("Signin.tsx res.data ::", res.data);
-
                 if (!res.data.isLogin) {
                     alert("로그인 실패 \n" + res.data);
                 } else {
-                    console.log(res.data);
                     navigate("/api");
                 }
             });
