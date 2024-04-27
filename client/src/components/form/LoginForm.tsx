@@ -1,11 +1,14 @@
 import kakaoLogo from "../../assets/Kakao.png";
 import { useForm } from "react-hook-form";
 import PasswordInput from "../input/PasswordInput";
-import { SigninData } from "../../types/interface";
 
 interface Props {
     role: string;
     login: (role: string, id: string, pw: string) => Promise<void>;
+}
+interface SigninData {
+    id: string;
+    pw: string;
 }
 
 export default function LoginForm({ role, login }: Props) {

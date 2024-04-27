@@ -10,11 +10,6 @@ export interface SignupData {
     authDocument: File | null;
     [key: string]: string | File | null; // 인덱스 시그니처
 }
-export interface SigninData {
-    id: string;
-    pw: string;
-}
-
 export interface InputProps {
     labelText?: string;
     type: string;
