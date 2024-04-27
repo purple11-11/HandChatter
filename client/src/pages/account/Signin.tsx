@@ -15,7 +15,7 @@ export default function Signip() {
     // axios
     const login = async (role: string, id: string, pw: string): Promise<void> => {
         try {
-            const url = `${process.env.REACT_APP_API_SERVER}/api/login${
+            const url = `${process.env.REACT_APP_API_SERVER}/login${
                 role === "student" ? "Student" : "Tutor"
             }`;
 
