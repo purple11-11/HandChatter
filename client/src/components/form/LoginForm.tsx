@@ -24,10 +24,8 @@ export default function LoginForm({ role, login }: Props) {
     const onSubmit = async (data: SigninData) => {
         try {
             const { id, pw } = data;
-            console.log("LoginForm.tsx hanleSubmit data ::", data);
 
             await login(role, id, pw);
-            console.log("login");
         } catch (error) {
             console.error("로그인 오류", error);
         }
