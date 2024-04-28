@@ -1,9 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InputProps } from "../../types/interface";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import React, { forwardRef, useState } from "react";
+import "../../styles/components/input/password.scss";
 
-export default function PasswordInput({ type, name, value, handleChange }: InputProps) {
+interface PasswordProps extends React.HTMLProps<HTMLInputElement> {
+    type: string;
+}
+
+const PasswordInput = forwardRef<HTMLInputElement, PasswordProps>(({ type, ...rest }, ref) => {
     const [isShow, setIsShow] = useState(false);
     const handleClick = () => {
         setIsShow(!isShow);
@@ -13,13 +17,10 @@ export default function PasswordInput({ type, name, value, handleChange }: Input
         <>
             <div className="pw_input_wrapper">
                 <input
+                    ref={ref}
                     type={isShow ? "text" : type}
-                    name={name}
-                    id={name}
-                    value={value}
-                    onChange={handleChange}
-                    autoComplete="off"
-                    required
+                    autoComplete="current-password"
+                    {...rest}
                 />
                 <div className="eye_icon" onClick={handleClick}>
                     <FontAwesomeIcon icon={isShow ? faEyeSlash : faEye} />
@@ -27,4 +28,6 @@ export default function PasswordInput({ type, name, value, handleChange }: Input
             </div>
         </>
     );
-}
+});
+
+export default PasswordInput;
