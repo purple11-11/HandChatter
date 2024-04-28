@@ -8,7 +8,9 @@ import Footer from "./components/Footer";
 import Mypage from "./pages/Mypage";
 import "./styles/index.scss";
 import Signin from "./pages/account/Signin";
-import Signup from "./pages/account/Signup";
+import InstructorDetailPage from "./pages/InstructorDetailPage";
+import Chatting from "./components/Chatting";
+// import Signup from "./pages/account/Signup";
 
 function App() {
     return (
@@ -22,6 +24,10 @@ function App() {
                 {/* <Route path="/personal-learning" element={<PersonalLearning />} /> */}
                 {/* <Route path="/quiz" element={<Quiz />} /> */}
                 <Route path="/api/mypage" element={<Mypage />} />
+                <Route
+                    path="/api/tutors/:tutorIndex"
+                    element={<InstructorDetailPage/>}
+                />
             </Routes>
             <Footer />
         </>

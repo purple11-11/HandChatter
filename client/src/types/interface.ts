@@ -20,3 +20,10 @@ export interface InputProps {
     btnText?: string;
     onClick?: () => Promise<void>;
 }
+
+export interface ChatRoom {
+    id: number;
+    name: string;
+    email: string;
+    intro: string;
+}
