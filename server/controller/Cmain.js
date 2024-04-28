@@ -1,5 +1,6 @@
-const { Model } = require("sequelize");
+const { Model, where } = require("sequelize");
 const { Tutor, Student } = require("../models");
+const { Op } = require("sequelize");
 
 const bcrypt = require("bcrypt");
 const saltRound = 10;
@@ -12,8 +13,55 @@ function comparePW(inputpw, hashedpw) {
 }
 
 // GET /api
-exports.getIndex = (req, res) => {
-    res.send("response from api server [GET /api]");
+exports.getIndex = async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (q) {
+            const searchTutorsInfo = await Tutor.findAll({
+                where: {
+                    description: {
+                        [Op.like]: `%${q}%`,
+                    },
+                },
+            });
+            if (searchTutorsInfo && searchTutorsInfo.length > 0) {
+                res.send({ searchTutorsInfo: searchTutorsInfo });
+            } else {
+                res.status(404).send("검색 결과가 없습니다.");
+            }
+        } else {
+            const tutorsInfo = await Tutor.findAll();
+            if (tutorsInfo && tutorsInfo.length > 0) {
+                res.send({ tutorsInfo: tutorsInfo });
+            } else {
+                res.status(404).send("검색 결과가 없습니다.");
+            }
+        }
+    } catch (err) {
+        console.log("강사정보 조회 실패 err:", err);
+        res.status(500).send("강사정보 조회 실패");
+    }
+    //jjjj
+};
+
+// GET /api/tutors/:tutorIdx
+exports.getTutorDetail = async (req, res) => {
+    try {
+        const { tutorIdx } = req.params;
+        const tutorInfo = await Tutor.findOne({
+            where: {
+                tutor_idx: tutorIdx,
+            },
+        });
+        if (tutorInfo) {
+            res.send({ tutorInfo: tutorInfo });
+        } else {
+            res.status(404).send("강사 상세정보가 존재하지 않음");
+        }
+    } catch (err) {
+        console.log("강사 상세정보 조회 실패 err:", err);
+        res.status(500).send("강사 상세정보 조회 실패");
+    }
 };
 
 // GET /api/signUpTutor
