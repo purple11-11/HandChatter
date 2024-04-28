@@ -290,9 +290,8 @@ exports.logout = (req, res) => {
     }
 };
 
-// POST /api/toggleFavorites
-// 좋아요 추가 또는 삭제
-exports.toggleFavorite = async (req, res) => {
+// POST /api/favorites
+exports.addFavorites = async (req, res) => {
     const { stu_idx, tutor_idx } = req.body;
 
     try {
@@ -303,13 +302,10 @@ exports.toggleFavorite = async (req, res) => {
             },
         });
 
-        if (existingFavorite) {
-            await existingFavorite.destroy();
-            res.status(200).send(`찜 목록에서 제거되었습니다.`);
-        } else {
+        if (!existingFavorite) {
             await Favorites.create({ stu_idx, tutor_idx });
-            res.status(200).send(`찜 목록에 추가되었습니다.`);
-        }
+            res.status(200).send("찜 목록에 추가되었습니다.");
+        } else return res.status(500).send("SERVER ERROR!!!");
     } catch (error) {
         console.error(error);
         res.status(500).send("SERVER ERROR!!!");
@@ -516,5 +512,27 @@ exports.deleteStudent = async (req, res) => {
         }
     } catch (err) {
         res.status(500).send("server error!");
+    }
+};
+
+// DELETE /api/favorites
+exports.deleteFavorites = async (req, res) => {
+    const { stu_idx, tutor_idx } = req.body;
+
+    try {
+        const existingFavorite = await Favorites.findOne({
+            where: {
+                stu_idx,
+                tutor_idx,
+            },
+        });
+
+        if (existingFavorite) {
+            await existingFavorite.destroy();
+            res.status(200).send("찜 목록에서 제거되었습니다.");
+        } else return res.status(500).send("SERVER ERROR!!!");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
     }
 };
