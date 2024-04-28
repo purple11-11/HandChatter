@@ -12,6 +12,9 @@ const Message = function (Sequelize, DataTypes) {
                 type: DataTypes.STRING(255),
                 allowNull: false,
             },
+            room_num: {
+                type: DataTypes.INTEGER,
+            },
         },
         {
             tableName: "message",

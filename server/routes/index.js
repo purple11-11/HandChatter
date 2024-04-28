@@ -17,8 +17,86 @@ const multer = require("../modules/multer/multer");
  */
 
 // GET /api
+// 메인페이지 - 강사 정보 조회
+/**
+ * @swagger
+ * /api/:
+ *   get:
+ *     summary: 모든 강사 정보 조회
+ *     description: DB에 있는 모든 강사 정보를 조회하고 send
+ *     tags: [Tutors]
+ *     responses:
+ *       '200':
+ *         description: 모든 강사 정보 조회에 따른 응답
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               properties:
+ *                 available:
+ *                   type: tutor
+ *                   description: 모든 강사 정보
+ */
+/**
+ * @swagger
+ * /api?q={keyword}:
+ *   get:
+ *     summary: 검색어(소개)로 강사들 검색
+ *     description: 클라이언트가 제공한 검색어로 강사 검색합니다.
+ *     tags: [Tutors]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 검색어가 소개에 포함된 강사들의 정보 조회
+ *     responses:
+ *       '200':
+ *         description: 검색어로 검색한 결과 응답
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               properties:
+ *                 available:
+ *                   type: tutor
+ *                   description: 검색 결과에 해당하는 강사들 정보 응답
+ */
 
 router.get("/", controller.getIndex);
+
+// GET /api/tutors/:tutorIdx
+// 강사 상세페이지 - 강사 상세 조회
+// 강사번호 파라미터
+/**
+ * @swagger
+ * /api/tutors/:tutorIdx:
+ *   get:
+ *     summary: 강사 상세 정보 조회
+ *     description: 클라이언트가 제공한 강사 인덱스로 해당 강사 정보를 조회합니다.
+ *     tags: [Tutors]
+ *     parameters:
+ *       - in: params
+ *         name: tutorIdx
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: 확인할 아이디
+ *     responses:
+ *       '200':
+ *         description: 중복 여부에 따른 응답
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 available:
+ *                   type: tutor
+ *                   description: 클라이언트가 제공한 강사 인덱스로 해당 강사 정보 조회 및 응답
+ */
+router.get("/tutors/:tutorIdx", controller.getTutorDetail);
+
 /**
  * 회원가입: 튜터
  * 사용자가 튜터로 회원가입할 때 호출됩니다.
@@ -386,6 +464,162 @@ router.post("/loginTutor", controller.loginTutor);
  *        description: "비밀번호가 일치하지 않습니다. 다시 시도해주세요.  //아이디는 있지만 비밀번호 불일치"
  */
 router.post("/loginStudent", controller.loginStudent);
+/**
+ * @swagger
+ *
+ * /api/tutorProfile:
+ *   patch:
+ *     summary: "튜터 프로필 수정"
+ *     description: "튜터의 프로필을 수정합니다."
+ *     tags: [Tutors]
+ *     parameters:
+ *       -  in: body
+ *          name: body
+ *          required: true
+ *          content:
+ *            application/json:
+ *          schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: string
+ *                  description: "튜터 ID"
+ *                changeDefaultImg:
+ *                  type: string
+ *                  description: "변경할 기본 이미지 URL"
+ *                nickname:
+ *                  type: string
+ *                  description: "튜터 닉네임"
+ *                password:
+ *                  type: string
+ *                  description: "튜터 비밀번호"
+ *                level:
+ *                  type: string
+ *                  description: "튜터 레벨"
+ *                price:
+ *                  type: number
+ *                  description: "튜터 가격"
+ *                desVideo:
+ *                  type: string
+ *                  description: "튜터 소개 비디오 URL"
+ *                description:
+ *                  type: string
+ *                  description: "튜터 자기 소개"
+ *     responses:
+ *       "200":
+ *         description: "프로필 수정 성공"
+ *       "default":
+ *         description: "서버 오류"
+ */
+router.patch("/tutorProfile", controller.editTutorProfile);
+/**
+ * @swagger
+ *
+ * /api/editTutorPassword:
+ *   patch:
+ *     summary: "튜터 비밀번호 수정"
+ *     description: "튜터의 비밀번호를 수정합니다."
+ *     tags: [Tutors]
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         content:
+ *           application/json:
+ *         schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: "튜터 ID"
+ *               password:
+ *                 type: string
+ *                 description: "현재 비밀번호"
+ *               newPassword1:
+ *                 type: string
+ *                 description: "새로운 비밀번호"
+ *               newPassword2:
+ *                 type: string
+ *                 description: "새로운 비밀번호 확인"
+ *     responses:
+ *       "200":
+ *         description: "비밀번호 수정 성공"
+ *       "default":
+ *         description: "서버 오류"
+ */
+router.patch("/editTutorPassword", controller.editTutorPassword);
+/**
+ * @swagger
+ *
+ * /api/studentProfile:
+ *   patch:
+ *     summary: "학생 프로필 수정"
+ *     description: "학생의 프로필을 수정합니다."
+ *     tags: [Students]
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         content:
+ *           application/json:
+ *         schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: "학생 ID"
+ *               changeDefaultImg:
+ *                 type: string
+ *                 description: "프로필 이미지 변경 여부"
+ *               nickname:
+ *                 type: string
+ *                 description: "닉네임"
+ *               password:
+ *                 type: string
+ *                 description: "비밀번호"
+ *     responses:
+ *       "200":
+ *         description: "프로필 수정 성공"
+ *       "default":
+ *         description: "서버 오류"
+ */
+router.patch("/studentProfile", controller.editStudentProfile);
+/**
+ * @swagger
+ *
+ * /api/editStudentPassword:
+ *   patch:
+ *     summary: "학생 비밀번호 수정"
+ *     description: "학생의 비밀번호를 수정합니다."
+ *     tags: [Students]
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         required: true
+ *         content:
+ *           application/json:
+ *         schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: string
+ *                 description: "학생 ID"
+ *               password:
+ *                 type: string
+ *                 description: "현재 비밀번호"
+ *               newPassword1:
+ *                 type: string
+ *                 description: "새로운 비밀번호"
+ *               newPassword2:
+ *                 type: string
+ *                 description: "새로운 비밀번호 확인"
+ *     responses:
+ *       "200":
+ *         description: "비밀번호 수정 성공"
+ *       "default":
+ *         description: "서버 오류"
+ */
+router.patch("/editStudentPassword", controller.editStudentPassword);
 
 /**
  * @swagger
