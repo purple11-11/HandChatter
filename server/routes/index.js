@@ -334,7 +334,9 @@ router.get("/searchId", controller.searchId);
 router.get("/searchPassword", controller.searchPassword);
 
 router.get("/logout", controller.logout);
-// POST /api
+
+// POST /api/sendEmail
+router.post("/sendEmail", controller.sendEmail);
 /**
  * @swagger
  *
@@ -370,7 +372,7 @@ router.get("/logout", controller.logout);
  *      "200":
  *        description: "회원가입 성공"
  */
-router.post("/tutor", multer.single(""), controller.createTutor);
+router.post("/tutor", multer.single("auth"), controller.createTutor);
 /**
  * @swagger
  *
