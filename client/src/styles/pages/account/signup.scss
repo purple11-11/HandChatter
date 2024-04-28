@@ -1,0 +1,19 @@
+@import "../../util";
+
+.signup_container {
+    padding: 20vh 0;
+    .go_to_other_sign_up {
+    }
+    form {
+        .sign_up,
+        .id,
+        .pw,
+        .name,
+        .email,
+        .auth_document {
+            @import "../../components/input/password.scss";
+        }
+        button {
+        }
+    }
+}

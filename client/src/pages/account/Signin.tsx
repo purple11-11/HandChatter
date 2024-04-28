@@ -3,10 +3,11 @@ import LoginForm from "../../components/form/LoginForm";
 import "../../styles/pages/account/signin.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { RoleProps } from "../../types/interface";
 
 export default function Signip() {
-    const [role, setRole] = useState<string>("student");
-    function showLoginForm(role: string) {
+    const [role, setRole] = useState<RoleProps>({ role: "student" });
+    function showLoginForm(role: RoleProps) {
         setRole(role);
     }
 
@@ -41,7 +42,7 @@ export default function Signip() {
     return (
         <>
             <div className="login_container">
-                <h2>{role === "student" ? "학생 " : "강사 "} 로그인</h2>
+                <h2>{role.role === "student" ? "학생 " : "강사 "} 로그인</h2>
                 <div className="go_to_sign_up">
                     <p>아직 회원이 아니신가요?</p>
                     <Link to="/api/student">학생 회원가입</Link>
@@ -50,14 +51,18 @@ export default function Signip() {
                 </div>
                 <div className="role_toggle_btn">
                     <div className="student_btn">
-                        <button onClick={() => showLoginForm("student")}>학생으로 로그인</button>
+                        <button onClick={() => showLoginForm({ role: "student" })}>
+                            학생으로 로그인
+                        </button>
                     </div>
                     <div className="tutor_btn">
-                        <button onClick={() => showLoginForm("tutor")}>강사로 로그인</button>
+                        <button onClick={() => showLoginForm({ role: "tutor" })}>
+                            강사로 로그인
+                        </button>
                     </div>
                 </div>
                 <div className="login_box">
-                    {role && <LoginForm role={role} login={login} />}
+                    {role && <LoginForm role={role.role} login={login} />}
 
                     <div className="find_id_pw">
                         <Link to="#">아이디 찾기</Link> | <Link to="#">비밀번호 찾기</Link>
