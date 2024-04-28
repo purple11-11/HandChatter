@@ -1,5 +1,5 @@
 const { Model, where } = require("sequelize");
-const { Tutor, Student } = require("../models");
+const { Tutor, Student, Favorites } = require("../models");
 const { Op } = require("sequelize");
 
 const bcrypt = require("bcrypt");
@@ -280,15 +280,39 @@ exports.loginStudent = async (req, res) => {
 };
 exports.logout = (req, res) => {
     try {
-        if (req.session && (req.session.tutor || req.session.student)) {
+        if (req.session) {
             req.session.destroy(() => {
                 res.status(200).send({ msg: "로그아웃 되었습니다." });
             });
-        } else {
-            res.status(401).send({ msf: "이미 세션이 만료되었습니다." });
-        }
+        } else res.status(401).send({ msg: "이미 세션이 만료되었습니다." });
     } catch (err) {
         res.status(500).send("SERVER ERROR");
+    }
+};
+
+// POST /api/toggleFavorites
+// 좋아요 추가 또는 삭제
+exports.toggleFavorite = async (req, res) => {
+    const { stu_idx, tutor_idx } = req.body;
+
+    try {
+        const existingFavorite = await Favorites.findOne({
+            where: {
+                stu_idx,
+                tutor_idx,
+            },
+        });
+
+        if (existingFavorite) {
+            await existingFavorite.destroy();
+            res.status(200).send(`찜 목록에서 제거되었습니다.`);
+        } else {
+            await Favorites.create({ stu_idx, tutor_idx });
+            res.status(200).send(`찜 목록에 추가되었습니다.`);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
     }
 };
 
