@@ -1,5 +1,5 @@
 const { Model, where } = require("sequelize");
-const { Tutor, Student, Favorites } = require("../models");
+const { Tutor, Student, Favorites, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { transporter } = require("../modules/nodemailer/nodemailer");
 
@@ -14,7 +14,7 @@ function comparePW(inputpw, hashedpw) {
 }
 
 // GET /api
-exports.getIndex = async (req, res) => {
+exports.getTutors = async (req, res) => {
     try {
         const { q } = req.query;
         if (q) {
@@ -24,6 +24,7 @@ exports.getIndex = async (req, res) => {
                         [Op.like]: `%${q}%`,
                     },
                 },
+                attributes: ["nickname", "description", "profile_img", "price"],
             });
             if (searchTutorsInfo && searchTutorsInfo.length > 0) {
                 res.send({ searchTutorsInfo: searchTutorsInfo });
@@ -42,7 +43,6 @@ exports.getIndex = async (req, res) => {
         console.log("강사정보 조회 실패 err:", err);
         res.status(500).send("강사정보 조회 실패");
     }
-    //jjjj
 };
 
 // GET /api/tutors/:tutorIdx
@@ -248,19 +248,23 @@ exports.loginTutor = async (req, res) => {
                 id,
             },
         });
-        // console.log(resultId);
         if (resultTutor) {
             // user가 있을 때
             // 비밀번호 비교
             const loginResult = comparePW(password, resultTutor.password);
             if (loginResult) {
-                req.session.tutor = resultTutor.id;
+                console.log("=========", req.session);
+                const { id, tutor_idx, authority } = resultTutor;
+
+                req.session.tutor = id;
+                req.session.tutor_idx = tutor_idx;
+
                 const tutorId = req.session.tutor;
-                console.log(req.session.tutor);
-                console.log("dd", req.session.tutor);
-                console.log(">>>", req.session);
-                console.log("***", req.sessionID);
-                res.status(200).send({ isLogin: true, tutorId: tutorId });
+
+                res.status(200).send({
+                    isLogin: true,
+                    tutorId: tutorId,
+                });
             } else {
                 // 아이디는 있지만 비밀번호 불일치
                 res.status(400).send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
@@ -295,8 +299,13 @@ exports.loginStudent = async (req, res) => {
             return res.status(400).send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
         } else {
             req.session.student = resultStudent.id;
+            req.session.stu_idx = resultStudent.stu_idx;
+
             const studentId = req.session.student;
-            return res.status(200).send({ isLogin: true, studentId: studentId });
+            return res.status(200).send({
+                isLogin: true,
+                studentId: studentId,
+            });
         }
     } catch (err) {
         console.log(err);
@@ -333,6 +342,44 @@ exports.addFavorites = async (req, res) => {
         } else return res.status(500).send("SERVER ERROR!!!");
     } catch (error) {
         console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
+// POST /api/favoritesTutor
+exports.searchFavorites = async (req, res) => {
+    try {
+        const id = req.session.student;
+        if (!id) res.status(400).send("로그인을 해주세요.");
+
+        const student = await Student.findOne({
+            where: {
+                id,
+            },
+        });
+        if (!student) {
+            throw new Error("SERVER ERROR");
+        } else {
+            const stu_idx = student.stu_idx;
+            const favorites = await Favorites.findAll({
+                where: {
+                    stu_idx,
+                },
+                include: [
+                    {
+                        model: Tutor,
+                        attributes: ["nickname", "description", "profile_img", "price"],
+                    },
+                ],
+            });
+            if (!favorites) {
+                res.status(200).send(
+                    "찜한 튜터가 없습니다. 관심 있는 튜터를 찜 목록에 추가해보세요!"
+                );
+            } else res.status(200).send({ favorites });
+        }
+    } catch (error) {
+        console.log(error);
         res.status(500).send("SERVER ERROR!!!");
     }
 };
@@ -381,7 +428,8 @@ exports.editTutorProfile = async (req, res) => {
 
 //PATCH / api / editTutorPassword;
 exports.editTutorPassword = async (req, res) => {
-    const { id, password, newPassword } = req.body;
+    const { password, newPassword } = req.body;
+    const id = req.session.tutor;
     try {
         if (!password || !newPassword) res.status(400).send("빈칸을 입력해주세요.");
         const tutor = await Tutor.findOne({
@@ -448,7 +496,8 @@ exports.editStudentProfile = async (req, res) => {
 };
 //PATCH / api / editStudentPassword;
 exports.editStudentPassword = async (req, res) => {
-    const { id, password, newPassword } = req.body;
+    const { password, newPassword } = req.body;
+    const id = req.session.id;
     try {
         if (!password || !newPassword) res.status(400).send("빈칸을 입력해주세요.");
         const student = await Student.findOne({
