@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as io from "socket.io-client";
 
   /* Client에서 사용할 변수들
@@ -16,18 +16,18 @@ import * as io from "socket.io-client";
       },
     ],
   };
-  //const SOCKET_SERVER_URL = "http://localhost:8080";
-  const SOCKET_SERVER_URL = "http://localhost:3000/api/class";
+  const SOCKET_SERVER_URL = "http://localhost:8080";
 
 
 
   const Webcam = () => {
     const socketRef = useRef<SocketIOClient.Socket>();
-
     const pcRef = useRef<RTCPeerConnection>();
     const pcRef2 = useRef<RTCPeerConnection>();
     const localVideoRef = useRef<HTMLVideoElement>(null);
-    const remoteVideoRef = useRef<HTMLVideoElement>(null);  
+    const remoteVideoRef = useRef<HTMLVideoElement>(null);
+    const [isMicMuted, setIsMicMuted] = useState(false); // 마이크 음소거 상태를 저장하는 상태 변수
+
   
     
     const setVideoTracks = async () => { //
@@ -66,6 +66,7 @@ import * as io from "socket.io-client";
     // 순서를 어기면 상대방의 MediaStream을 받을 수 없음
 
         };
+        console.log("sfjkdfhkjhfkj", socketRef.current);
         socketRef.current.emit("join_room", {
           room: "1234",
         });
@@ -90,45 +91,68 @@ import * as io from "socket.io-client";
       }
     };
 
+    // 상대방의 Offer를 받고, 이에 대한 Answer를 생성하여 Signaling Server로 전송하는 함수
     const createAnswer = async (sdp: RTCSessionDescription) => {
       if (!(pcRef.current && socketRef.current)) return;
       try {
+        // 원격 설명을 설정
         console.log("bbbbbbb")
         await pcRef.current.setRemoteDescription(new RTCSessionDescription(sdp));
         console.log("answer set remote description success");
+
+        // Answer SDP를 생성
         const mySdp = await pcRef.current.createAnswer({
           offerToReceiveVideo: true,
           offerToReceiveAudio: true,
         });
         console.log("create answer");
+
+        // 로컬 설명을 설정
         await pcRef.current.setLocalDescription(new RTCSessionDescription(mySdp));
+
+        // Answer SDP를 Signaling Server로 전송
         socketRef.current.emit("answer", mySdp);
+
+        // 이벤트 핸들러를 사용하여 원격 트랙을 받아와서 remoteVideoRef에 연결
+        pcRef.current.ontrack = (event) => { 
+          // ontrack 이벤트 핸들러는 상대방의 비디오 트랙을 받아와서 remoteVideoRef에 연결
+          // 상대방의 비디오가 "remoteVideoRef에 랜더링"
+          console.log("Received remote track");
+          if (remoteVideoRef.current) {
+            remoteVideoRef.current.srcObject = event.streams[0];
+          }
+        }
       } catch (e) {
         console.error(e);
       }
     };
-
+  
     useEffect(() => {
       socketRef.current = io.connect(SOCKET_SERVER_URL);
       pcRef.current = new RTCPeerConnection(pc_config);
 
       socketRef.current.on("all_users", (allUsers: Array<{ id: string }>) => {
+        console.log("allUsers", allUsers)
         if (allUsers.length > 0) {
           createOffer();
         }
       });
+      /* 위에 주석을 해제하고 실행 시키면 메모장에 있는 에러문들이 뜸
+      console.log에는 candidate: sLCSnCWcz4NhlBOFAAAr 이렇게 많은 글이 반복해서 나옴
+      */
 
       socketRef.current.on("getOffer", (sdp: RTCSessionDescription) => {
+        pcRef2.current = new RTCPeerConnection(pc_config);
         console.log("get offer");
+        pcRef2.current.createOffer();
         createAnswer(sdp);
       });
 
       socketRef.current.on("getAnswer", (sdp: RTCSessionDescription) => {
-        pcRef2.current = new RTCPeerConnection(pc_config);
         console.log("get answer");
-        if (!pcRef2.current) return;
+        if (!pcRef.current) return;
         console.log("aaaaaaaa")
-        pcRef2.current.setRemoteDescription(new RTCSessionDescription(sdp));
+        pcRef.current.setRemoteDescription(new RTCSessionDescription(sdp));
       });
 
       socketRef.current.on(
@@ -139,9 +163,7 @@ import * as io from "socket.io-client";
           console.log("candidate add success");
         }
       );
-
       console.log(navigator.mediaDevices)
-
       setVideoTracks();
 
       return () => {
@@ -153,7 +175,13 @@ import * as io from "socket.io-client";
         }
       };
     }, []);
-    
+
+    // Button
+    const MicMute = () => {};
+    const CamMute = () => {};
+    const ChattIngress = () => {};
+    const ChattExit = () => {};
+
     // 본인과 상대방의 video 렌더링
     return (
       <div>
@@ -178,10 +206,13 @@ import * as io from "socket.io-client";
           }}
           ref={remoteVideoRef}
           autoPlay
-        />
+        /> <br/>
+          <button onClick={MicMute}>마이크 음소거</button>
+          <button onClick={CamMute}>카메라 끄기</button>
+          <button onClick={ChattIngress}>채팅 켜기</button>
+          <button onClick={ChattExit}>나가기</button>
       </div>
     );
   };
 
   export default Webcam;
-

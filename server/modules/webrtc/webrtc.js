@@ -7,20 +7,22 @@ const maximum = 2;
 function socketWebRTC(server) {
   const io = socketIO(server, {
     cors: {
-      origin: "http://localhost:3000/api/class",
+      origin: "http://localhost:3000",
     },
   });
 
   io.on("connection", (socket) => {
+    console.log("webrtc.js 소캣확인")
     socket.on("join_room", (data) => {
       // user[room]에는 room에 있는 사용자들이 배열 형태로 저장된다.
       // room이 존재한다면
+      console.log("aaaaaa")
       if (users[data.room]) {
         const length = users[data.room].length;
         // 최대 인원을 충족시켰으면 더 이상 접속 불가
         if (length === maximum) {
           socket.to(socket.id).emit("room_full");
-          return;
+          return; 
         }
         // 인원이 최대 인원보다 적으면 접속 가능
         users[data.room].push({ id: socket.id });
