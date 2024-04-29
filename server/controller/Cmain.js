@@ -13,6 +13,44 @@ function comparePW(inputpw, hashedpw) {
     return bcrypt.compareSync(inputpw, hashedpw);
 }
 
+// GET /api/userInfo
+exports.getInfo = async (req, res) => {
+    try {
+        const tutorId = req.session.tutor;
+        const studentId = req.session.student;
+        console.log(tutorId);
+        console.log(studentId);
+
+        if (!tutorId && !studentId) {
+            res.status(401).send("로그인을 해주세요.");
+        } else if (studentId) {
+            const studentInfo = await Student.findAll({
+                where: { id: studentId },
+                attributes: ["id", "nickname", "email", "provider", "profile_img", "authority"],
+            });
+            res.status(200).send({ studentInfo });
+        } else {
+            const tuterInfo = await Tutor.findAll({
+                where: { id: tutorId },
+                attributes: [
+                    "id",
+                    "nickname",
+                    "email",
+                    "description",
+                    "authority",
+                    "profile_img",
+                    "des_video",
+                    "price",
+                ],
+            });
+            res.status(200).send({ tuterInfo });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
 // GET /api
 exports.getTutors = async (req, res) => {
     try {
@@ -253,8 +291,7 @@ exports.loginTutor = async (req, res) => {
             // 비밀번호 비교
             const loginResult = comparePW(password, resultTutor.password);
             if (loginResult) {
-                console.log("=========", req.session);
-                const { id, tutor_idx, authority } = resultTutor;
+                const { id, tutor_idx } = resultTutor;
 
                 req.session.tutor = id;
                 req.session.tutor_idx = tutor_idx;
@@ -350,7 +387,7 @@ exports.addFavorites = async (req, res) => {
 exports.searchFavorites = async (req, res) => {
     try {
         const id = req.session.student;
-        if (!id) res.status(400).send("로그인을 해주세요.");
+        if (!id) res.status(401).send("로그인을 해주세요.");
 
         const student = await Student.findOne({
             where: {
@@ -358,7 +395,7 @@ exports.searchFavorites = async (req, res) => {
             },
         });
         if (!student) {
-            throw new Error("SERVER ERROR");
+            throw new Error("SERVER ERROR!!!");
         } else {
             const stu_idx = student.stu_idx;
             const favorites = await Favorites.findAll({
