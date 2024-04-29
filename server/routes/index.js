@@ -64,7 +64,7 @@ const multer = require("../modules/multer/multer");
  *                   description: 검색 결과에 해당하는 강사들 정보 응답
  */
 
-router.get("/", controller.getIndex);
+router.get("/", controller.getTutors);
 
 // GET /api/tutors/:tutorIdx
 // 강사 상세페이지 - 강사 상세 조회
@@ -506,6 +506,43 @@ router.post("/loginStudent", controller.loginStudent);
  *              example: "SERVER ERROR!!!"
  */
 router.post("/favorites", controller.addFavorites);
+
+/**
+ * @swagger
+ * /api/favoritesTutor:
+ *   get:
+ *     summary: 찜 목록 조회
+ *     description: 학생 마이페이지에서 찜 목록 누르면 추가한 튜터들 전부 조회
+ *     tags: [Favorites]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         description: 사용자 ID(백에서 세션으로 조회 -> 로그인 상태에서만 조회 가능)
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: 찜한 튜터 목록들 결과(닉네임, 소개글, 프로필사진, 가격 보내질 예정)
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       '400':
+ *         description: 세션 만료했을 때 발생하는 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *       '500':
+ *         description: 서버 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Internal Server Error"
+ */
+router.get("/favoritesTutor", controller.searchFavorites);
 
 // patch
 /**

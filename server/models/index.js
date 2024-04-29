@@ -36,6 +36,13 @@ TutorModel.hasMany(FavoritesModel, {
         allowNull: false,
     },
 });
+FavoritesModel.belongsTo(TutorModel, {
+    onDelete: "CASCADE",
+    foreignKey: {
+        name: "tutor_idx",
+        allowNull: false,
+    },
+});
 // 강사 : 리뷰
 TutorModel.hasMany(ReviewModel, {
     onDelete: "CASCADE",
