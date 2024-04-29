@@ -31,7 +31,7 @@ export default function Signip() {
                 if (!res.data.isLogin) {
                     alert("로그인 실패 \n" + res.data);
                 } else {
-                    navigate("/api");
+                    navigate("/");
                 }
             });
         } catch (error) {
@@ -45,9 +45,9 @@ export default function Signip() {
                 <h2>{role.role === "student" ? "학생 " : "강사 "} 로그인</h2>
                 <div className="go_to_sign_up">
                     <p>아직 회원이 아니신가요?</p>
-                    <Link to="/api/student">학생 회원가입</Link>
+                    <Link to="/signup/student">학생 회원가입</Link>
                     &nbsp;&nbsp;&nbsp;
-                    <Link to="/api/tutor">강사 회원가입</Link>
+                    <Link to="/signup/tutor">강사 회원가입</Link>
                 </div>
                 <div className="role_toggle_btn">
                     <div className="student_btn">
