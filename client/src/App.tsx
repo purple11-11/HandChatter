@@ -12,6 +12,7 @@ import InstructorDetailPage from "./pages/InstructorDetailPage";
 import Chatting from "./components/Chatting";
 import Signup from "./pages/account/Signup";
 import Webcam from "./pages/Webcam";
+import FindId from "./pages/account/FindId";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Main />} />
                 <Route path="/login" element={<Signin />} />
+                <Route path="/find/id" element={<FindId />} />
                 <Route path="/signup/student" element={<Signup role={"student"} />} />
                 <Route path="/signup/tutor" element={<Signup role={"tutor"} />} />
                 {/* <Route path="/personal-learning" element={<PersonalLearning />} /> */}

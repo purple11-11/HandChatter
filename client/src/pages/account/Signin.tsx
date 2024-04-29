@@ -62,10 +62,9 @@ export default function Signip() {
                     </div>
                 </div>
                 <div className="login_box">
-                    {role && <LoginForm role={role.role} login={login} />}
-
+                    <LoginForm role={role.role} login={login} />
                     <div className="find_id_pw">
-                        <Link to="#">아이디 찾기</Link> | <Link to="#">비밀번호 찾기</Link>
+                        <Link to="/find/id">아이디 찾기</Link> | <Link to="#">비밀번호 찾기</Link>
                     </div>
                 </div>
             </div>

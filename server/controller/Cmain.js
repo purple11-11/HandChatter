@@ -158,7 +158,7 @@ exports.searchId = async (req, res) => {
     let searchEmailStudent, searchEmailTutor;
     try {
         const { email } = req.query;
-        if (!email) return res.status(400).send("빈칸을 입력해주세요.");
+        if (!email) return res.send("빈칸을 입력해주세요.");
 
         [searchEmailTutor, searchEmailStudent] = await Promise.all([
             Tutor.findOne({ where: { email } }),
@@ -166,7 +166,7 @@ exports.searchId = async (req, res) => {
         ]);
 
         if (!searchEmailTutor && !searchEmailStudent) {
-            res.status(400).send("존재하지 않는 이메일입니다. 다시 입력해주세요.");
+            res.send("존재하지 않는 이메일입니다. 다시 입력해주세요.");
         } else if (searchEmailStudent) {
             const studentId = searchEmailStudent.id;
             res.status(200).send(`회원님의 아이디는 ${studentId}입니다.`);
@@ -209,12 +209,19 @@ exports.searchPassword = async (req, res) => {
     }
 };
 
-// GET /api/sendEmail
+// GET /api/email
 exports.sendEmail = async (req, res) => {
     const { email } = req.body;
     const randomNum = Math.floor(Math.random() * 1000000) + 100000;
     console.log("randomNum ::", randomNum);
-    console.log("from ::", process.env.EMAIL_USER);
+
+    const checkEmail = await Promise.all([
+        Tutor.findOne({ where: { email } }),
+        Student.findOne({ where: { email } }),
+    ]);
+
+    if (checkEmail[0] || checkEmail[1]) return res.send("이미 가입된 이메일입니다.");
+
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
