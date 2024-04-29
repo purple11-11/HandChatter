@@ -11,8 +11,11 @@ import Signin from "./pages/account/Signin";
 import InstructorDetailPage from "./pages/InstructorDetailPage";
 import Chatting from "./components/Chatting";
 import Signup from "./pages/account/Signup";
+import Webcam from "./pages/Webcam";
+
 
 function App() {
+
     return (
         <>
             <Header />
@@ -25,6 +28,8 @@ function App() {
                 {/* <Route path="/quiz" element={<Quiz />} /> */}
                 <Route path="/api/mypage" element={<Mypage />} />
                 <Route path="/api/tutors/:tutorIndex" element={<InstructorDetailPage />} />
+                <Route path="/api/class" element={<Webcam/>} />
+
             </Routes>
             <Footer />
         </>

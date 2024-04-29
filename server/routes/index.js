@@ -467,6 +467,48 @@ router.post("/loginStudent", controller.loginStudent);
 /**
  * @swagger
  *
+ * /api/favorites:
+ *  post:
+ *    summary: "강사 찜(하트) 기능"
+ *    description: "강사 찜(하트) 추가. 하트를 눌렀을 때 찜 추가"
+ *    tags: [Favorites]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "강사 인덱스와 학생 인덱스로 좋아요 연결"
+ *        schema:
+ *            type: object
+ *            properties:
+ *              stu_idx:
+ *                type: integer
+ *                description: "학생 인덱스"
+ *              tutor_idx:
+ *                type: integer
+ *                description: "강사 인덱스"
+ *    responses:
+ *      "200":
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: string
+ *              example: >
+ *                찜 목록에 추가되었습니다.
+ *      "500":
+ *        description: Server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: string
+ *              example: "SERVER ERROR!!!"
+ */
+router.post("/favorites", controller.addFavorites);
+
+// patch
+/**
+ * @swagger
+ *
  * /api/tutorProfile:
  *   patch:
  *     summary: "튜터 프로필 수정"
@@ -759,6 +801,47 @@ router.delete("/tutor", controller.deleteTutor);
  *                  description: "서버 오류"
  */
 router.delete("/student", controller.deleteStudent);
+
+/**
+ * @swagger
+ *
+ * /api/favorites:
+ *  delete:
+ *    summary: "강사 찜(하트) 삭제 기능"
+ *    description: "강사 찜(하트) 제거. 하트를 눌렀을 때 찜 제거"
+ *    tags: [Favorites]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "강사 인덱스와 학생 인덱스로 좋아요 연결"
+ *        schema:
+ *            type: object
+ *            properties:
+ *              stu_idx:
+ *                type: integer
+ *                description: "학생 인덱스"
+ *              tutor_idx:
+ *                type: integer
+ *                description: "강사 인덱스"
+ *    responses:
+ *      "200":
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: string
+ *              example: >
+ *                찜 목록에서 제거되었습니다.
+ *      "500":
+ *        description: Server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: string
+ *              example: "SERVER ERROR!!!"
+ */
+router.delete("/favorites", controller.deleteFavorites);
 
 router.get("*", (req, res) => {
     // res.render("404");
