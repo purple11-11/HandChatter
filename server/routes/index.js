@@ -16,6 +16,9 @@ const multer = require("../modules/multer/multer");
  *   description: 학생 추가 수정 삭제 조회
  */
 
+// /api/userInfo
+router.get("/userInfo", controller.getInfo);
+
 // GET /api
 // 메인페이지 - 강사 정보 조회
 /**
