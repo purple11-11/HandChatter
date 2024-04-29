@@ -7,7 +7,8 @@ export interface SignupData {
     password: string;
     nickname: string;
     email: string;
-    authDocument?: File | null;
+    authDocument?: FileList | null;
+    certification?: number;
 }
 
 export interface ChatRoom {

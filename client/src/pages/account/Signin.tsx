@@ -40,7 +40,7 @@ export default function Signip() {
     };
 
     return (
-        <>
+        <section>
             <div className="login_container">
                 <h2>{role.role === "student" ? "학생 " : "강사 "} 로그인</h2>
                 <div className="go_to_sign_up">
@@ -69,6 +69,6 @@ export default function Signip() {
                     </div>
                 </div>
             </div>
-        </>
+        </section>
     );
 }
