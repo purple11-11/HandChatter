@@ -2,6 +2,7 @@ import kakaoLogo from "../../assets/Kakao.png";
 import { useForm } from "react-hook-form";
 import PasswordInput from "../input/PasswordInput";
 import { RoleProps } from "../../types/interface";
+import { Link } from "react-router-dom";
 
 interface SigninData {
     id: string;
@@ -57,10 +58,12 @@ export default function LoginForm({ role, login }: RoleProps & LoginProps) {
                     </form>
                     {role === "student" && (
                         <div className="social_login">
-                            <button type="button">
-                                <img src={kakaoLogo} alt="카카오 로그인 버튼" width={25} />
-                                카카오톡 로그인
-                            </button>
+                            <Link to={`${process.env.REACT_APP_API_SERVER}/auth/kakao`}>
+                                <button type="button">
+                                    <img src={kakaoLogo} alt="카카오 로그인 버튼" width={25} />
+                                    카카오톡 로그인
+                                </button>
+                            </Link>
                         </div>
                     )}
                 </div>
