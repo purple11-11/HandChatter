@@ -1,6 +1,6 @@
 // 각 채팅방 컴포넌트
 import { ChatRoom } from "../../types/interface";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import io from "socket.io-client";
 
 const socket = io("http://localhost:8080", {
@@ -21,11 +21,21 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
     const handleSendMessage = () => {
         if (newMessage.trim() !== "") {
             setMessages([...messages, newMessage]); // 새로운 메시지를 메시지 목록에 추가
-            socket.emit("send", newMessage);
-
+            socket.emit("send", { msg: newMessage, stuIdx: 1, tutorIdx: 1 });
             setNewMessage(""); // 입력 필드 초기화
         }
     };
+    const addMessage = useCallback(
+        (msg: string) => {
+            const newMessages = [...messages, msg];
+
+            setMessages(newMessages);
+        },
+        [messages]
+    );
+    useEffect(() => {
+        socket.on("message", addMessage);
+    }, [messages]);
 
     return (
         <div>

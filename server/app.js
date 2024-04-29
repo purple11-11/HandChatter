@@ -15,8 +15,8 @@ const passportConfig = require("./passport");
 passportConfig(passport);
 const server = http.createServer(app);
 const { swaggerUi, specs } = require("./modules/swagger/swagger");
-const socketHadnler = require("./modules/sockets");
-// socketHandler(server);
+const socketHandler = require("./sockets");
+socketHandler(server);
 
 // body-parser 설정
 app.use(cors());
