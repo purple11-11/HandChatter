@@ -1,6 +1,7 @@
 import { useFormContext } from "react-hook-form";
 import { RoleProps, SignupData } from "../../types/interface";
 import PasswordInput from "../input/PasswordInput";
+import "../../styles/components/form/signupForm.scss";
 
 // signup, checkDuplicate 함수를 props로 받아옴
 interface SignupFormProps {
@@ -9,9 +10,17 @@ interface SignupFormProps {
         role: string,
         data: FormData | { id: string; password: string; nickname: string; email: string }
     ) => Promise<void>;
+    sendEmail: (email: string) => Promise<void>;
+    checkCertification: (certification: number) => void;
 }
 
-export default function SignupForm({ role, signup, checkDuplicate }: SignupFormProps & RoleProps) {
+export default function SignupForm({
+    role,
+    signup,
+    checkDuplicate,
+    sendEmail,
+    checkCertification,
+}: SignupFormProps & RoleProps) {
     const {
         register,
         handleSubmit,
@@ -21,17 +30,23 @@ export default function SignupForm({ role, signup, checkDuplicate }: SignupFormP
 
     const onSubmit = (data: SignupData) => {
         const { id, password, nickname, email, authDocument } = data;
+        // TODO: tutor의 경우 authDocument가 없을 때 alert 띄우기
+        /* if (role === "tutor" && authDocument) {
+            if (!authDocument || authDocument.length === 0) {
+                return alert("증빙 자료를 첨부해주세요.");
+            } */
+
         if (role === "tutor" && authDocument) {
             const formData = new FormData();
             formData.append("id", id);
             formData.append("password", password);
             formData.append("nickname", nickname);
             formData.append("email", email);
-            formData.append("authDocument", authDocument as File);
-            signup?.(role, formData);
+            formData.append("authDocument", authDocument[0]);
+            signup(role, formData);
         } else {
             const newData = { id, password, nickname, email };
-            signup?.(role, newData);
+            signup(role, newData);
         }
     };
 
@@ -81,7 +96,24 @@ export default function SignupForm({ role, signup, checkDuplicate }: SignupFormP
                                 {...register("email", { required: true })}
                                 id="email"
                             />
-                            <button type="button">인증</button>
+                            <button type="button" onClick={() => sendEmail(watch("email"))}>
+                                인증번호 발송
+                            </button>
+                        </div>
+                        <div className="signup_certification">
+                            <label htmlFor="certification">인증번호</label>
+                            <input
+                                type="number"
+                                placeholder="숫자만 입력해주세요."
+                                {...register("certification", { required: true })}
+                                id="certification"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => checkCertification(Number(watch("certification")))}
+                            >
+                                인증 확인
+                            </button>
                         </div>
                         {role !== "student" && (
                             <div className="sign_up_auth_document">

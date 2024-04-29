@@ -235,10 +235,9 @@ exports.sendEmail = async (req, res) => {
 
 // POST /api/tutor
 exports.createTutor = async (req, res) => {
-    console.log("req.file ::", req.file);
-    const { id, nickname, password, email, auth } = req.body;
-    console.log("req.body auth ::", auth);
-    if (!id || !nickname || !password || !email || !auth)
+    const { id, nickname, password, email } = req.body;
+
+    if (!id || !nickname || !password || !email)
         return res.status(400).send("빈칸을 입력해주세요.");
     try {
         await Tutor.create({
@@ -246,10 +245,10 @@ exports.createTutor = async (req, res) => {
             nickname,
             password: hashPW(password),
             email,
-            auth,
+            auth: req.file.path,
         });
-        // console.log(result);
-        res.status(400).send("회원가입 성공");
+
+        res.status(200).send("회원가입 성공");
     } catch (err) {
         res.status(500).send("회원가입 실패");
     }
