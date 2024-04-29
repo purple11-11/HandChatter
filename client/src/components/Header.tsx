@@ -13,7 +13,7 @@ const Header = () => {
         <>
             <header className="header">
                 <div className="logo">
-                    <Link to="/api">로고</Link>
+                    <Link to="/">로고</Link>
                 </div>
                 <nav className="menu">
                     <ul>
@@ -24,13 +24,13 @@ const Header = () => {
                             <Link to="/quiz">퀴즈</Link>
                         </li>
                         <li>
-                            <Link to="/api/login">로그인</Link>
+                            <Link to="/login">로그인</Link>
                         </li>
                         <li>
-                            <Link to="/api/student">회원가입</Link>
+                            <Link to="/signup/student">회원가입</Link>
                         </li>
                         <li>
-                            <Link to="/api/mypage" onClick={toggleMenu}>
+                            <Link to="/signup/mypage" onClick={toggleMenu}>
                                 -----님
                             </Link>
                         </li>

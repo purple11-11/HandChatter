@@ -15,7 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen }) => {
                 <div className="sidebar">
                     <ul>
                         <li>
-                            <Link to="/api/mypage">마이페이지</Link>
+                            <Link to="/mypage">마이페이지</Link>
                         </li>
                         <li onClick={handleLogout}>로그아웃</li>
                     </ul>
