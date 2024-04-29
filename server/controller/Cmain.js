@@ -1,6 +1,7 @@
 const { Model, where } = require("sequelize");
 const { Tutor, Student, Favorites } = require("../models");
 const { Op } = require("sequelize");
+const { transporter } = require("../modules/nodemailer/nodemailer");
 
 const bcrypt = require("bcrypt");
 const saltRound = 10;
@@ -88,12 +89,11 @@ exports.checkId = async (req, res) => {
             Tutor.findOne({ where: { id } }),
             Student.findOne({ where: { id } }),
         ]);
+        const available = !isDuplicateTutor && !isDuplicateStudent;
+        res.status(200).send({ available });
     } catch (error) {
         res.status(500).send("SERVER ERROR");
     }
-
-    const available = !isDuplicateTutor && !isDuplicateStudent;
-    res.status(200).send({ available });
 };
 
 // GET /api/checkTutorNickname
@@ -108,12 +108,11 @@ exports.checkNickname = async (req, res) => {
             Tutor.findOne({ where: { nickname } }),
             Student.findOne({ where: { nickname } }),
         ]);
+        const available = !isDuplicateTutor && !isDuplicateStudent;
+        res.status(200).send({ available });
     } catch (error) {
         res.status(500).send("SERVER ERROR");
     }
-
-    const available = !isDuplicateTutor && !isDuplicateStudent;
-    res.status(200).send({ available });
 };
 
 // GET /api/searchId
@@ -172,9 +171,35 @@ exports.searchPassword = async (req, res) => {
     }
 };
 
+// GET /api/sendEmail
+exports.sendEmail = async (req, res) => {
+    const { email } = req.body;
+    const randomNum = Math.floor(Math.random() * 1000000) + 100000;
+    console.log("randomNum ::", randomNum);
+    console.log("from ::", process.env.EMAIL_USER);
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "[Hand Chatter 👐🏻] 이메일 인증",
+        html: `<h2>인증번호를 입력해주세요</h2>  <h3>${randomNum} 입니다.</h3>`,
+    };
+
+    await transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+            console.log("이메일 전송 실패", err);
+            return res.status(500).send("이메일 전송 실패");
+        } else {
+            console.log("이메일 전송 성공", info.response);
+            return res.status(200).send({ randomNum });
+        }
+    });
+};
+
 // POST /api/tutor
 exports.createTutor = async (req, res) => {
+    console.log("req.file ::", req.file);
     const { id, nickname, password, email, auth } = req.body;
+    console.log("req.body auth ::", auth);
     if (!id || !nickname || !password || !email || !auth)
         return res.status(400).send("빈칸을 입력해주세요.");
     try {

@@ -47,7 +47,7 @@ export default function StudentSignup({ role }: RoleProps) {
         if (!value) return alert(`${keyword === "id" ? "아이디를" : "닉네임을"} 입력해주세요.`);
 
         try {
-            const url = `${process.env.REACT_APP_API_SERVER}/check${
+            const url = `${process.env.REACT_APP_API_SERVER}/api/check${
                 role === "student" ? "Student" : "Tutor"
             }${keyword === "id" ? "Id" : "Nickname"}?${keyword}=${value}`;
 
@@ -80,7 +80,7 @@ export default function StudentSignup({ role }: RoleProps) {
             try {
                 const res = await axios({
                     method: "post",
-                    url: `${process.env.REACT_APP_API_SERVER}/${role}`,
+                    url: `${process.env.REACT_APP_API_SERVER}/api/${role}`,
                     data: newFormData,
                     headers: { "Content-Type": "multipart/form-data" },
                 });
@@ -92,7 +92,10 @@ export default function StudentSignup({ role }: RoleProps) {
             }
         } else {
             try {
-                const res = await axios.post(`${process.env.REACT_APP_API_SERVER}/${role}`, data);
+                const res = await axios.post(
+                    `${process.env.REACT_APP_API_SERVER}/api/${role}`,
+                    data
+                );
 
                 alert(`${res.data}! ${data.nickname}님 환영합니다🎉\n로그인 페이지로 이동합니다.`);
                 navigate("/api/login");
