@@ -10,9 +10,11 @@ import "./styles/index.scss";
 import Signin from "./pages/account/Signin";
 import InstructorDetailPage from "./pages/InstructorDetailPage";
 import Chatting from "./components/Chatting";
+import Webcam from "./pages/Webcam";
 // import Signup from "./pages/account/Signup";
 
 function App() {
+
     return (
         <>
             <Header />
@@ -28,6 +30,7 @@ function App() {
                     path="/api/tutors/:tutorIndex"
                     element={<InstructorDetailPage/>}
                 />
+                <Route path="/api/class" element={<Webcam/>} />
             </Routes>
             <Footer />
         </>
