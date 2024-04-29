@@ -10,8 +10,9 @@ import "./styles/index.scss";
 import Signin from "./pages/account/Signin";
 import InstructorDetailPage from "./pages/InstructorDetailPage";
 import Chatting from "./components/Chatting";
+import Signup from "./pages/account/Signup";
 import Webcam from "./pages/Webcam";
-// import Signup from "./pages/account/Signup";
+
 
 function App() {
 
@@ -21,16 +22,14 @@ function App() {
             <Routes>
                 <Route path="/api" element={<Main />} />
                 <Route path="/api/login" element={<Signin />} />
-                {/*  <Route path="/api/student" element={<Signup role={"student"} />} /> */}
-                {/* <Route path="/api/tutor" element={<Signup role={"tutor"} />} /> */}
+                <Route path="/api/student" element={<Signup role={"student"} />} />
+                <Route path="/api/tutor" element={<Signup role={"tutor"} />} />
                 {/* <Route path="/personal-learning" element={<PersonalLearning />} /> */}
                 {/* <Route path="/quiz" element={<Quiz />} /> */}
                 <Route path="/api/mypage" element={<Mypage />} />
-                <Route
-                    path="/api/tutors/:tutorIndex"
-                    element={<InstructorDetailPage/>}
-                />
+                <Route path="/api/tutors/:tutorIndex" element={<InstructorDetailPage />} />
                 <Route path="/api/class" element={<Webcam/>} />
+
             </Routes>
             <Footer />
         </>

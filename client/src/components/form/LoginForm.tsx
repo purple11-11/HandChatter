@@ -1,17 +1,17 @@
 import kakaoLogo from "../../assets/Kakao.png";
 import { useForm } from "react-hook-form";
 import PasswordInput from "../input/PasswordInput";
+import { RoleProps } from "../../types/interface";
 
-interface Props {
-    role: string;
-    login: (role: string, id: string, pw: string) => Promise<void>;
-}
 interface SigninData {
     id: string;
     pw: string;
 }
+interface LoginProps {
+    login?: (role: string, id: string, pw: string) => Promise<void>;
+}
 
-export default function LoginForm({ role, login }: Props) {
+export default function LoginForm({ role, login }: RoleProps & LoginProps) {
     const {
         register,
         handleSubmit,
@@ -28,7 +28,7 @@ export default function LoginForm({ role, login }: Props) {
         try {
             const { id, pw } = data;
 
-            await login(role, id, pw);
+            await login?.(role, id, pw);
         } catch (error) {
             console.error("로그인 오류", error);
         }
