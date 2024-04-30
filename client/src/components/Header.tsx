@@ -25,6 +25,17 @@ const Header = () => {
         toggleMenu();
     };
 
+    const handleLogout = async () => {
+        try {
+            const url = `${process.env.REACT_APP_API_SERVER}/api/logout`;
+            await axios.post(url);
+            setIsMenuOpen(false); // 로그아웃 후 메뉴 닫기
+            setUserInfo(null); // 로그아웃 후 사용자 정보 초기화
+        } catch (error) {
+            console.error("로그아웃 오류:", error);
+        }
+    };
+
     const getUser = async () => {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/userInfo`;
@@ -76,7 +87,7 @@ const Header = () => {
             <br />
             <br />
             <br />
-            <Sidebar isMenuOpen={isMenuOpen} />
+            <Sidebar isMenuOpen={isMenuOpen} onLogout={handleLogout} />
         </>
     );
 };
