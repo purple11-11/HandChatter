@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import InstructorCard from "../components/InstructorCard";
-import { Tutor, Sign } from "../types/interface";
+import { Tutor } from "../types/interface";
 
 export default function Main() {
     const url = "http://api.kcisa.kr/openapi/service/rest/meta13/getCTE01701";
@@ -10,6 +10,38 @@ export default function Main() {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searchResults, setSearchResults] = useState<Tutor[]>([]);
     const [error, setError] = useState<string>("");
+
+    const filterTutorsByNickname = (tutors: Tutor[], searchTerm: string): Tutor[] => {
+        if (!searchTerm) {
+            return tutors; // 검색어가 없으면 모든 강사를 반환
+        }
+
+        const filteredTutors = tutors.filter((tutor) =>
+            tutor.nickname.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        return filteredTutors;
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleSearchTutor = async () => {
+        try {
+            const url = `${process.env.REACT_APP_API_SERVER}/api`;
+            const res = await axios.get(url);
+            const filteredTutors = filterTutorsByNickname(res.data.tutorsInfo, searchTerm);
+            setSearchResults(filteredTutors);
+            setError("");
+        } catch (error) {
+            setError("검색 중 오류가 발생");
+        }
+    };
+
+    useEffect(() => {
+        handleSearchTutor(); // 초기 렌더링 시에 강사 정보를 불러옴
+    }, []);
 
     // const handleSearch = async () => {
     //     try {
@@ -34,41 +66,29 @@ export default function Main() {
     //     }
     // };
 
-    const filterTutorsByNickname = (tutors: Tutor[], searchTerm: string): Tutor[] => {
-        if (!searchTerm) {
-            return tutors; // 검색어가 없으면 모든 강사를 반환
-        }
-
-        const filteredTutors = tutors.filter((tutor) =>
-            tutor.nickname.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-
-        return filteredTutors;
-    };
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(event.target.value);
-        handleSearchTutor();
-    };
-
-    const handleSearchTutor = async () => {
-        try {
-            const url = `${process.env.REACT_APP_API_SERVER}/api`;
-            const res = await axios.get(url);
-            console.log(res.data);
-            const filteredTutors = filterTutorsByNickname(res.data.tutorsInfo, searchTerm);
-            setSearchResults(filteredTutors);
-            setError("");
-        } catch (error) {
-            setError("검색 중 오류가 발생");
-        }
-    };
-    useEffect(() => {
-        handleSearchTutor(); // 초기 렌더링 시에 강사 정보를 불러옴
-    }, []);
-
     return (
         <>
-            <section></section>
+            <section>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="튜터 검색"
+                        value={searchTerm}
+                        onChange={handleChange}
+                    />
+                    <button onClick={handleSearchTutor}>검색</button>
+                    {error && <p>{error}</p>}
+                    <ul>
+                        {searchResults.map((tutor, index) => (
+                            <li key={index}>
+                                <Link to={`/tutors/${index + 1}`}>
+                                    <InstructorCard tutor={tutor}></InstructorCard>
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
             {/* <section>
                 <div>
                     <input
@@ -95,25 +115,6 @@ export default function Main() {
                     </ul>
                 </div>
             </section> */}
-            <section>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="튜터 검색"
-                        value={searchTerm}
-                        onChange={handleChange}
-                    />
-                    <button onClick={handleSearchTutor}>검색</button>
-                    {error && <p>{error}</p>}
-                    <ul>
-                        {searchResults.map((tutor, index) => (
-                            <li key={index}>
-                                <InstructorCard tutor={tutor}></InstructorCard>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </section>
         </>
     );
 }
