@@ -710,7 +710,7 @@ router.patch("/editStudentPassword", controller.editStudentPassword);
 /**
  * @swagger
  *
- * /api/tutor:
+ * /api/withdrawal:
  *  delete:
  *    summary: "회원 탈퇴"
  *    description: "[회원 탈퇴] DELETE 방식으로 계정을 삭제한다."
