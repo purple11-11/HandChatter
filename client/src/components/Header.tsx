@@ -44,6 +44,9 @@ const Header = () => {
             const url = `${process.env.REACT_APP_API_SERVER}/api/userInfo`;
             const res = await axios.get(url);
             setUserInfo(res.data.studentInfo[0]);
+            const myInfo = JSON.stringify(res.data.studentInfo[0]);
+            localStorage.setItem("userInfo", myInfo);
+            console.log(myInfo);
         } catch (error) {
             setUserInfo(null);
         }

@@ -5,7 +5,6 @@ export default function CourseReview() {
             <div>
                 <div></div>
                 <div></div>
-                
             </div>
         </section>
     );

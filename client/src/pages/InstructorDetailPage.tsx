@@ -26,10 +26,10 @@ export default function InstructorDetailPage() {
     return (
         <section>
             <div>
-                <InstructorProfile tutor={tutor}></InstructorProfile>
+                <InstructorProfile tutor={tutor} tutorIndex={tutorIndex}></InstructorProfile>
                 <div>
                     <div>
-                        <div></div>
+                        <div>{tutor?.des_video}</div>
                         <div>{tutor?.content}</div>
                     </div>
                     <CourseReview></CourseReview>
