@@ -100,14 +100,20 @@ exports.getTutorDetail = async (req, res) => {
                 "des_video",
             ],
         });
-        // const review = await Review.findAll({
-        //     where: {
-        //         tutor_idx: tutorIdx,
-        //     },
-        //     attributes: ["content", "rating", "created_at"],
-        // });
+        const review = await Review.findAll({
+            where: {
+                tutor_idx: tutorIdx,
+            },
+            include: [
+                {
+                    model: Student,
+                    attributes: ["id"],
+                },
+            ],
+            attributes: ["content", "rating", "created_at"],
+        });
         if (tutorInfo) {
-            res.send({ tutorInfo: tutorInfo });
+            res.send({ tutorInfo: tutorInfo, review: review });
         } else {
             res.status(404).send("강사 상세정보가 존재하지 않음");
         }

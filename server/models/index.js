@@ -83,6 +83,13 @@ StudentModel.hasMany(ReviewModel, {
         allowNull: false,
     },
 });
+ReviewModel.belongsTo(StudentModel, {
+    onDelete: "CASCADE",
+    foreignKey: {
+        name: "stu_idx",
+        allowNull: false,
+    },
+});
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
