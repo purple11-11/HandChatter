@@ -1,0 +1,47 @@
+import axios from "axios";
+import { useState } from "react";
+import { set } from "react-hook-form";
+import MypageWithdrawMembership from "../../components/Mypage/MypageWithdrawMembership";
+
+export default function FindId() {
+    const [email, setEmail] = useState<string>("");
+    const [findIdResult, setFindIdResult] = useState<string>("");
+
+    const findId = async () => {
+        if (!email) return alert("이메일을 입력해주세요.");
+
+        const res = await axios({
+            method: "get",
+            url: `${process.env.REACT_APP_API_SERVER}/api/searchId?email=${email}`,
+        });
+        setFindIdResult(res.data);
+    };
+
+    return (
+        <section>
+            <div className="find_id_container">
+                <h2>아이디 찾기</h2>
+                <div className="find_id">
+                    <div className="find_id_email">
+                        <label htmlFor="email">이메일</label>
+                        <input
+                            type="email"
+                            id="email"
+                            value={email || ""}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <button type="button" onClick={findId}>
+                        아이디 찾기
+                    </button>
+
+                    <div className="find_id_result">
+                        <p>{findIdResult}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
