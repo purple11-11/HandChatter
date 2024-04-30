@@ -91,6 +91,6 @@ db.Student = StudentModel;
 db.Level = LevelModel;
 db.Favorites = FavoritesModel;
 db.Message = MessageModel;
-db.ReviewModel = ReviewModel;
+db.Review = ReviewModel;
 
 module.exports = db;
