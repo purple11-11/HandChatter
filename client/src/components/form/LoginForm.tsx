@@ -9,7 +9,7 @@ interface SigninData {
     pw: string;
 }
 interface LoginProps {
-    login?: (role: string, id: string, pw: string) => Promise<void>;
+    login: (role: string, id: string, pw: string) => Promise<void>;
 }
 
 export default function LoginForm({ role, login }: RoleProps & LoginProps) {
@@ -28,8 +28,7 @@ export default function LoginForm({ role, login }: RoleProps & LoginProps) {
     const onSubmit = async (data: SigninData) => {
         try {
             const { id, pw } = data;
-
-            await login?.(role, id, pw);
+            await login(role, id, pw);
         } catch (error) {
             console.error("로그인 오류", error);
         }

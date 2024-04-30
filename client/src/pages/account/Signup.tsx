@@ -118,10 +118,12 @@ export default function StudentSignup({ role }: RoleProps) {
 
     // 이메일 인증
     const sendEmail = async (email: string) => {
-        const res = await axios.post(`${process.env.REACT_APP_API_SERVER}/api/sendEmail`, {
+        const res = await axios.post(`${process.env.REACT_APP_API_SERVER}/api/email`, {
             email,
         });
-        setRandomNum(res.data.randomNum);
+
+        if (res.data.randomNum) setRandomNum(res.data.randomNum);
+        else alert(res.data);
     };
 
     // 인증번호 확인

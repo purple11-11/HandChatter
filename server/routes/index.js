@@ -338,8 +338,8 @@ router.get("/searchPassword", controller.searchPassword);
 
 router.get("/logout", controller.logout);
 
-// POST /api/sendEmail
-router.post("/sendEmail", controller.sendEmail);
+// POST /api/email
+router.post("/email", controller.sendEmail);
 /**
  * @swagger
  *
