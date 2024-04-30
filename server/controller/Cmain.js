@@ -16,22 +16,20 @@ function comparePW(inputpw, hashedpw) {
 // GET /api/userInfo
 exports.getInfo = async (req, res) => {
     try {
-        const tutorId = req.session.tutor;
-        const studentId = req.session.student;
-        console.log(tutorId);
-        console.log(studentId);
+        const { userId, role } = req.session;
+        console.log(userId, role);
 
-        if (!tutorId && !studentId) {
-            res.status(401).send("로그인을 해주세요.");
-        } else if (studentId) {
+        if (!userId) return res.status(401).send("로그인을 해주세요.");
+
+        if (role === "student") {
             const studentInfo = await Student.findAll({
-                where: { id: studentId },
+                where: { id: userId },
                 attributes: ["id", "nickname", "email", "provider", "profile_img", "authority"],
             });
-            res.status(200).send({ studentInfo });
-        } else {
-            const tuterInfo = await Tutor.findAll({
-                where: { id: tutorId },
+            return res.status(200).send({ studentInfo });
+        } else if (role === "tutor") {
+            const tutorInfo = await Tutor.findAll({
+                where: { id: userId },
                 attributes: [
                     "id",
                     "nickname",
@@ -43,7 +41,7 @@ exports.getInfo = async (req, res) => {
                     "price",
                 ],
             });
-            res.status(200).send({ tuterInfo });
+            return res.status(200).send({ tutorInfo });
         }
     } catch (error) {
         console.log(error);
@@ -212,7 +210,8 @@ exports.searchPassword = async (req, res) => {
 // GET /api/email
 exports.sendEmail = async (req, res) => {
     const { email } = req.body;
-    const randomNum = Math.floor(Math.random() * 1000000) + 100000;
+    const randomNum = (Math.floor(Math.random() * 1000000) + 100000).toString().substring(0, 6);
+
     console.log("randomNum ::", randomNum);
 
     const checkEmail = await Promise.all([
@@ -299,10 +298,11 @@ exports.loginTutor = async (req, res) => {
             if (loginResult) {
                 const { id, tutor_idx } = resultTutor;
 
-                req.session.tutor = id;
+                req.session.userId = id;
                 req.session.tutor_idx = tutor_idx;
+                req.session.role = "tutor";
 
-                const tutorId = req.session.tutor;
+                const tutorId = req.session.userId;
 
                 res.status(200).send({
                     isLogin: true,
@@ -320,6 +320,7 @@ exports.loginTutor = async (req, res) => {
         res.status(500).send(err);
     }
 };
+
 // POST /api/loginStudent
 exports.loginStudent = async (req, res) => {
     const { id, password } = req.body;
@@ -341,10 +342,17 @@ exports.loginStudent = async (req, res) => {
             //비밀번호 틀렸을 때
             return res.status(400).send("비밀번호가 일치하지 않습니다. 다시 시도해주세요.");
         } else {
-            req.session.student = resultStudent.id;
+            req.session.userId = resultStudent.id;
             req.session.stu_idx = resultStudent.stu_idx;
+            req.session.role = "student";
 
-            const studentId = req.session.student;
+            console.log(
+                "req.session 저장 ::",
+                req.session.userId,
+                req.session.stu_idx,
+                req.session.role
+            );
+            const studentId = req.session.userId;
             return res.status(200).send({
                 isLogin: true,
                 studentId: studentId,
@@ -355,6 +363,8 @@ exports.loginStudent = async (req, res) => {
         res.status(500).send("SERVER ERROR");
     }
 };
+
+// POST /api/logout
 exports.logout = (req, res) => {
     try {
         if (req.session) {
@@ -392,7 +402,7 @@ exports.addFavorites = async (req, res) => {
 // POST /api/favoritesTutor
 exports.searchFavorites = async (req, res) => {
     try {
-        const id = req.session.student;
+        const id = req.session.userId;
         if (!id) res.status(401).send("로그인을 해주세요.");
 
         const student = await Student.findOne({
@@ -472,7 +482,7 @@ exports.editTutorProfile = async (req, res) => {
 //PATCH / api / editTutorPassword;
 exports.editTutorPassword = async (req, res) => {
     const { password, newPassword } = req.body;
-    const id = req.session.tutor;
+    const id = req.session.userId;
     try {
         if (!password || !newPassword) res.status(400).send("빈칸을 입력해주세요.");
         const tutor = await Tutor.findOne({
@@ -569,66 +579,51 @@ exports.editStudentPassword = async (req, res) => {
     }
 };
 
-// DELETE /api/tutor
-exports.deleteTutor = async (req, res) => {
+// DELETE /api/withdrawal
+exports.deleteUser = async (req, res) => {
     const { id, password } = req.body;
-
-    console.log("tutor_id ::", id, "tutor_password ::", password);
+    const { userId, role } = req.session;
+    let isTutor, isStudent;
     try {
-        if (!req.session.tutor)
-            return res.status(400).send("탈퇴 권한이 없습니다. 로그인 후 이용해주세요.");
-        if (id !== req.session.tutor)
-            return res.status(400).send("아이디를 정확하게 입력해주세요.");
-        if (!password) return res.status(400).send("비밀번호를 입력해주세요.");
+        console.log(userId, role);
+        if (!req.session.userId) return res.send("탈퇴 권한이 없습니다. 로그인 후 이용해주세요.");
 
-        const isTutor = await Tutor.findOne({
-            where: { id },
-        });
-        if (!comparePW(password, isTutor.password))
-            return res.status(400).send("비밀번호가 일치하지 않습니다.");
-        if (isTutor && comparePW(password, isTutor.password)) {
-            await Tutor.destroy({ where: { id } });
-            await req.session.destroy((err) => {
+        if (id !== req.session.userId) return res.send("아이디를 정확하게 입력해주세요.");
+
+        if (!password) return res.send("비밀번호를 입력해주세요.");
+
+        [isTutor, isStudent] = await Promise.all([
+            Tutor.findOne({ where: { id } }),
+            Student.findOne({ where: { id } }),
+        ]);
+
+        if (!isTutor && !isStudent) return res.send("존재하지 않는 아이디입니다.");
+
+        async function deleteUser(model, id) {
+            await model.destroy({ where: { id } });
+        }
+
+        if (
+            (isTutor && comparePW(password, isTutor.password)) ||
+            (isStudent && comparePW(password, isStudent.password))
+        ) {
+            const model = isTutor ? Tutor : Student;
+            const userId = isTutor ? isTutor.id : isStudent.id;
+
+            await deleteUser(model, userId);
+            req.session.destroy((err) => {
                 if (err) {
                     console.error("세션 삭제 실패:", err);
                     return res.status(500).send("서버에러");
                 }
-                return res.status(200).send({ success: true, msg: "회원 탈퇴" });
+                return res.status(200).send({ success: true });
             });
+        } else {
+            return res.send("비밀번호가 일치하지 않습니다.");
         }
-    } catch (err) {
-        res.status(500).send("SERVER ERROR");
-    }
-};
-
-// DELETE /api/student
-exports.deleteStudent = async (req, res) => {
-    const { id, password } = req.body;
-    console.log("student_id ::", id, "student_password ::", password);
-    try {
-        if (!req.session.student)
-            return res.status(400).send("탈퇴 권한이 없습니다. 로그인 후 이용해주세요.");
-        if (id !== req.session.student)
-            return res.status(400).send("아이디를 정확하게 입력해주세요.");
-        if (!password) return res.status(400).send("비밀번호를 입력해주세요.");
-
-        const isStudent = await Student.findOne({
-            where: { id },
-        });
-        if (!comparePW(password, isStudent.password))
-            return res.status(400).send("비밀번호가 일치하지 않습니다.");
-        if (isStudent && comparePW(password, isStudent.password)) {
-            await Student.destroy({ where: { id } });
-            await req.session.destroy((err) => {
-                if (err) {
-                    console.error("세션 삭제 실패:", err);
-                    return res.status(500).send("서버에러");
-                }
-                return res.status(200).send({ success: true, msg: "회원 탈퇴" });
-            });
-        }
-    } catch (err) {
-        res.status(500).send("server error!");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
     }
 };
 
