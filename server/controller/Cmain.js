@@ -1,4 +1,3 @@
-const { Model, where } = require("sequelize");
 const { Tutor, Student } = require("../models");
 const { Op } = require("sequelize");
 

@@ -9,19 +9,27 @@ function socketHandler(server) {
             origin: "http://localhost:3000", // react server와 통신하기 위함
         },
     });
-    const nickInfo = [];
+
+    // 튜터와 학생의 소켓 ID를 저장할 객체
+    const tutorSockets = {};
+    const studentSockets = {};
+
     io.on("connection", (socket) => {
-        nickInfo.push(socket.id);
+        // 소켓 연결이 이루어졌을 때
+        console.log("새로운 소켓이 연결되었습니다:", socket.id);
+
+        socket.on("join", (data) => {
+            // 클라이언트가 튜터인지 학생인지에 따라 소켓 ID를 저장
+            const { role, idx } = data;
+            if (role === "tutor") {
+                tutorSockets[idx] = socket.id;
+            } else if (role === "student") {
+                studentSockets[idx] = socket.id;
+            }
+        });
+
         socket.on("send", async (data) => {
-            const { msg, stuIdx, tutorIdx } = data;
-            console.log("client에서 보낸 메시지>>", msg);
-            // dm
-            // (1) io.to(socket.id).emit(~~)
-            // 특정 소켓아이디에게만 전달(나 포함 x)
-            io.to(socket.id).emit("message", msg);
-            // (2) socket.emit()
-            // 나에게만 메세지 보내기
-            socket.emit("message", msg);
+            const { msg, stuIdx, tutorIdx, sender, receiver } = data;
 
             try {
                 // 메시지를 데이터베이스에 저장
@@ -29,14 +37,36 @@ function socketHandler(server) {
                     stu_idx: stuIdx,
                     tutor_idx: tutorIdx,
                     content: msg, // 예시로 content 속성에 메시지를 저장합니다.
+                    sender,
+                    receiver,
                 });
                 console.log("새로운 메시지가 데이터베이스에 저장되었습니다:");
             } catch (error) {
                 console.error("메시지 저장 중 오류 발생:", error);
             }
+
+            // 특정 튜터나 학생에게 메시지 전송
+            if (sender === "tutor" && studentSockets[stuIdx]) {
+                io.to(studentSockets[stuIdx]).emit("message", msg);
+            } else if (sender === "student" && tutorSockets[tutorIdx]) {
+                io.to(tutorSockets[tutorIdx]).emit("message", msg);
+            }
         });
         socket.on("disconnect", () => {
-            // 클라이언트 연결 해제
+            // 클라이언트 연결 해제 시 소켓 ID를 관리하는 배열에서 제거
+            console.log("소켓이 연결 해제되었습니다:", socket.id);
+
+            // tutorSockets에서 제거
+            const tutorIndex = Object.values(tutorSockets).indexOf(socket.id);
+            if (tutorIndex !== -1) {
+                delete tutorSockets[tutorIndex];
+            }
+
+            // studentSockets에서 제거
+            const studentIndex = Object.values(studentSockets).indexOf(socket.id);
+            if (studentIndex !== -1) {
+                delete studentSockets[studentIndex];
+            }
         });
     });
 }

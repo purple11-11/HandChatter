@@ -10,23 +10,41 @@ const socket = io("http://localhost:8080", {
 const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
     const initSocketConnect = () => {
         if (!socket.connected) socket.connect();
+        // 튜터로 로그인한 경우
+        socket.emit("join", { role: "tutor", idx: 1 });
+        // 학생으로 로그인한 경우
+        socket.emit("join", { role: "student", idx: 1 });
     };
     useEffect(() => {
         initSocketConnect();
     }, []);
 
-    const [messages, setMessages] = useState<string[]>([]); // 메시지를 저장하는 상태
+    const [messages, setMessages] = useState<{ idx: number; msg: string }[]>([]); // { idx: idx, msg: msg } 형태로 메시지를 저장하는 상태
+    // 메세지를 string배열이 아닌 { 강사 or 학생 인덱스: idx, msg } 형태로 담아야
+    // 채팅방 내용을 따로보여줄때 해당 강사 or 학생과의 메시지들만 보여줄 수 있음
     const [newMessage, setNewMessage] = useState<string>(""); // 사용자가 입력한 새로운 메시지
 
     const handleSendMessage = () => {
         if (newMessage.trim() !== "") {
-            setMessages([...messages, newMessage]); // 새로운 메시지를 메시지 목록에 추가
-            socket.emit("send", { msg: newMessage, stuIdx: 1, tutorIdx: 1 });
+            setMessages([...messages, { idx: 1, msg: newMessage }]);
+            // 권한여부(로그인된 사용자가 학생인지 강사인지 판별) 조건문
+            // if (authority === 0)
+            socket.emit("send", {
+                msg: newMessage,
+                stuIdx: 1,
+                tutorIdx: 1,
+                sender: "student",
+                receiver: "tutor",
+            });
+            // else {
+            //      socket.emit("send", { msg: newMessage, stuIdx: 1, tutorIdx: 1, sender: "tutor", receiver: "student" });
+            // }
+
             setNewMessage(""); // 입력 필드 초기화
         }
     };
     const addMessage = useCallback(
-        (msg: string) => {
+        (msg: { idx: number; msg: string }) => {
             const newMessages = [...messages, msg];
 
             setMessages(newMessages);
@@ -35,7 +53,7 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
     );
     useEffect(() => {
         socket.on("message", addMessage);
-    }, [messages]);
+    }, [addMessage]);
 
     return (
         <div>
@@ -45,7 +63,7 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
             {/* 채팅 메시지 표시 */}
             <div>
                 {messages.map((message, index) => (
-                    <div key={index}>{message}</div>
+                    <div key={index}>{message.msg}</div>
                 ))}
             </div>
             {/* 메시지 입력 필드와 전송 버튼 */}
