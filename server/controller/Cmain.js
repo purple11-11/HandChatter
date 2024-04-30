@@ -1,5 +1,4 @@
-const { Model, where } = require("sequelize");
-const { Tutor, Student, Favorites, sequelize } = require("../models");
+const { Tutor, Student, Favorites, Review } = require("../models");
 const { Op } = require("sequelize");
 const { transporter } = require("../modules/nodemailer/nodemailer");
 
@@ -89,7 +88,22 @@ exports.getTutorDetail = async (req, res) => {
             where: {
                 tutor_idx: tutorIdx,
             },
+
+            attributes: [
+                "nickname",
+                "email",
+                "description",
+                "authority",
+                "profile_img",
+                "des_video",
+            ],
         });
+        // const review = await Review.findAll({
+        //     where: {
+        //         tutor_idx: tutorIdx,
+        //     },
+        //     attributes: ["content", "rating", "created_at"],
+        // });
         if (tutorInfo) {
             res.send({ tutorInfo: tutorInfo });
         } else {
@@ -379,6 +393,8 @@ exports.logout = (req, res) => {
 
 // POST /api/favorites
 exports.addFavorites = async (req, res) => {
+    const id = req.session.student;
+    if (!id) res.status(401).send("로그인을 해주세요.");
     const { stu_idx, tutor_idx } = req.body;
 
     try {
@@ -431,6 +447,29 @@ exports.searchFavorites = async (req, res) => {
                 );
             } else res.status(200).send({ favorites });
         }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
+//POST /api/reviews
+exports.addReviews = async (req, res) => {
+    try {
+        const stu_idx = req.session.stu_idx;
+        if (!stu_idx) return res.send("로그인을 해주세요.");
+
+        const { content, rating, tutor_idx } = req.body;
+        if (!content || !rating) return res.status(400).send("빈칸을 입력해주세요.");
+        const review = await Review.create({
+            content,
+            rating,
+            tutor_idx,
+            stu_idx,
+        });
+        if (!review) {
+            throw new Error("SERVER ERROR!!!");
+        } else res.status(200).send("리뷰를 성공적으로 달았습니다!");
     } catch (error) {
         console.log(error);
         res.status(500).send("SERVER ERROR!!!");
@@ -629,6 +668,8 @@ exports.deleteUser = async (req, res) => {
 
 // DELETE /api/favorites
 exports.deleteFavorites = async (req, res) => {
+    const id = req.session.student;
+    if (!id) res.status(401).send("로그인을 해주세요.");
     const { stu_idx, tutor_idx } = req.body;
 
     try {
