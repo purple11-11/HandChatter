@@ -590,12 +590,6 @@ exports.deleteUser = async (req, res) => {
 
         if (id !== req.session.userId) return res.send("아이디를 정확하게 입력해주세요.");
 
-        /*  if (!(req.session.tutor || req.session.student))
-            return res.send("탈퇴 권한이 없습니다. 로그인 후 이용해주세요.");
-
-        if (!(id === req.session.tutor || id === req.session.student))
-            return res.send("아이디를 정확하게 입력해주세요."); */
-
         if (!password) return res.send("비밀번호를 입력해주세요.");
 
         [isTutor, isStudent] = await Promise.all([
