@@ -18,7 +18,7 @@ function socketHandler(server) {
             // dm
             // (1) io.to(socket.id).emit(~~)
             // 특정 소켓아이디에게만 전달(나 포함 x)
-            io.to(msgData.dm).emit("message", msg);
+            io.to(socket.id).emit("message", msg);
             // (2) socket.emit()
             // 나에게만 메세지 보내기
             socket.emit("message", msg);
