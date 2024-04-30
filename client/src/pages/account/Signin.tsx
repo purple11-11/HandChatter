@@ -12,7 +12,6 @@ export default function Signip() {
     }
 
     const navigate = useNavigate();
-
     // axios
     const login = async (role: string, id: string, pw: string): Promise<void> => {
         try {
@@ -31,7 +30,9 @@ export default function Signip() {
                 if (!res.data.isLogin) {
                     alert("로그인 실패 \n" + res.data);
                 } else {
-                    navigate("/");
+                    localStorage.setItem("isLoggedIn", "true");
+                    console.log("-----");
+                    window.location.href = "/";
                 }
             });
         } catch (error) {

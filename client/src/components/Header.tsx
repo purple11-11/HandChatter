@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [userInfo, setUserInfo] = useState<any>(null);
-
-    useEffect(() => {
-        getUser();
-    }, []);
+    const navigate = useNavigate();
+    // useEffect(() => {
+    //     console.log("하하");
+    //     getUser();
+    // }, []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
     const handleLeftClick = () => {
-        window.location.href = "/mypage";
+        navigate("/mypage");
     };
 
     const handleRightClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -29,6 +30,8 @@ const Header = () => {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/logout`;
             await axios.post(url);
+
+            localStorage.removeItem("isLoggedIn");
             setIsMenuOpen(false); // 로그아웃 후 메뉴 닫기
             setUserInfo(null); // 로그아웃 후 사용자 정보 초기화
         } catch (error) {
@@ -40,12 +43,19 @@ const Header = () => {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/userInfo`;
             const res = await axios.get(url);
-            console.log(res.data.studentInfo[0]);
             setUserInfo(res.data.studentInfo[0]);
         } catch (error) {
-            console.error("사용자 정보를 불러오는 중 에러:", error);
+            setUserInfo(null);
         }
     };
+
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    useEffect(() => {
+        console.log(isLoggedIn + "-------");
+        if (isLoggedIn) {
+            getUser();
+        }
+    }, [isLoggedIn]);
 
     return (
         <>
