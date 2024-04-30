@@ -15,9 +15,9 @@ interface Props {
 
 const InstructorCard: React.FC<Props> = ({ tutor }) => {
     return (
-        <div>
-            <div>강사 사진</div>
-            <div>
+        <div className="card">
+            <div className="profile">강사 사진</div>
+            <div className="profiel-info">
                 <ul>
                     <li>강사 이름: {tutor.nickname}</li>
                     <li>레슨 시간: {tutor.email}</li>

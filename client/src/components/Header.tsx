@@ -1,3 +1,4 @@
+import Logo from "../assets/logo.jpg";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -63,44 +64,44 @@ const Header = () => {
     return (
         <>
             <header className="header">
-                <div className="logo">
-                    <Link to="/">로고</Link>
-                </div>
-                <nav className="menu">
-                    <ul>
-                        <li>
-                            <Link to="/personal-learning">개인학습</Link>
-                        </li>
-                        <li>
-                            <Link to="/quiz">퀴즈</Link>
-                        </li>
-                        {!userInfo ? (
-                            <>
-                                <li>
-                                    <Link to="/login">로그인</Link>
-                                </li>
-                                <li>
-                                    <Link to="/signup/student">회원가입</Link>
-                                </li>
-                            </>
-                        ) : (
+                <div className="container">
+                    <div className="logo">
+                        {/* <img src={Logo} alt="" /> */}
+                        <Link to="/">HandChatter</Link>
+                    </div>
+                    <nav className="menu">
+                        <ul>
                             <li>
-                                <Link
-                                    to="/mypage"
-                                    onClick={handleLeftClick}
-                                    onContextMenu={handleRightClick}
-                                >
-                                    {userInfo.nickname} 님
-                                </Link>
+                                <Link to="/personal-learning">개인학습</Link>
                             </li>
-                        )}
-                    </ul>
-                </nav>
+                            <li>
+                                <Link to="/quiz">퀴즈</Link>
+                            </li>
+                            {!userInfo ? (
+                                <>
+                                    <li>
+                                        <Link to="/login">로그인</Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/signup/student">회원가입</Link>
+                                    </li>
+                                </>
+                            ) : (
+                                <li>
+                                    <Link
+                                        to="/mypage"
+                                        onClick={handleLeftClick}
+                                        onContextMenu={handleRightClick}
+                                    >
+                                        {userInfo.nickname} 님
+                                    </Link>
+                                </li>
+                            )}
+                        </ul>
+                    </nav>
+                    <Sidebar isMenuOpen={isMenuOpen} onLogout={handleLogout} />
+                </div>
             </header>
-            <br />
-            <br />
-            <br />
-            <Sidebar isMenuOpen={isMenuOpen} onLogout={handleLogout} />
         </>
     );
 };
