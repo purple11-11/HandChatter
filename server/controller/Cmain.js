@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 const { transporter } = require("../modules/nodemailer/nodemailer");
 
 const bcrypt = require("bcrypt");
+
 const saltRound = 10;
 
 function hashPW(pw) {
@@ -30,6 +31,7 @@ exports.getInfo = async (req, res) => {
             const tutorInfo = await Tutor.findAll({
                 where: { id: userId },
                 attributes: [
+                    "tutor_idx",
                     "id",
                     "nickname",
                     "email",
@@ -316,8 +318,13 @@ exports.loginTutor = async (req, res) => {
                 req.session.tutor_idx = tutor_idx;
                 req.session.role = "tutor";
 
+                console.log(
+                    "req.session 저장 ::",
+                    req.session.userId,
+                    req.session.tutor_idx,
+                    req.session.role
+                );
                 const tutorId = req.session.userId;
-
                 res.status(200).send({
                     isLogin: true,
                     tutorId: tutorId,
@@ -684,6 +691,27 @@ exports.deleteFavorites = async (req, res) => {
             await existingFavorite.destroy();
             res.status(200).send("찜 목록에서 제거되었습니다.");
         } else return res.status(500).send("SERVER ERROR!!!");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
+//DELETE /api/reviews
+exports.deleteReviews = async (req, res) => {
+    try {
+        const { stu_idx } = req.session;
+        const { review_idx } = req.body;
+        let deletedRows;
+        if (stu_idx) {
+            deletedRows = await Review.destroy({ where: { review_idx } });
+        } else return res.status(400).send("로그인을 해주세요.");
+
+        if (deletedRows > 0) {
+            res.status(200).send("리뷰가 삭제되었습니다.");
+        } else {
+            res.status(404).send("해당하는 리뷰가 없습니다.");
+        }
     } catch (error) {
         console.error(error);
         res.status(500).send("SERVER ERROR!!!");

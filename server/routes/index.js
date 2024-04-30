@@ -831,22 +831,45 @@ router.delete("/withdrawal", controller.deleteUser);
  *                description: "강사 인덱스"
  *    responses:
  *      "200":
- *        description: Success
- *        content:
- *          application/json:
- *            schema:
- *              type: string
- *              example: >
- *                찜 목록에서 제거되었습니다.
+ *        description: "찜 목록에서 제거되었습니다."
  *      "500":
- *        description: Server error
- *        content:
- *          application/json:
- *            schema:
- *              type: string
- *              example: "SERVER ERROR!!!"
+ *        description: "SERVER ERROR!!!"
  */
 router.delete("/favorites", controller.deleteFavorites);
+
+/**
+ * @swagger
+ *
+ * /api/reviews:
+ *  delete:
+ *    summary: "리뷰 삭제 기능"
+ *    description: "리뷰 삭제. 세션 정보로 받아오기에 로그인 되어야만 함."
+ *    tags: [Review]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "세션으로 학생 인덱스 받고, 삭제할 리뷰 인덱스 받아야 함."
+ *        schema:
+ *            type: object
+ *            properties:
+ *              stu_idx:
+ *                type: integer
+ *                description: "학생 인덱스"
+ *              review_idx:
+ *                type: integer
+ *                description: "리뷰 인덱스"
+ *    responses:
+ *      "200":
+ *        description: "리뷰가 삭제되었습니다."
+ *      "400":
+ *        description: "로그인을 해주세요."
+ *      "404":
+ *        description: "해당하는 리뷰가 없습니다."
+ *      "500":
+ *        description: "SERVER ERROR!!!"
+ */
+router.delete("/reviews", controller.deleteReviews);
 
 router.get("*", (req, res) => {
     // res.render("404");
