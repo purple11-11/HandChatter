@@ -4,3 +4,5 @@
 # local
 */api.*
 */init.sql
+
+node_modules

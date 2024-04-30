@@ -18,7 +18,6 @@ const multer = require("../modules/multer/multer");
 
 // /api/userInfo
 router.get("/userInfo", controller.getInfo);
-
 // GET /api
 // 메인페이지 - 강사 정보 조회
 /**
@@ -66,9 +65,7 @@ router.get("/userInfo", controller.getInfo);
  *                   type: tutor
  *                   description: 검색 결과에 해당하는 강사들 정보 응답
  */
-
 router.get("/", controller.getTutors);
-
 // GET /api/tutors/:tutorIdx
 // 강사 상세페이지 - 강사 상세 조회
 // 강사번호 파라미터
@@ -99,7 +96,6 @@ router.get("/", controller.getTutors);
  *                   description: 클라이언트가 제공한 강사 인덱스로 해당 강사 정보 조회 및 응답
  */
 router.get("/tutors/:tutorIdx", controller.getTutorDetail);
-
 /**
  * 회원가입: 튜터
  * 사용자가 튜터로 회원가입할 때 호출됩니다.
@@ -335,9 +331,44 @@ router.get("/searchId", controller.searchId);
  *               example: "Internal Server Error"
  */
 router.get("/searchPassword", controller.searchPassword);
+/**
+ * @swagger
+ * /api/favoritesTutor:
+ *   get:
+ *     summary: 찜 목록 조회
+ *     description: 학생 마이페이지에서 찜 목록 누르면 추가한 튜터들 전부 조회
+ *     tags: [Favorites]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         description: 사용자 ID(백에서 세션으로 조회 -> 로그인 상태에서만 조회 가능)
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: 찜한 튜터 목록들 결과(닉네임, 소개글, 프로필사진, 가격 보내질 예정)
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       '400':
+ *         description: 세션 만료했을 때 발생하는 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *       '500':
+ *         description: 서버 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Internal Server Error"
+ */
+router.get("/favoritesTutor", controller.searchFavorites);
 
 router.post("/logout", controller.logout);
-
 // TODO: swagger
 // POST /api/sendEmail
 router.post("/email", controller.sendEmail);
@@ -510,43 +541,42 @@ router.post("/loginStudent", controller.loginStudent);
  *              example: "SERVER ERROR!!!"
  */
 router.post("/favorites", controller.addFavorites);
-
 /**
  * @swagger
- * /api/favoritesTutor:
- *   get:
- *     summary: 찜 목록 조회
- *     description: 학생 마이페이지에서 찜 목록 누르면 추가한 튜터들 전부 조회
- *     tags: [Favorites]
- *     parameters:
- *       - in: query
- *         name: id
- *         required: true
- *         description: 사용자 ID(백에서 세션으로 조회 -> 로그인 상태에서만 조회 가능)
- *         schema:
- *           type: string
- *     responses:
- *       '200':
- *         description: 찜한 튜터 목록들 결과(닉네임, 소개글, 프로필사진, 가격 보내질 예정)
- *         content:
- *           text/html:
- *             schema:
- *               type: string
- *       '400':
- *         description: 세션 만료했을 때 발생하는 오류
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *       '500':
- *         description: 서버 오류
- *         content:
- *           text/plain:
- *             schema:
- *               type: string
- *               example: "Internal Server Error"
+ *
+ * /api/reviews:
+ *  post:
+ *    summary: "튜터 리뷰 달기"
+ *    description: "[리뷰 생성]POST 방식으로 리뷰 등록.
+ *                  학생 인덱스는 세션 정보에서 받아오기 때문에 로그인이 되어야만
+ *                  리뷰를 달 수 있습니다."
+ *    tags: [Review]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "리뷰 생성"
+ *        schema:
+ *            type: object
+ *            properties:
+ *              content:
+ *                type: string
+ *                description: "리뷰 내용"
+ *              rating:
+ *                type: integer
+ *                description: "별점"
+ *              tutor_idx:
+ *                type: integer
+ *                description: "튜터 인덱스"
+ *    responses:
+ *      "200":
+ *        description: "리뷰를 성공적으로 달았습니다!!"
+ *      "400":
+ *        description: "빈 칸을 입력해주세요. //리뷰 내용이나 별점이 없는 경우"
+ *      "500":
+ *        description: "Server error(리뷰 생성 실패)"
  */
-router.get("/favoritesTutor", controller.searchFavorites);
+router.post("/reviews", controller.addReviews);
 
 // patch
 /**
