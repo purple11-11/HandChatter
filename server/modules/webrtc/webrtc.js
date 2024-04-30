@@ -33,14 +33,11 @@ function socketWebRTC(server) {
       socketToRoom[socket.id] = data.room;
 
       socket.join(data.room);
-      console.log(`[${socketToRoom[socket.id]}]: ${socket.id} enter`);
 
       // 본인을 제외한 같은 room의 user array
       const usersInThisRoom = users[data.room].filter(
         (user) => user.id !== socket.id
       );
-
-      console.log(usersInThisRoom);
 
       // 본인에게 해당 user array를 전송
       // 새로 접속하는 user가 이미 방에 있는 user들에게 offer(signal)를 보내기 위해
@@ -49,28 +46,24 @@ function socketWebRTC(server) {
 
     // 다른 user들에게 offer를 보냄 (자신의 RTCSessionDescription)
     socket.on("offer", (sdp) => {
-      console.log("offer: " + socket.id);
       // room에는 두 명 밖에 없으므로 broadcast 사용해서 전달
       socket.broadcast.emit("getOffer", sdp);
     });
 
     // offer를 보낸 user에게 answer을 보냄 (자신의 RTCSessionDescription)
     socket.on("answer", (sdp) => {
-      console.log("answer: " + socket.id);
       // room에는 두 명 밖에 없으므로 broadcast 사용해서 전달
       socket.broadcast.emit("getAnswer", sdp);
     });
 
     // 자신의 ICECandidate 정보를 signal(offer 또는 answer)을 주고 받은 상대에게 전달
     socket.on("candidate", (candidate) => {
-      console.log("candidate: " + socket.id);
       // room에는 두 명 밖에 없으므로 broadcast 사용해서 전달
       socket.broadcast.emit("getCandidate", candidate);
     });
 
     // user가 연결이 끊겼을 때 처리
     socket.on("disconnect", () => {
-      console.log(`[${socketToRoom[socket.id]}]: ${socket.id} exit`);
       // disconnect한 user가 포함된 roomID
       const roomID = socketToRoom[socket.id];
       // room에 포함된 유저
@@ -86,7 +79,6 @@ function socketWebRTC(server) {
       }
       // 어떤 user가 나갔는 지 room의 다른 user에게 통보
       socket.broadcast.to(room).emit("user_exit", { id: socket.id });
-      console.log(users);
     });
   });
 }
