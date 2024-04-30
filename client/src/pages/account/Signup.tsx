@@ -118,19 +118,25 @@ export default function StudentSignup({ role }: RoleProps) {
 
     // 이메일 인증
     const sendEmail = async (email: string) => {
-        const res = await axios.post(`${process.env.REACT_APP_API_SERVER}/api/email`, {
-            email,
-        });
+        if (!email) return alert("이메일을 입력해주세요.");
 
-        if (res.data.randomNum) setRandomNum(res.data.randomNum);
-        else alert(res.data);
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_API_SERVER}/api/email`, {
+                email,
+            });
+
+            if (res.data.randomNum) setRandomNum(res.data.randomNum);
+            else alert(res.data);
+        } catch (error) {
+            console.error("이메일 전송 오류", error);
+        }
     };
 
     // 인증번호 확인
     const checkCertification = (certification: number) => {
         if (!certification) return alert("인증번호를 입력해주세요.");
 
-        if (certification === randomNum) {
+        if (certification === Number(randomNum)) {
             alert("인증되었습니다.");
             setIsCertified(true);
         } else {

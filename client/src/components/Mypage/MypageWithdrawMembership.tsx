@@ -1,6 +1,9 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function MypageWithdrawMembership() {
+    const navigate = useNavigate();
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
 
@@ -12,10 +15,22 @@ export default function MypageWithdrawMembership() {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // 회원탈퇴 요청 보내는 로직 구현
-        console.log("회원탈퇴 요청: ", { userId, password });
+        if (!userId || !password) return alert("아이디와 비밀번호를 입력해주세요.");
+
+        const res = await axios({
+            method: "delete",
+            url: `${process.env.REACT_APP_API_SERVER}/api/withdrawal`,
+            data: { id: userId, password },
+        });
+
+        if (res.data.success) {
+            alert("회원탈퇴가 완료되었습니다.");
+            navigate("/");
+        } else {
+            alert(res.data);
+        }
     };
 
     return (
@@ -39,6 +54,7 @@ export default function MypageWithdrawMembership() {
                             id="password"
                             value={password}
                             onChange={handlePasswordChange}
+                            autoComplete="current-password"
                         />
                     </div>
                     <button type="submit">회원탈퇴</button>
