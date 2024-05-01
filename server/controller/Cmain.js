@@ -69,7 +69,7 @@ exports.getTutors = async (req, res) => {
                         [Op.like]: `%${q}%`,
                     },
                 },
-                attributes: ["nickname", "description", "profile_img", "price"],
+                attributes: ["tutor_idx", "nickname", "description", "profile_img", "price"],
             });
             if (searchTutorsInfo && searchTutorsInfo.length > 0) {
                 res.send({ searchTutorsInfo: searchTutorsInfo });
