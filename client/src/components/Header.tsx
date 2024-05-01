@@ -7,6 +7,7 @@ import axios from "axios";
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [userInfo, setUserInfo] = useState<any>(null);
+    const [profileImgUrl, setProfileImgUrl] = useState<string>("");
     const navigate = useNavigate();
 
     const toggleMenu = () => {
@@ -39,15 +40,24 @@ const Header = () => {
 
     const getUser = async () => {
         try {
+            console.log("++++");
             const url = `${process.env.REACT_APP_API_SERVER}/api/userInfo`;
             const res = await axios.get(url);
-            console.log(res.data.tutorInfo[0]);
             const role = localStorage.getItem("role");
             console.log(role);
+
+            console.log(res.data);
             if (role === "student") {
+                const newProfileImgUrl =
+                    process.env.REACT_APP_API_SERVER + res.data.studentInfo[0].profile_img;
+                console.log(res.data);
+                setProfileImgUrl(newProfileImgUrl);
                 setUserInfo(res.data.studentInfo[0]);
-                console.log(userInfo);
+                console.log("+++");
             } else {
+                const newProfileImgUrl =
+                    process.env.REACT_APP_API_SERVER + res.data.tutorInfo[0].profile_img;
+                setProfileImgUrl(newProfileImgUrl);
                 setUserInfo(res.data.tutorInfo[0]);
             }
         } catch (error) {
@@ -95,7 +105,12 @@ const Header = () => {
                                         onClick={handleLeftClick}
                                         onContextMenu={handleRightClick}
                                     >
-                                        {userInfo.nickname} 님
+                                        <div className="header-nickname">
+                                            <div className="profile-img">
+                                                <img src={profileImgUrl} alt="" />
+                                            </div>
+                                            <div>{userInfo.nickname} 님</div>
+                                        </div>
                                     </Link>
                                 </li>
                             )}
