@@ -242,7 +242,7 @@ exports.sendEmail = async (req, res) => {
     const { email } = req.body;
     const randomNum = (Math.floor(Math.random() * 1000000) + 100000).toString().substring(0, 6);
 
-    console.log("randomNum ::", randomNum);
+    console.log("randomNum ::", Number(randomNum));
 
     const checkEmail = await Promise.all([
         Tutor.findOne({ where: { email } }),
@@ -258,15 +258,22 @@ exports.sendEmail = async (req, res) => {
         html: `<h2>인증번호를 입력해주세요</h2>  <h3>${randomNum} 입니다.</h3>`,
     };
 
-    await transporter.sendMail(mailOptions, (err, info) => {
-        if (err) {
-            console.log("이메일 전송 실패", err);
-            return res.status(500).send("이메일 전송 실패");
-        } else {
-            console.log("이메일 전송 성공", info.response);
-            return res.status(200).send({ randomNum });
-        }
-    });
+    try {
+        const info = await new Promise((resolve, reject) => {
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(info);
+                }
+            });
+        });
+        console.log("이메일 전송 성공", info.response);
+        return res.status(200).send({ randomNum });
+    } catch (error) {
+        console.log("이메일 전송 실패", err);
+        return res.status(500).send("이메일 전송 실패");
+    }
 };
 
 // POST /api/tutor
