@@ -16,6 +16,8 @@ const multer = require("../modules/multer/multer");
  *   description: 학생 추가 수정 삭제 조회
  */
 
+// /api/userInfo
+router.get("/userInfo", controller.getInfo);
 // GET /api
 // 메인페이지 - 강사 정보 조회
 /**
@@ -63,9 +65,7 @@ const multer = require("../modules/multer/multer");
  *                   type: tutor
  *                   description: 검색 결과에 해당하는 강사들 정보 응답
  */
-
-router.get("/", controller.getIndex);
-
+router.get("/", controller.getTutors);
 // GET /api/tutors/:tutorIdx
 // 강사 상세페이지 - 강사 상세 조회
 // 강사번호 파라미터
@@ -96,7 +96,6 @@ router.get("/", controller.getIndex);
  *                   description: 클라이언트가 제공한 강사 인덱스로 해당 강사 정보 조회 및 응답
  */
 router.get("/tutors/:tutorIdx", controller.getTutorDetail);
-
 /**
  * 회원가입: 튜터
  * 사용자가 튜터로 회원가입할 때 호출됩니다.
@@ -332,9 +331,47 @@ router.get("/searchId", controller.searchId);
  *               example: "Internal Server Error"
  */
 router.get("/searchPassword", controller.searchPassword);
+/**
+ * @swagger
+ * /api/favoritesTutor:
+ *   get:
+ *     summary: 찜 목록 조회
+ *     description: 학생 마이페이지에서 찜 목록 누르면 추가한 튜터들 전부 조회
+ *     tags: [Favorites]
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         required: true
+ *         description: 사용자 ID(백에서 세션으로 조회 -> 로그인 상태에서만 조회 가능)
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: 찜한 튜터 목록들 결과(닉네임, 소개글, 프로필사진, 가격 보내질 예정)
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       '400':
+ *         description: 세션 만료했을 때 발생하는 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *       '500':
+ *         description: 서버 오류
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Internal Server Error"
+ */
+router.get("/favoritesTutor", controller.searchFavorites);
 
-router.get("/logout", controller.logout);
-// POST /api
+router.post("/logout", controller.logout);
+// TODO: swagger
+// POST /api/sendEmail
+router.post("/email", controller.sendEmail);
 /**
  * @swagger
  *
@@ -370,7 +407,7 @@ router.get("/logout", controller.logout);
  *      "200":
  *        description: "회원가입 성공"
  */
-router.post("/tutor", multer.single(""), controller.createTutor);
+router.post("/tutor", multer.single("auth"), controller.createTutor);
 /**
  * @swagger
  *
@@ -464,6 +501,84 @@ router.post("/loginTutor", controller.loginTutor);
  *        description: "비밀번호가 일치하지 않습니다. 다시 시도해주세요.  //아이디는 있지만 비밀번호 불일치"
  */
 router.post("/loginStudent", controller.loginStudent);
+/**
+ * @swagger
+ *
+ * /api/favorites:
+ *  post:
+ *    summary: "강사 찜(하트) 기능"
+ *    description: "강사 찜(하트) 추가. 하트를 눌렀을 때 찜 추가"
+ *    tags: [Favorites]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "강사 인덱스와 학생 인덱스로 좋아요 연결"
+ *        schema:
+ *            type: object
+ *            properties:
+ *              stu_idx:
+ *                type: integer
+ *                description: "학생 인덱스"
+ *              tutor_idx:
+ *                type: integer
+ *                description: "강사 인덱스"
+ *    responses:
+ *      "200":
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: string
+ *              example: >
+ *                찜 목록에 추가되었습니다.
+ *      "500":
+ *        description: Server error
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: string
+ *              example: "SERVER ERROR!!!"
+ */
+router.post("/favorites", controller.addFavorites);
+/**
+ * @swagger
+ *
+ * /api/reviews:
+ *  post:
+ *    summary: "튜터 리뷰 달기"
+ *    description: "[리뷰 생성]POST 방식으로 리뷰 등록.
+ *                  학생 인덱스는 세션 정보에서 받아오기 때문에 로그인이 되어야만
+ *                  리뷰를 달 수 있습니다."
+ *    tags: [Review]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "리뷰 생성"
+ *        schema:
+ *            type: object
+ *            properties:
+ *              content:
+ *                type: string
+ *                description: "리뷰 내용"
+ *              rating:
+ *                type: integer
+ *                description: "별점"
+ *              tutor_idx:
+ *                type: integer
+ *                description: "튜터 인덱스"
+ *    responses:
+ *      "200":
+ *        description: "리뷰를 성공적으로 달았습니다!!"
+ *      "400":
+ *        description: "빈 칸을 입력해주세요. //리뷰 내용이나 별점이 없는 경우"
+ *      "500":
+ *        description: "Server error(리뷰 생성 실패)"
+ */
+router.post("/reviews", controller.addReviews);
+
+// patch
 /**
  * @swagger
  *
@@ -621,29 +736,30 @@ router.patch("/studentProfile", controller.editStudentProfile);
  */
 router.patch("/editStudentPassword", controller.editStudentPassword);
 
+// TODO: swagger 수정
 /**
  * @swagger
  *
- * /api/tutor:
+ * /api/withdrawal:
  *  delete:
- *    summary: "튜터 회원 탈퇴"
- *    description: "[회원 탈퇴] DELETE 방식으로 튜터 계정을 삭제한다."
- *    tags: [Tutors]
+ *    summary: "회원 탈퇴"
+ *    description: "[회원 탈퇴] DELETE 방식으로 계정을 삭제한다."
+ *    tags: [Users]
  *    parameters:
  *      - in: body
  *        name: body
  *        required: true
- *        description: "튜터 회원 탈퇴"
+ *        description: "회원 탈퇴"
  *        application/json:
  *        schema:
  *          type: object
  *          properties:
  *            id:
  *              type: string
- *              description: "튜터 ID"
+ *              description: "ID"
  *            password:
  *              type: string
- *              description: "튜터 비밀번호"
+ *              description: "비밀번호"
  *    responses:
  *      '200':
  *        description: "회원 탈퇴 성공"
@@ -689,76 +805,71 @@ router.patch("/editStudentPassword", controller.editStudentPassword);
  *                  type: string
  *                  description: "서버 오류"
  */
-router.delete("/tutor", controller.deleteTutor);
+router.delete("/withdrawal", controller.deleteUser);
+
 /**
  * @swagger
  *
- * /api/student:
+ * /api/favorites:
  *  delete:
- *    summary: "학생 회원 탈퇴"
- *    description: "[회원 탈퇴] DELETE 방식으로 학생 계정을 삭제한다."
- *    tags: [Students]
+ *    summary: "강사 찜(하트) 삭제 기능"
+ *    description: "강사 찜(하트) 제거. 하트를 눌렀을 때 찜 제거"
+ *    tags: [Favorites]
  *    parameters:
  *      - in: body
  *        name: body
  *        required: true
- *        description: "학생 회원 탈퇴"
- *        application/json:
+ *        description: "강사 인덱스와 학생 인덱스로 좋아요 연결"
  *        schema:
- *          type: object
- *          properties:
- *            id:
- *              type: string
- *              description: "학생 ID"
- *            password:
- *              type: string
- *              description: "학생 비밀번호"
+ *            type: object
+ *            properties:
+ *              stu_idx:
+ *                type: integer
+ *                description: "학생 인덱스"
+ *              tutor_idx:
+ *                type: integer
+ *                description: "강사 인덱스"
  *    responses:
- *      '200':
- *        description: "회원 탈퇴 성공"
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                success:
- *                  type: boolean
- *                  description: "회원 탈퇴 성공 여부"
- *                msg:
- *                  type: string
- *                  description: "메시지"
- *      '400':
- *        description: "Bad Request"
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: "오류 메시지"
- *      '401':
- *        description: "Unauthorized"
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: "권한 없음"
- *      '500':
- *        description: "Internal Server Error"
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: "서버 오류"
+ *      "200":
+ *        description: "찜 목록에서 제거되었습니다."
+ *      "500":
+ *        description: "SERVER ERROR!!!"
  */
-router.delete("/student", controller.deleteStudent);
+router.delete("/favorites", controller.deleteFavorites);
+
+/**
+ * @swagger
+ *
+ * /api/reviews:
+ *  delete:
+ *    summary: "리뷰 삭제 기능"
+ *    description: "리뷰 삭제. 세션 정보로 받아오기에 로그인 되어야만 함."
+ *    tags: [Review]
+ *    parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        description: "세션으로 학생 인덱스 받고, 삭제할 리뷰 인덱스 받아야 함."
+ *        schema:
+ *            type: object
+ *            properties:
+ *              stu_idx:
+ *                type: integer
+ *                description: "학생 인덱스"
+ *              review_idx:
+ *                type: integer
+ *                description: "리뷰 인덱스"
+ *    responses:
+ *      "200":
+ *        description: "리뷰가 삭제되었습니다."
+ *      "400":
+ *        description: "로그인을 해주세요."
+ *      "404":
+ *        description: "해당하는 리뷰가 없습니다."
+ *      "500":
+ *        description: "SERVER ERROR!!!"
+ */
+router.delete("/reviews", controller.deleteReviews);
 
 // 채팅방 메시지 조회
 router.get("/messages", controller.getMessage);

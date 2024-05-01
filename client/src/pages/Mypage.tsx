@@ -13,19 +13,20 @@ const MyPage: React.FC = () => {
 
     return (
         <section>
-            <h1>마이페이지</h1>
-            <div>
-                <button onClick={() => handleTabChange("chatting")}>메세지</button>
-                <button onClick={() => handleTabChange("lesson")}>찜 목록</button>
-                <button onClick={() => handleTabChange("profile")}>프로필</button>
-                <button onClick={() => handleTabChange("withdraw")}>회원탈퇴</button>
-            </div>
-            <div>
-                {/* 조건부 렌더링을 사용하여 활성화된 탭에 따라 해당 컴포넌트를 보여줍니다. */}
-                {activeTab === "chatting" && <Chatting />}
-                {activeTab === "lesson" && <StudentMypageLesson />}
-                {activeTab === "profile" && <MypageProfile />}
-                {activeTab === "withdraw" && <MypageWithdrawMembership />}
+            <div className="container">
+                <div className="mypage-button-container">
+                    <button onClick={() => handleTabChange("chatting")}>메세지</button>
+                    <button onClick={() => handleTabChange("lesson")}>찜 목록</button>
+                    <button onClick={() => handleTabChange("profile")}>프로필</button>
+                    <button onClick={() => handleTabChange("withdraw")}>회원탈퇴</button>
+                </div>
+                <div>
+                    {/* 조건부 렌더링을 사용하여 활성화된 탭에 따라 해당 컴포넌트를 보여줍니다. */}
+                    {activeTab === "chatting" && <Chatting />}
+                    {activeTab === "lesson" && <StudentMypageLesson />}
+                    {activeTab === "profile" && <MypageProfile />}
+                    {activeTab === "withdraw" && <MypageWithdrawMembership />}
+                </div>
             </div>
         </section>
     );

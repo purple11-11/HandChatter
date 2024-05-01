@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { ChatRoom } from "../types/interface";
-import ChattingList from "./chatting/ChattingList";
-import ChattingForOne from "./chatting/ChattingForOne";
-import ChattingTutorIntroductor from "./chatting/ChattingTutorIntroductor";
+import ChattingList from "./Chatting/ChattingList";
+import ChattingForOne from "./Chatting/ChattingForOne";
+import ChattingTutorIntroductor from "./Chatting/ChattingTutorIntroductor";
 
 // 예시로 하드코딩된 데이터
 const dummyChatRooms: ChatRoom[] = [

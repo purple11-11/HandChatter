@@ -36,6 +36,13 @@ TutorModel.hasMany(FavoritesModel, {
         allowNull: false,
     },
 });
+FavoritesModel.belongsTo(TutorModel, {
+    onDelete: "CASCADE",
+    foreignKey: {
+        name: "tutor_idx",
+        allowNull: false,
+    },
+});
 // 강사 : 리뷰
 TutorModel.hasMany(ReviewModel, {
     onDelete: "CASCADE",
@@ -76,6 +83,13 @@ StudentModel.hasMany(ReviewModel, {
         allowNull: false,
     },
 });
+ReviewModel.belongsTo(StudentModel, {
+    onDelete: "CASCADE",
+    foreignKey: {
+        name: "stu_idx",
+        allowNull: false,
+    },
+});
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
@@ -84,6 +98,6 @@ db.Student = StudentModel;
 db.Level = LevelModel;
 db.Favorites = FavoritesModel;
 db.Message = MessageModel;
-db.ReviewModel = ReviewModel;
+db.Review = ReviewModel;
 
 module.exports = db;

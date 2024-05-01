@@ -15,16 +15,21 @@ const passportConfig = require("./passport");
 passportConfig(passport);
 const server = http.createServer(app);
 const { swaggerUi, specs } = require("./modules/swagger/swagger");
-const socketHandler = require("./sockets");
+const socketHandler = require("./modules/sockets");
 socketHandler(server);
+const socketWebRTC = require("./modules/webrtc/webrtc");
+socketWebRTC(server);
 
-// body-parser 설정
-app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+const corsOptions = {
+    origin: "http://localhost:3000",
+    credentials: true,
+};
+
+// cors 설정 및 세션 설정 (body-parser 이전에 위치해야 함)
+app.use(cors(corsOptions));
 app.use(
     session({
-        secret: "secretKey",
+        secret: process.env.SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -32,6 +37,10 @@ app.use(
         },
     })
 );
+
+// body-parser 설정
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // passport 설정
 app.use(passport.initialize());

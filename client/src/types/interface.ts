@@ -4,20 +4,11 @@ export interface RoleProps {
 
 export interface SignupData {
     id: string;
-    pw: string;
+    password: string;
     nickname: string;
     email: string;
-    authDocument: File | null;
-    [key: string]: string | File | null; // 인덱스 시그니처
-}
-export interface InputProps {
-    labelText?: string;
-    type: string;
-    name: string;
-    value?: string;
-    handleChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    btnText?: string;
-    onClick?: () => Promise<void>;
+    authDocument?: FileList | null;
+    certification?: number;
 }
 
 export interface ChatRoom {
@@ -25,4 +16,19 @@ export interface ChatRoom {
     name: string;
     email: string;
     intro: string;
+}
+
+export interface Sign {
+    title: string;
+    url: string;
+    referenceIdentifier: string;
+    subDescription: string;
+}
+export interface Tutor {
+    nickname: string;
+    email: string;
+    content: string;
+    price: string;
+    des_video?: string;
+    profile_img?: string;
 }

@@ -1,17 +1,18 @@
 import kakaoLogo from "../../assets/Kakao.png";
 import { useForm } from "react-hook-form";
 import PasswordInput from "../input/PasswordInput";
+import { RoleProps } from "../../types/interface";
+import { Link } from "react-router-dom";
 
-interface Props {
-    role: string;
-    login: (role: string, id: string, pw: string) => Promise<void>;
-}
 interface SigninData {
     id: string;
     pw: string;
 }
+interface LoginProps {
+    login: (role: string, id: string, pw: string) => Promise<void>;
+}
 
-export default function LoginForm({ role, login }: Props) {
+export default function LoginForm({ role, login }: RoleProps & LoginProps) {
     const {
         register,
         handleSubmit,
@@ -27,7 +28,6 @@ export default function LoginForm({ role, login }: Props) {
     const onSubmit = async (data: SigninData) => {
         try {
             const { id, pw } = data;
-
             await login(role, id, pw);
         } catch (error) {
             console.error("로그인 오류", error);
@@ -57,10 +57,12 @@ export default function LoginForm({ role, login }: Props) {
                     </form>
                     {role === "student" && (
                         <div className="social_login">
-                            <button type="button">
-                                <img src={kakaoLogo} alt="카카오 로그인 버튼" width={25} />
-                                카카오톡 로그인
-                            </button>
+                            <Link to={`${process.env.REACT_APP_API_SERVER}/auth/kakao`}>
+                                <button type="button">
+                                    <img src={kakaoLogo} alt="카카오 로그인 버튼" width={25} />
+                                    카카오톡 로그인
+                                </button>
+                            </Link>
                         </div>
                     )}
                 </div>
