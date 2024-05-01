@@ -6,9 +6,14 @@ import { Link } from "react-router-dom";
 interface InstructorProfileProps {
     tutor: Tutor | null;
     tutorIndex?: string;
+    profileImgUrl?: string;
 }
 
-const InstructorProfile: React.FC<InstructorProfileProps> = ({ tutor, tutorIndex }) => {
+const InstructorProfile: React.FC<InstructorProfileProps> = ({
+    tutor,
+    tutorIndex,
+    profileImgUrl,
+}) => {
     const [shortenedContent, setShortenedContent] = useState<string>(""); // 제한된 길이의 소개 내용
     const [isFavorite, setIsFavorite] = useState(false);
     // console.log(tutorIndex);
@@ -44,7 +49,7 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({ tutor, tutorIndex
     return (
         <div>
             <div>
-                <img src={tutor.profile_img} alt="" />
+                <img src={profileImgUrl} alt="" />
             </div>
             <div>
                 <h2>{tutor.nickname}</h2>

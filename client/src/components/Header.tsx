@@ -8,10 +8,6 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [userInfo, setUserInfo] = useState<any>(null);
     const navigate = useNavigate();
-    // useEffect(() => {
-    //     console.log("하하");
-    //     getUser();
-    // }, []);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -33,6 +29,7 @@ const Header = () => {
             await axios.post(url);
 
             localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("role");
             setIsMenuOpen(false); // 로그아웃 후 메뉴 닫기
             setUserInfo(null); // 로그아웃 후 사용자 정보 초기화
         } catch (error) {
@@ -44,10 +41,15 @@ const Header = () => {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/userInfo`;
             const res = await axios.get(url);
-            setUserInfo(res.data.studentInfo[0]);
-            const myInfo = JSON.stringify(res.data.studentInfo[0]);
-            localStorage.setItem("userInfo", myInfo);
-            console.log(myInfo);
+            console.log(res.data.tutorInfo[0]);
+            const role = localStorage.getItem("role");
+            console.log(role);
+            if (role === "student") {
+                setUserInfo(res.data.studentInfo[0]);
+                console.log(userInfo);
+            } else {
+                setUserInfo(res.data.tutorInfo[0]);
+            }
         } catch (error) {
             setUserInfo(null);
         }
