@@ -15,10 +15,10 @@ const passportConfig = require("./passport");
 passportConfig(passport);
 const server = http.createServer(app);
 const { swaggerUi, specs } = require("./modules/swagger/swagger");
-const socketHandler = require("./modules/sockets");
+const socketHandler = require("./sockets");
 socketHandler(server);
-const socketWebRTC = require("./modules/webrtc/webrtc");
-socketWebRTC(server);
+// const socketWebRTC = require("./modules/webrtc/webrtc");
+// socketWebRTC(server);
 
 const corsOptions = {
     origin: "http://localhost:3000",

@@ -19,25 +19,25 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
     };
     useEffect(() => {
         initSocketConnect();
-        const fetchData = async () => {
-            try {
-                // Axios를 사용하여 데이터를 가져옴
-                const response = await axios.get("/api/messages", {
-                    params: {
-                        stuIdx: 1,
-                        tutorIdx: 1,
-                        sender: "student",
-                    },
-                });
-                // 응답 데이터를 상태로 설정
-                setMessages(response.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
+        // const fetchData = async () => {
+        //     try {
+        //         // Axios를 사용하여 데이터를 가져옴
+        //         const response = await axios.get("/api/messages", {
+        //             params: {
+        //                 stuIdx: 1,
+        //                 tutorIdx: 1,
+        //                 sender: "student",
+        //             },
+        //         });
+        //         // 응답 데이터를 상태로 설정
+        //         setMessages(response.data);
+        //     } catch (error) {
+        //         console.error("Error fetching data:", error);
+        //     }
+        // };
 
-        // 데이터 가져오기 함수 호출
-        fetchData();
+        // // 데이터 가져오기 함수 호출
+        // fetchData();
     }, []);
 
     // 메세지를 string배열이 아닌 { 강사 or 학생 인덱스: idx, msg } 형태로 담아야

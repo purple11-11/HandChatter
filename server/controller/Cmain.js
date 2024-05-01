@@ -244,12 +244,10 @@ exports.sendEmail = async (req, res) => {
 
     console.log("randomNum ::", randomNum);
 
-    const checkEmail = await Promise.all([
-        Tutor.findOne({ where: { email } }),
-        Student.findOne({ where: { email } }),
-    ]);
+    const se = await Student.findOne({ where: { email } });
+    const te = await Tutor.findOne({ where: { email } });
 
-    if (checkEmail[0] || checkEmail[1]) return res.send("이미 가입된 이메일입니다.");
+    if (se || te) return res.send("이미 가입된 이메일입니다.");
 
     const mailOptions = {
         from: process.env.EMAIL_USER,
