@@ -1,6 +1,7 @@
 const { Tutor, Student, Favorites, Review } = require("../models");
 const { Op } = require("sequelize");
 const { transporter } = require("../modules/nodemailer/nodemailer");
+const fs = require("fs");
 
 const bcrypt = require("bcrypt");
 
@@ -505,10 +506,9 @@ exports.addReviews = async (req, res) => {
 // PATCH /api/tutorProfile
 exports.editTutorProfile = async (req, res) => {
     try {
-        const { id, nickname, password, level, price, desVideo, description } = req.body;
+        const { id, nickname, password, level, price, description } = req.body;
         if (!nickname || !price || !password) res.status(400).send("빈칸을 입력해주세요.");
-        // desVideo 유효성 검사 해야하나? 일단 대기
-        let defaultImg = "./uploads/default.jpg";
+
         const realPrice = Number(price);
 
         const tutor = await Tutor.findOne({
@@ -523,11 +523,9 @@ exports.editTutorProfile = async (req, res) => {
             } else {
                 await Tutor.update(
                     {
-                        profile_img: defaultImg,
                         nickname,
                         level,
                         price: realPrice,
-                        des_video: desVideo,
                         description,
                     },
                     {
@@ -582,8 +580,6 @@ exports.editStudentProfile = async (req, res) => {
         const { id, nickname, password } = req.body;
         if (!nickname || !password) res.status(400).send("빈칸을 입력해주세요.");
 
-        let defaultImg = "./uploads/default.jpg";
-
         const student = await Student.findOne({
             where: {
                 id,
@@ -596,7 +592,6 @@ exports.editStudentProfile = async (req, res) => {
             } else {
                 await Student.update(
                     {
-                        profile_img: defaultImg,
                         nickname,
                     },
                     {
@@ -641,6 +636,67 @@ exports.editStudentPassword = async (req, res) => {
         }
     } catch (error) {
         res.status(500).send(error);
+    }
+};
+
+//PATCH /api/editPhoto
+exports.editPhoto = async (req, res) => {
+    try {
+        const { userId, role } = req.session;
+        if (!userId) return res.status(400).send("로그인을 해주세요.");
+
+        if (role === "tutor") {
+            const pastImg = await Tutor.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            fs.unlink(pastImg.profile_img, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("파일이 성공적으로 삭제되었습니다.");
+            });
+            await Tutor.update(
+                {
+                    profile_img: req.file.path,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        } else {
+            const pastImg = await Student.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            fs.unlink(pastImg.profile_img, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("파일이 성공적으로 삭제되었습니다.");
+            });
+            await Student.update(
+                {
+                    profile_img: req.file.path,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
     }
 };
 

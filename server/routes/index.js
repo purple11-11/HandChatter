@@ -735,6 +735,7 @@ router.patch("/studentProfile", controller.editStudentProfile);
  *         description: "서버 오류"
  */
 router.patch("/editStudentPassword", controller.editStudentPassword);
+router.patch("/editPhoto", multer.single("profile_img"), controller.editPhoto);
 
 // TODO: swagger 수정
 /**
