@@ -29,4 +29,6 @@ export interface Tutor {
     email: string;
     content: string;
     price: string;
+    des_video?: string;
+    profile_img?: string;
 }

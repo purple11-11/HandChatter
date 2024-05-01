@@ -67,18 +67,26 @@ export default function Main() {
     // };
 
     return (
-        <>
+        <div>
             <section>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="튜터 검색"
-                        value={searchTerm}
-                        onChange={handleChange}
-                    />
-                    <button onClick={handleSearchTutor}>검색</button>
+                <div className="container">
+                    <img src="" alt="" />
+                </div>
+            </section>
+            <section className="ourtutor">
+                <div className="container">
+                    <p>Our Tutor</p>
+                    <div className="search">
+                        <input
+                            type="text"
+                            placeholder="    튜터 검색"
+                            value={searchTerm}
+                            onChange={handleChange}
+                        />
+                        <button onClick={handleSearchTutor}>검색</button>
+                    </div>
                     {error && <p>{error}</p>}
-                    <ul>
+                    <ul className="card-container">
                         {searchResults.map((tutor, index) => (
                             <li key={index}>
                                 <Link to={`/tutors/${index + 1}`}>
@@ -115,6 +123,6 @@ export default function Main() {
                     </ul>
                 </div>
             </section> */}
-        </>
+        </div>
     );
 }

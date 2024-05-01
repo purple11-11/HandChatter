@@ -1,33 +1,77 @@
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUITE/fonts/static/woff2/SUITE.css");
+
 body {
     margin: 0;
     padding: 0;
+    background-color: #fcfcec;
+    font-family: "SUITE", sans-serif;
+    position: relative;
+}
+a {
+    text-decoration: none;
+}
+ul,
+li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+input {
+    border-radius: 5px;
+    border: 1px solid #d4d4ba;
+    box-shadow: 1px 1px 1px gray;
+    padding: 0;
+    margin: 0;
+}
+button {
+    background-color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #c9c9aa;
+    box-shadow: 1px 1px 1px gray;
+}
+.container {
+    max-width: 1080px;
+    margin: 0 auto;
+}
+section {
+    height: 960px;
+    border-bottom: 2px solid #d4d4ba;
+    padding: 80px;
 }
 
 // Header
 .header {
     position: fixed;
-    top: 0;
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
     background-color: #016a70;
     color: #ffffdd;
+    top: 0;
+    z-index: 1;
+    .container {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        .logo {
+            a {
+                color: #ffffdd;
+            }
+        }
+        .menu {
+            ul {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                li {
+                    display: inline;
+                    margin: 0 1rem;
 
-    .menu {
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-
-            li {
-                display: inline;
-                margin: 0 1rem;
-
-                a {
-                    text-decoration: none;
-                    color: #ffffdd;
+                    a {
+                        text-decoration: none;
+                        color: #ffffdd;
+                    }
                 }
             }
         }
@@ -38,46 +82,109 @@ body {
     }
 }
 .sidebar {
-    position: fixed;
+    position: absolute;
+    top: 70px;
     right: 0;
-    background-color: #a2c579;
+    background-color: #ffffdd;
     padding: 1rem;
-    border: 1px solid #016a70;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px gray;
+
     ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
+        display: flex;
         li {
+            background-color: #ffff;
             color: #016a70;
+            padding: 7px 12px;
+            margin: 0 1rem;
+            border-radius: 5px;
+            border: 1px solid #c9c9aa;
+            box-shadow: 1px 1px 1px gray;
             a {
                 text-decoration: none;
-                color: #016a70;
+                color: #004d51;
             }
         }
     }
 }
 // Footer
 .footer {
+    position: absolute;
+    bottom: -182px;
     width: 100%;
+    height: 150px;
     background-color: #016a70;
     color: #ffffdd;
     padding: 1rem 0;
     text-align: center;
-    position: relative;
-
-    .container {
-        max-width: 960px;
-        margin: 0 auto;
-    }
-
     p {
         margin: 0;
         font-size: 0.9rem;
     }
 }
 
-// main
-section {
-    background-color: #ffffdd;
-    border: 1px solid black;
+// Instructor card
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    .card {
+        width: 300px;
+        height: 450px;
+        border: 1px solid #c9c9aa;
+        border-radius: 10px;
+        box-shadow: 1px 1px 1px gray;
+        color: #ffffdd;
+        background-color: #016a70;
+        margin: 0 22.5px;
+        .profile-info {
+        }
+    }
+}
+
+// Main
+.ourtutor {
+    div {
+        position: relative;
+        height: 50px;
+        p {
+            color: #004d51;
+            padding-left: 22.5px;
+            margin: 0;
+            font-size: 70px;
+        }
+        .search {
+            width: 900px;
+            margin: 30px auto;
+            input {
+                width: 900px;
+                height: 40px;
+            }
+            button {
+                position: absolute;
+                top: 6px;
+                right: 0;
+                padding: 5px 10px;
+                border: none;
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+// Mypage
+.mypage-button-container {
+    width: 700px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    button {
+        padding: 8px 45px;
+        color: #004d51;
+        font-size: 16px;
+        font-weight: bold;
+        &:hover {
+            background-color: #016a70;
+            color: #ffff;
+        }
+    }
 }
