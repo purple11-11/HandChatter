@@ -45,7 +45,8 @@ const Tutor = function (Sequelize, DataTypes) {
             },
             des_video: {
                 type: DataTypes.STRING(255),
-                allowNull: true,
+                allowNull: false,
+                defaultValue: "자기소개 영상 파일 경로",
             },
             price: {
                 type: DataTypes.INTEGER,
