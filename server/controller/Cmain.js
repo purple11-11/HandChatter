@@ -24,7 +24,15 @@ exports.getInfo = async (req, res) => {
         if (role === "student") {
             const studentInfo = await Student.findAll({
                 where: { id: userId },
-                attributes: ["id", "nickname", "email", "provider", "profile_img", "authority"],
+                attributes: [
+                    "stu_idx",
+                    "id",
+                    "nickname",
+                    "email",
+                    "provider",
+                    "profile_img",
+                    "authority",
+                ],
             });
             return res.status(200).send({ studentInfo });
         } else if (role === "tutor") {
