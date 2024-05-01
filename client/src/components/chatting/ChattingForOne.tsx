@@ -11,9 +11,11 @@ const socket = io("http://localhost:8080", {
 const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
     const initSocketConnect = () => {
         if (!socket.connected) socket.connect();
+        const user = axios.get("/api/userInfo");
         // 로그인 상황(강사 or 학생)에 따라 emit 다르게 작동
         // 튜터로 로그인한 경우
-        // socket.emit("join", { role: "tutor", idx: 1 });
+        // if (authority === 1)
+        socket.emit("join", { role: "tutor", idx: 1 });
         // 학생으로 로그인한 경우
         socket.emit("join", { role: "student", idx: 1 });
     };
