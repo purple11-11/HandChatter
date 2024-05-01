@@ -763,6 +763,43 @@ exports.editDefaultPhoto = async (req, res) => {
     }
 };
 
+// PATCH /api/uploadVideo
+exports.uploadVideo = async (req, res) => {
+    try {
+        const { userId, role } = req.session;
+        if (!userId) return res.status(400).send("로그인을 해주세요.");
+
+        if (role === "tutor") {
+            const pastVideo = await Tutor.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            fs.unlink(pastVideo.des_video, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("파일이 성공적으로 삭제되었습니다.");
+            });
+            await Tutor.update(
+                {
+                    des_video: req.file.path,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        } else return res.status(400).send("올바른 요청이 아닙니다.");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
 // DELETE /api/withdrawal
 exports.deleteUser = async (req, res) => {
     const { id, password } = req.body;

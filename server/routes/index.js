@@ -737,6 +737,7 @@ router.patch("/studentProfile", controller.editStudentProfile);
 router.patch("/editStudentPassword", controller.editStudentPassword);
 router.patch("/editPhoto", multer.single("profile_img"), controller.editPhoto);
 router.patch("/backDefault", multer.single("default"), controller.editDefaultPhoto);
+router.patch("/uploadVideo", multer.single("video"), controller.uploadVideo);
 
 // TODO: swagger 수정
 /**
