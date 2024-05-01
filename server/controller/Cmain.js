@@ -1,4 +1,4 @@
-const { Tutor, Student } = require("../models");
+const { Tutor, Student, Message } = require("../models");
 const { Op } = require("sequelize");
 
 const bcrypt = require("bcrypt");
@@ -26,14 +26,14 @@ exports.getIndex = async (req, res) => {
             if (searchTutorsInfo && searchTutorsInfo.length > 0) {
                 res.send({ searchTutorsInfo: searchTutorsInfo });
             } else {
-                res.status(404).send("검색 결과가 없습니다.");
+                res.status(404).send("강사 검색 결과가 없습니다.");
             }
         } else {
             const tutorsInfo = await Tutor.findAll();
             if (tutorsInfo && tutorsInfo.length > 0) {
                 res.send({ tutorsInfo: tutorsInfo });
             } else {
-                res.status(404).send("검색 결과가 없습니다.");
+                res.status(404).send("강사 검색 결과가 없습니다.");
             }
         }
     } catch (err) {
@@ -492,4 +492,36 @@ exports.deleteStudent = async (req, res) => {
     } catch (err) {
         res.status(500).send("server error!");
     }
+};
+
+// GET /api/messages
+exports.getMessage = async (req, res) => {
+    const { stuIdx, tutorIdx, sender } = req.params;
+    try {
+        const messages = await Message.findAll({
+            where: {
+                stu_idx: stuIdx,
+                tutor_idx: tutorIdx,
+            },
+        });
+        if (messages && messages.length > 0) {
+            if (sender === "student")
+                res.send({
+                    messages: messages.map((message) => ({
+                        idx: message.tutor_idx,
+                        msg: message.content,
+                    })),
+                });
+            else {
+                res.send({
+                    messages: messages.map((message) => ({
+                        idx: message.tutorIdx,
+                        msg: message.content,
+                    })),
+                });
+            }
+        } else {
+            res.status(404).send("메시지 검색 결과가 없습니다.");
+        }
+    } catch (err) {}
 };

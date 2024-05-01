@@ -19,6 +19,7 @@ function socketHandler(server) {
         console.log("새로운 소켓이 연결되었습니다:", socket.id);
 
         socket.on("join", (data) => {
+            console.log("새로운 학생 추가");
             // 클라이언트가 튜터인지 학생인지에 따라 소켓 ID를 저장
             const { role, idx } = data;
             if (role === "tutor") {
@@ -26,11 +27,11 @@ function socketHandler(server) {
             } else if (role === "student") {
                 studentSockets[idx] = socket.id;
             }
+            // console.log(studentSockets);
         });
 
         socket.on("send", async (data) => {
             const { msg, stuIdx, tutorIdx, sender, receiver } = data;
-
             try {
                 // 메시지를 데이터베이스에 저장
                 const newMessage = await Message.create({
