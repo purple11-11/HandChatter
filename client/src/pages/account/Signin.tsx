@@ -4,9 +4,12 @@ import "../../styles/pages/account/signin.scss";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { RoleProps } from "../../types/interface";
+import { useInfoStore } from "../../store/store";
 
 export default function Signip() {
     const [role, setRole] = useState<RoleProps>({ role: "student" });
+
+    const getInfo = useInfoStore((state) => state.getInfo);
     function showLoginForm(role: RoleProps) {
         setRole(role);
     }
@@ -30,9 +33,8 @@ export default function Signip() {
                 if (!res.data.isLogin) {
                     alert("로그인 실패 \n" + res.data);
                 } else {
-                    localStorage.setItem("isLoggedIn", "true");
-                    localStorage.setItem("role", role);
-                    window.location.href = "/";
+                    getInfo();
+                    navigate("/");
                 }
             });
         } catch (error) {
