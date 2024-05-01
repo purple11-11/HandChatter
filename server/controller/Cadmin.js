@@ -1,4 +1,25 @@
-const { Tutor } = require("../models");
+const { Tutor, Student } = require("../models");
+
+//GET /admin
+exports.getUsers = async (req, res) => {
+    try {
+        const id = req.session.adminId;
+        if (id) {
+            const users = await Promise.all([
+                Tutor.findAll({
+                    attributes: ["tutor_idx", "id", "nickname", "auth", "email", "authority"],
+                }),
+                Student.findAll({
+                    attributes: ["stu_idx", "id", "nickname", "email", "authority"],
+                }),
+            ]);
+            res.status(200).send({ users });
+        } else return res.status(400).send("관리자로 로그인을 해주세요.");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
 
 //POST /admin/login
 exports.login = (req, res) => {
@@ -13,6 +34,7 @@ exports.login = (req, res) => {
         if (id === admin.id) {
             if (password === admin.password) {
                 req.session.adminId = id;
+                console.log(req.session.adminId);
                 res.status(200).send({
                     isAdminLogin: true,
                     msg: "관리자로 로그인되었습니다.",
