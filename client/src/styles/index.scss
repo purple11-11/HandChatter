@@ -39,7 +39,16 @@ section {
     border-bottom: 2px solid #d4d4ba;
     padding: 80px;
 }
-
+.profile-img {
+    width: 20px;
+    height: 20px;
+    border-radius: 15px;
+    border: 1px solid #d4d4ba;
+    overflow: hidden;
+    img {
+        width: 20px;
+    }
+}
 // Header
 .header {
     position: fixed;
@@ -64,13 +73,18 @@ section {
                 list-style-type: none;
                 padding: 0;
                 margin: 0;
+                display: flex;
                 li {
-                    display: inline;
                     margin: 0 1rem;
 
                     a {
                         text-decoration: none;
                         color: #ffffdd;
+                    }
+                    .header-nickname {
+                        width: 80px;
+                        display: flex;
+                        justify-content: space-between;
                     }
                 }
             }
