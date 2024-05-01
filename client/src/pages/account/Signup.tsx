@@ -58,7 +58,7 @@ export default function StudentSignup({ role }: RoleProps) {
             const url = `${process.env.REACT_APP_API_SERVER}/api/check${
                 role === "student" ? "Student" : "Tutor"
             }${keyword === "id" ? "Id" : "Nickname"}?${keyword}=${value}`;
-
+            console.log(url);
             const res = await axios.get(url);
 
             if (res.data.available === false) {

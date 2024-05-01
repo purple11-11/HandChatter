@@ -871,6 +871,9 @@ router.delete("/favorites", controller.deleteFavorites);
  */
 router.delete("/reviews", controller.deleteReviews);
 
+// 채팅방 메시지 조회
+router.get("/messages", controller.getMessage);
+
 router.get("*", (req, res) => {
     // res.render("404");
     res.send("404page");

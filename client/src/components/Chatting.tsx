@@ -12,9 +12,15 @@ const dummyChatRooms: ChatRoom[] = [
 ];
 
 // 메인 채팅 컴포넌트
-const Chatting: React.FC = () => {
+const Chatting: React.FC = (props?) => {
+    // 강사 상세(dm보내기)에서 props로 받아온 강사인덱스 넣어주기
+    // 즉 모든 강사들과의 채팅방을 보기위한 state
+    // 추후 채팅방 삭제시 이 state 배열에서 해당 강사인덱스 삭제해야함
+    const [allRoom, setAllRoom] = useState<number[]>([]);
+    // 강사인덱스(해당 강사와의 채팅방)선택값 담는 state
     const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
 
+    // roomid -> tutorIdx(강사인덱스)
     const handleRoomClick = (roomId: number) => {
         setSelectedRoom(roomId); // 선택된 채팅방 변경
     };
