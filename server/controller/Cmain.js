@@ -696,7 +696,7 @@ exports.deleteUser = async (req, res) => {
 
 // DELETE /api/favorites
 exports.deleteFavorites = async (req, res) => {
-    const id = req.session.student;
+    const id = req.session.userId;
     if (!id) res.status(401).send("로그인을 해주세요.");
     const { stu_idx, tutor_idx } = req.body;
 
