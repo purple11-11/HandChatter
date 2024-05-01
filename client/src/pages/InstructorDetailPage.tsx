@@ -8,6 +8,7 @@ import { Tutor } from "../types/interface";
 export default function InstructorDetailPage() {
     const { tutorIndex } = useParams<{ tutorIndex: string }>(); // URL 파라미터에서 강사 ID 가져오기
     const [tutor, setTutor] = useState<Tutor | null>(null);
+    const [profileImgUrl, setProfileImgUrl] = useState<string>("");
 
     useEffect(() => {
         const fetchTutor = async () => {
@@ -15,6 +16,11 @@ export default function InstructorDetailPage() {
                 const url = `${process.env.REACT_APP_API_SERVER}/api/tutors/${tutorIndex}`;
                 const res = await axios.get(url);
                 console.log(res.data);
+                const newProfileImgUrl = res.data.tutorInfo.profile_img.replace(
+                    ".",
+                    process.env.REACT_APP_API_SERVER
+                );
+                setProfileImgUrl(newProfileImgUrl);
                 setTutor(res.data.tutorInfo);
             } catch (error) {
                 console.error("강사 정보를 불러오는 중 에러:", error);
@@ -23,10 +29,11 @@ export default function InstructorDetailPage() {
 
         fetchTutor();
     }, [tutorIndex]);
+
     return (
         <section>
             <div>
-                <InstructorProfile tutor={tutor} tutorIndex={tutorIndex}></InstructorProfile>
+                <InstructorProfile tutor={tutor} tutorIndex={tutorIndex} profileImgUrl={profileImgUrl}></InstructorProfile>
                 <div>
                     <div>
                         <div>{tutor?.des_video}</div>

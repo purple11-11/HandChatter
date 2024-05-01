@@ -31,7 +31,7 @@ export default function Signip() {
                     alert("로그인 실패 \n" + res.data);
                 } else {
                     localStorage.setItem("isLoggedIn", "true");
-                    console.log("-----");
+                    localStorage.setItem("role", role);
                     window.location.href = "/";
                 }
             });
