@@ -132,18 +132,19 @@ exports.getTutorDetail = async (req, res) => {
     }
 };
 
-// GET /api/signUpTutor
-exports.signUpTutor = (req, res) => {
-    res.send({ isLogin: false });
-};
-// GET /api/signUpStudent
-exports.signUpStudent = (req, res) => {
-    res.send({ isLogin: false });
-};
-// GET /api/login
-exports.login = (req, res) => {
-    res.send({ isLogin: false });
-};
+// // GET /api/signUpTutor
+// exports.signUpTutor = (req, res) => {
+//     res.send({ isLogin: false });
+// };
+// // GET /api/signUpStudent
+// exports.signUpStudent = (req, res) => {
+//     res.send({ isLogin: false });
+// };
+// // GET /api/login
+// exports.login = (req, res) => {
+//     res.send({ isLogin: false });
+// };
+
 // GET /api/checkStudentId
 // GET /api/checkTutorId
 exports.checkId = async (req, res) => {
@@ -484,10 +485,10 @@ exports.searchFavorites = async (req, res) => {
 exports.addReviews = async (req, res) => {
     try {
         const stu_idx = req.session.stu_idx;
-        if (!stu_idx) return res.send("로그인을 해주세요.");
+        if (!stu_idx) return res.send("올바른 요청이 아닙니다."); //로그인 해야 함.
 
         const { content, rating, tutor_idx } = req.body;
-        if (!content || !rating) return res.status(400).send("빈칸을 입력해주세요.");
+        if (!(content || rating)) return res.status(400).send("빈칸을 입력해주세요.");
         const review = await Review.create({
             content,
             rating,
@@ -685,6 +686,68 @@ exports.editPhoto = async (req, res) => {
             await Student.update(
                 {
                     profile_img: req.file.path,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+//PATCH /api/backDefault
+exports.editDefaultPhoto = async (req, res) => {
+    try {
+        const { userId, role } = req.session;
+        const defaultImg = "../uploads/default.jpg";
+
+        if (!userId) return res.status(400).send("로그인을 해주세요.");
+
+        if (role === "tutor") {
+            const pastImg = await Tutor.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            fs.unlink(pastImg.profile_img, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("파일이 성공적으로 삭제되었습니다.");
+            });
+            await Tutor.update(
+                {
+                    profile_img: defaultImg,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        } else {
+            const pastImg = await Student.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            fs.unlink(pastImg.profile_img, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("파일이 성공적으로 삭제되었습니다.");
+            });
+            await Student.update(
+                {
+                    profile_img: defaultImg,
                 },
                 {
                     where: {
