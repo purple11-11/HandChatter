@@ -7,6 +7,7 @@ const http = require("http");
 const { sequelize } = require("./models");
 const indexRouter = require("./routes");
 const authRouter = require("./routes/auth");
+const adminRouter = require("./routes/admin");
 const serverPrefix = "/api";
 const cors = require("cors");
 const session = require("express-session");
@@ -51,6 +52,7 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 // route 설정
 app.use(serverPrefix, indexRouter);
 app.use("/auth", authRouter);
+app.use("/admin", adminRouter);
 
 sequelize
     .sync({ force: false })
