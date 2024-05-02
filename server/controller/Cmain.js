@@ -480,9 +480,9 @@ exports.addReviews = async (req, res) => {
             tutor_idx,
             stu_idx,
         });
-        if (!review) {
-            throw new Error("SERVER ERROR!!!");
-        } else res.status(200).send("리뷰를 성공적으로 달았습니다!");
+        if (review) {
+            res.status(200).send("리뷰를 성공적으로 달았습니다!")
+        } else throw new Error("SERVER ERROR!!!");
     } catch (error) {
         console.log(error);
         res.status(500).send("SERVER ERROR!!!");

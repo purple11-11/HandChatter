@@ -2,15 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import * as io from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import {Tutor} from "../types/interface";
 
-  /* Client에서 사용할 변수들
-  pc_config: RTCPeerConnection을 생성할 때의 config
-  socket: Signaling Server와 통신할 socket
-  pc: RTCPeerConnetion
-  localVideoRef: 본인의 video, audio를 재생할 video 태그의 ref
-  remoteVideoRef: 상대방의 video, audio를 재생할 video 태그의 ref
-  */
- 
+
   const pc_config = {
     iceServers: [
       {
@@ -23,6 +19,8 @@ import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-ico
 
 
   const Webcam = () => {
+    const [tutorIndex, setTutorIndex] = useState<number>(1); // 예시로 초기값 1로 설정
+
     const socketRef = useRef<SocketIOClient.Socket>();
     const pcRef = useRef<RTCPeerConnection>();
     const pcRef2 = useRef<RTCPeerConnection>();
@@ -30,6 +28,11 @@ import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-ico
     const remoteVideoRef = useRef<HTMLVideoElement>(null);
     const [isMicMuted, setIsMicMuted] = useState(false); // 마이크 음소거 상태를 저장하는 상태 변수
     const [isCameraOn, setIsCameraOn] = useState(false); // 화면 켜고 끄기 상태를 저장하는 상태 변수
+    const [showModal, setShowModal] = useState(false); // 모달 상태를 저장하는 상태 변수
+    const [rating, setRating] = useState(0); // 별점을 저장하는 상태 변수
+    const [review, setReview] = useState(""); // 후기를 저장하는 상태 변수
+
+    const navigate = useNavigate()
     const setVideoTracks = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -64,7 +67,7 @@ import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-ico
         };
   
         socketRef.current.emit("join_room", {
-          room: "1234",
+          room: "0001",
         });
       } catch (e) {
         console.error(e);
@@ -137,7 +140,6 @@ import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-ico
       socketRef.current.on("getAnswer", (sdp: RTCSessionDescription) => {
         console.log("get answer");
         if (!pcRef.current) return;
-        console.log("aaaaaaaa");
         pcRef.current.setRemoteDescription(new RTCSessionDescription(sdp));
       });
   
@@ -178,63 +180,121 @@ import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-ico
   const micText = isMicMuted ? "마이크 켜기" : "마이크 끄기";
 
   // CamMute : 영상 켜고 끄기
-const CamMute = () => {
-  if (localVideoRef.current) {
-    const stream = localVideoRef.current.srcObject as MediaStream;
-    if (stream) {
-      const videoTracks = stream.getVideoTracks();
-      videoTracks.forEach((track) => {
-        track.enabled = !track.enabled; // 카메라 상태를 반전시킴
-      });
+  const CamMute = () => {
+    if (localVideoRef.current) {
+      const stream = localVideoRef.current.srcObject as MediaStream;
+      if (stream) {
+        const videoTracks = stream.getVideoTracks();
+        videoTracks.forEach((track) => {
+          track.enabled = !track.enabled;
+        });
+      }
     }
-  }
-  // 카메라 상태 변경 후 버튼 
-  setIsCameraOn((prev) => !prev);
-};
+    // 카메라 상태 변경 후 버튼 
+    setIsCameraOn((prev) => !prev);
+  };
 
-const ChattIngress = () => {};
-const ChattExit = () => {};
+  // 모달이 열릴 때 호출되는 함수
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
-return (
-  <div style={{ position: "relative" }}>
-    <div style={{ position: "relative", width: 240, height: 240 }}>
-      <video
-        style={{
-          width: 240,
-          height: 240,
-          margin: 5,
-          backgroundColor: "#727272",
-        }}
-        muted
-        ref={localVideoRef}
-        autoPlay
-      />
-      <div style={{ position: "absolute", bottom: 0, right: 0 }}>
-        <div className="mic_icon" onClick={MicMute}>
-          <FontAwesomeIcon icon={isMicMuted ? faMicrophoneSlash : faMicrophone} />
+  const sendReview = async () => {
+    console.log("별점:", rating);
+    console.log("후기:", review);
+      
+    try {
+      // 후기와 별점이 입력되었는지 확인
+      if (!review || !rating) {
+        console.log("후기와 별점을 모두 입력하세요.");
+        return;
+      }
+      const url = `${process.env.REACT_APP_API_SERVER}/api/reviews`;
+      const response = await axios.post(url, {
+        content: review, 
+        rating: rating,
+        tutor_idx: tutorIndex, 
+      });
+  
+      // 서버로부터의 응답 확인
+      if (response.status === 200) {
+        console.log("후기 작성 성공");
+        navigate('/mypage'); // 후기 작성 성공 시 마이페이지로 이동
+      } else {
+        console.log("서버에서 응답을 받을 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("후기 전송 중 오류 발생:", error);
+    }
+  };
+      
+
+
+    const MemoIngress = () => {};
+
+    const ChattExit = () => {
+      setShowModal(true); 
+    };
+
+    return (
+      <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", width: 240, height: 240 }}>
+          <video
+            style={{
+              width: 240,
+              height: 240,
+              margin: 5,
+              backgroundColor: "#727272",
+            }}
+            muted
+            ref={localVideoRef}
+            autoPlay
+          />
+          <div style={{ position: "absolute", bottom: 0, right: 0 }}>
+            <div className="mic_icon" onClick={MicMute}>
+              <FontAwesomeIcon icon={isMicMuted ? faMicrophoneSlash : faMicrophone} />
+            </div>
+          </div>
         </div>
+        <video
+          id="remotevideo"
+          style={{
+            width: 240,
+            height: 240,
+            margin: 5,
+            backgroundColor: "#a2c579",
+          }}
+          ref={remoteVideoRef}
+          autoPlay
+        /> <br/>
+
+        <button onClick={MicMute}>
+          {micText}
+        </button>
+        <button onClick={CamMute}>카메라 {isCameraOn ? '켜기' : '끄기'}</button>
+        <button onClick={MemoIngress}>채팅 켜기</button>
+        <button onClick={ChattExit}>나가기</button>
+
+        {showModal && (
+          <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 999 }}>
+            <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ffffdd", padding: 20, borderRadius: 10 }}>
+              <h2>강의 후기 작성하기</h2>
+              <h4>강사님의 강의가 도움이 되셨나요? 후기를 작성해주세요</h4>
+              <div>
+                <span> 별점: </span>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} onClick={() => setRating(star)} style={{ cursor: "pointer", color: star <= rating ? "orange" : "gray" }}>★</span>
+                ))}
+              </div>
+              <textarea value={review} onChange={(e) => setReview(e.target.value)}  />
+              <button onClick={closeModal}>뒤로가기</button>
+              <button onClick={sendReview}>보내기</button>
+
+            </div>
+          </div>
+        )}
       </div>
-    </div>
-    <video
-      id="remotevideo"
-      style={{
-        width: 240,
-        height: 240,
-        margin: 5,
-        backgroundColor: "#a2c579",
-      }}
-      ref={remoteVideoRef}
-      autoPlay
-    /> <br/>
-    
-    <button onClick={MicMute}>
-      {micText}
-    </button> 
-    <button onClick={CamMute}>카메라 {isCameraOn ? '켜기' : '끄기'}</button>
-    <button onClick={ChattIngress}>채팅 켜기</button>
-    <button onClick={ChattExit}>나가기</button>
-  </div>
+
   );
 };
-
 export default Webcam;
