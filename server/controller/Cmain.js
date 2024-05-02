@@ -1,4 +1,4 @@
-const { Tutor, Student, Favorites, Review } = require("../models");
+const { Tutor, Student, Favorites, Review, Message, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { transporter } = require("../modules/nodemailer/nodemailer");
 const fs = require("fs");
@@ -895,32 +895,91 @@ exports.deleteReviews = async (req, res) => {
 
 // GET /api/messages
 exports.getMessage = async (req, res) => {
-    const { stuIdx, tutorIdx, sender } = req.params;
+    const { stuIdx, tutorIdx } = req.query;
     try {
-        const messages = await Message.findAll({
-            where: {
-                stu_idx: stuIdx,
-                tutor_idx: tutorIdx,
-            },
-        });
-        if (messages && messages.length > 0) {
-            if (sender === "student")
-                res.send({
-                    messages: messages.map((message) => ({
-                        idx: message.tutor_idx,
-                        msg: message.content,
-                    })),
+        // 특정 강사 메세지(채팅방 하나에 담긴) 조회
+        if (stuIdx && tutorIdx) {
+            const messages = await Message.findAll({
+                where: {
+                    stu_idx: stuIdx,
+                    tutor_idx: tutorIdx,
+                },
+            });
+            if (messages && messages.length > 0) {
+                res.send({ messages: messages });
+            } else {
+                res.status(404).send("메시지 검색 결과가 없습니다.");
+            }
+
+            // 모든 강사와의 메세지 조회(학생 로그인)후 강사들 인덱스 보내주기
+        } else if (stuIdx) {
+            const tutors = await Message.findAll({
+                where: {
+                    stu_idx: stuIdx,
+                },
+                attributes: [[sequelize.literal("DISTINCT tutor_idx"), "tutor_idx"]],
+            });
+            if (tutors && tutors.length > 0) {
+                const tutorsIdx = tutors.map((tutor) => {
+                    return tutor.tutor_idx;
                 });
-            else {
-                res.send({
-                    messages: messages.map((message) => ({
-                        idx: message.tutorIdx,
-                        msg: message.content,
-                    })),
+                res.send({ tutorsIdx: tutorsIdx });
+            } else {
+                res.status(404).send("메시지 검색 결과가 없습니다.");
+            }
+
+            // 모든 학생과의 메세지 조회(강사 로그인)
+        } else if (tutorIdx) {
+            const students = await Message.findAll({
+                where: {
+                    tutor_idx: tutorIdx,
+                },
+                attributes: [[sequelize.literal("DISTINCT stu_idx"), "stu_idx"]],
+            });
+            if (students && students.length > 0) {
+                const studentsIdx = students.map((student) => {
+                    return student.stu_idx;
                 });
+                res.send({ studentsIdx: studentsIdx });
+            } else {
+                res.status(404).send("메시지 검색 결과가 없습니다.");
             }
         } else {
             res.status(404).send("메시지 검색 결과가 없습니다.");
         }
-    } catch (err) {}
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
+// 채팅 중인 강사들 정보 조회
+exports.getChatTutors = async (req, res) => {
+    try {
+        const { tutorsIdx } = req.query;
+        const chatTutorsInfo = await Promise.all(
+            tutorsIdx.map(async (tutorIdx) => {
+                return await Tutor.findOne({
+                    where: {
+                        tutor_idx: tutorIdx,
+                    },
+                    attributes: [
+                        ["tutor_idx", "id"],
+                        ["nickname", "name"],
+                        "email",
+                        ["description", "intro"],
+                    ],
+                });
+            })
+        );
+
+        if (chatTutorsInfo && chatTutorsInfo.length > 0) {
+            res.send({ chatTutorsInfo });
+        } else {
+            res.status(404).send("채팅 중인 강사 검색 결과가 없습니다.");
+        }
+    } catch (err) {
+        console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
 };
