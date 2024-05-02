@@ -709,7 +709,7 @@ router.patch("/studentProfile", controller.editStudentProfile);
  *         description: "서버 오류"
  */
 router.patch("/editStudentPassword", controller.editStudentPassword);
-router.patch("/editPhoto", multer.single("profile_img"), controller.editPhoto);
+router.patch("/editPhoto", multer.single("image"), controller.editPhoto);
 router.patch("/backDefault", controller.editDefaultPhoto);
 router.patch("/uploadVideo", multer.single("video"), controller.uploadVideo);
 

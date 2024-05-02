@@ -80,8 +80,9 @@ section {
                             width: 20px;
                             height: 20px;
                             border-radius: 15px;
+                            overflow: hidden;
                             img {
-                                width: 20px;
+                                height: 20px;
                             }
                         }
                     }
@@ -117,7 +118,8 @@ section {
         border-radius: 65px;
         overflow: hidden;
         img {
-            width: 130px;
+            height: 130px;
+            vertical-align: middle;
         }
     }
     .sidebar-profile {
