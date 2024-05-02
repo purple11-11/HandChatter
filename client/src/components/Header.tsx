@@ -14,19 +14,13 @@ const Header = () => {
     const userInfo = useInfoStore((state) => state.userInfo);
     const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
     const logout = useInfoStore((state) => state.logout);
-    console.log(userInfo);
     let mypageIndex = userInfo?.tutor_idx ? userInfo.tutor_idx : userInfo?.stu_idx;
-    console.log(mypageIndex);
+
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
     const handleLeftClick = () => {
-        navigate("/mypage");
-    };
-
-    const handleRightClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.preventDefault();
         setIsMenuOpen(true);
         toggleMenu();
     };
@@ -69,23 +63,21 @@ const Header = () => {
                                 </>
                             ) : (
                                 <li>
-                                    <Link
-                                        to={`/mypage/${mypageIndex}`}
-                                        onClick={handleLeftClick}
-                                        onContextMenu={handleRightClick}
-                                    >
-                                        <div className="header-nickname">
-                                            <div className="profile-img small">
-                                                <img src={profileImgUrl} alt="" />
-                                            </div>
-                                            <div>{userInfo?.nickname} 님</div>
+                                    <div className="header-nickname" onClick={handleLeftClick}>
+                                        <div className="profile-img small">
+                                            <img src={profileImgUrl} alt="" />
                                         </div>
-                                    </Link>
+                                        <div>{userInfo?.nickname} 님</div>
+                                    </div>
                                 </li>
                             )}
                         </ul>
                     </nav>
-                    <Sidebar isMenuOpen={isMenuOpen} onLogout={handleLogout} />
+                    <Sidebar
+                        isMenuOpen={isMenuOpen}
+                        onLogout={handleLogout}
+                        mypageIndex={mypageIndex}
+                    />
                 </div>
             </header>
         </>
