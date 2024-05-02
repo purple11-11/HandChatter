@@ -481,7 +481,7 @@ exports.addReviews = async (req, res) => {
             stu_idx,
         });
         if (review) {
-            res.status(200).send("리뷰를 성공적으로 달았습니다!")
+            res.status(200).send("리뷰를 성공적으로 달았습니다!");
         } else throw new Error("SERVER ERROR!!!");
     } catch (error) {
         console.log(error);
@@ -636,6 +636,7 @@ exports.editStudentPassword = async (req, res) => {
 
 //PATCH /api/editPhoto
 exports.editPhoto = async (req, res) => {
+    console.log(req);
     try {
         const { userId, role } = req.session;
         if (!userId) return res.status(400).send("로그인을 해주세요.");

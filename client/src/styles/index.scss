@@ -70,18 +70,19 @@ section {
                 display: flex;
                 li {
                     margin: 0 1rem;
-
                     a {
                         text-decoration: none;
                         color: #ffffdd;
-                        .header-nickname {
-                            .small {
-                                width: 20px;
+                    }
+                    .header-nickname {
+                        cursor: pointer;
+                        .small {
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 15px;
+                            overflow: hidden;
+                            img {
                                 height: 20px;
-                                border-radius: 15px;
-                                img {
-                                    width: 20px;
-                                }
                             }
                         }
                     }
@@ -101,13 +102,42 @@ section {
 }
 .sidebar {
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     top: 70px;
     right: 0;
     background-color: #ffffdd;
     padding: 1rem;
     border-radius: 5px;
     box-shadow: 3px 3px 3px gray;
-
+    .big {
+        width: 130px;
+        height: 130px;
+        border-radius: 65px;
+        overflow: hidden;
+        img {
+            height: 130px;
+            vertical-align: middle;
+        }
+    }
+    .sidebar-profile {
+        width: 100%;
+        color: #004d51;
+        p {
+            text-align: center;
+            margin: 0;
+        }
+        p:first-child {
+            font-size: 30px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        p:last-child {
+            margin-bottom: 15px;
+        }
+    }
     ul {
         display: flex;
         li {
