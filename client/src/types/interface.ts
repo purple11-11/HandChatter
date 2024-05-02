@@ -18,11 +18,14 @@ export interface ChatRoom {
     intro: string;
 }
 
-export interface Sign {
+export interface SignRes {
+    key: number;
+    result?: Object;
     title: string;
     url: string;
-    referenceIdentifier: string;
-    subDescription: string;
+    description?: string;
+    referenceIdentifier?: string; // 썸네일
+    subDescription: string; // 영상 자료
 }
 export interface Tutor {
     nickname: string;
