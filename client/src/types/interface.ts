@@ -13,9 +13,9 @@ export interface SignupData {
 
 export interface ChatRoom {
     id: number;
-    name: string;
-    email: string;
-    intro: string;
+    name?: string;
+    email?: string;
+    intro?: string;
 }
 
 export interface Sign {
