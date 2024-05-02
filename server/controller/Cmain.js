@@ -421,7 +421,7 @@ exports.addFavorites = async (req, res) => {
         if (!existingFavorite) {
             await Favorites.create({ stu_idx, tutor_idx });
             res.status(200).send("찜 목록에 추가되었습니다.");
-        } else return res.status(400).send("올바른 요청이 아닙니다.");
+        } else return res.send(existingFavorite);
     } catch (error) {
         console.error(error);
         res.status(500).send("SERVER ERROR!!!");
