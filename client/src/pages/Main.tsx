@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import InstructorCard from "../components/InstructorCard";
 import { Tutor } from "../types/interface";
+import mainImg from "../assets/mainImg.jpg";
 
 export default function Main() {
     const url = "http://api.kcisa.kr/openapi/service/rest/meta13/getCTE01701";
@@ -68,10 +69,8 @@ export default function Main() {
 
     return (
         <div>
-            <section>
-                <div className="container">
-                    <img src="" alt="" />
-                </div>
+            <section className="main-banner">
+                <div>WELCOME TO HAND CHATTER</div>
             </section>
             <section className="ourtutor">
                 <div className="container">

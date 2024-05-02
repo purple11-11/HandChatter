@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import ModifyEmail from "./ModifyEmail";
 import ModifyPassword from "./ModifyPassword";
+import { useInfoStore } from "../../store/store";
 
 export default function MypageProfile() {
+    const userInfo = useInfoStore((state) => state.userInfo);
     const [activeTab, setActiveTab] = useState<string>("chatting"); // 활성화된 탭을 관리하는 state
     const [userData, setUserData] = useState<any>({
-        id: "dlrlgur789",
-        nickname: "rekey", // 닉네임 초기값
-        email: "789rlgur@naver.com", // 이메일 초기값
-        password: "Ctywo9631!", // 비밀번호 초기값
+        id: userInfo?.id,
+        nickname: userInfo?.nickname,
+        email: userInfo?.email,
+        password: userInfo?.password,
     });
 
     const handleTabChange = (tab: string) => {
