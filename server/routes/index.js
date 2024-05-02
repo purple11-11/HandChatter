@@ -96,33 +96,7 @@ router.get("/", controller.getTutors);
  *                   description: 클라이언트가 제공한 강사 인덱스로 해당 강사 정보 조회 및 응답
  */
 router.get("/tutors/:tutorIdx", controller.getTutorDetail);
-/**
- * 회원가입: 튜터
- * 사용자가 튜터로 회원가입할 때 호출됩니다.
- *
- * @param {Object} req - 요청 객체
- * @param {Object} res - 응답 객체
- * @returns {Object} isLogin: false - 로그인 상태를 나타내는 객체
- */
-// router.get("/signUpTutor", controller.signUpTutor);
-// /**
-//  * 회원가입: 학생
-//  * 사용자가 학생으로 회원가입할 때 호출됩니다.
-//  *
-//  * @param {Object} req - 요청 객체
-//  * @param {Object} res - 응답 객체
-//  * @returns {Object} isLogin: false - 로그인 상태를 나타내는 객체
-//  */
-// router.get("/signUpStudent", controller.signUpStudent);
-// /**
-//  * 로그인 처리
-//  * 사용자의 로그인을 처리합니다.
-//  *
-//  * @param {Object} req - 요청 객체
-//  * @param {Object} res - 응답 객체
-//  * @returns {Object} isLogin: false - 로그인 상태를 나타내는 객체
-//  */
-// router.get("/login", controller.login);
+
 /**
  * @swagger
  * /api/checkTutorId:
@@ -736,7 +710,7 @@ router.patch("/studentProfile", controller.editStudentProfile);
  */
 router.patch("/editStudentPassword", controller.editStudentPassword);
 router.patch("/editPhoto", multer.single("profile_img"), controller.editPhoto);
-router.patch("/backDefault", multer.single("default"), controller.editDefaultPhoto);
+router.patch("/backDefault", controller.editDefaultPhoto);
 router.patch("/uploadVideo", multer.single("video"), controller.uploadVideo);
 
 // TODO: swagger 수정
