@@ -1,6 +1,7 @@
 // InstructorCard.js
 
 import React from "react";
+import mainImg from "../assets/mainImg.jpg";
 
 interface Tutor {
     nickname: string;
@@ -16,13 +17,18 @@ interface Props {
 const InstructorCard: React.FC<Props> = ({ tutor }) => {
     return (
         <div className="card">
-            <div className="profile">강사 사진</div>
-            <div className="profiel-info">
-                <ul>
-                    <li>강사 이름: {tutor.nickname}</li>
-                    <li>레슨 시간: {tutor.email}</li>
-                    <li>가격: {tutor.price}</li>
-                </ul>
+            <div className="gradi">
+                <div className="profile-info">
+                    <ul>
+                        <li>{tutor.nickname}</li>
+                        <li>{tutor.email}</li>
+                        <li>{tutor.content}안녕하세요 제이름은 이기혁입니다</li>
+                        <li>{tutor.price} 원</li>
+                    </ul>
+                </div>
+            </div>
+            <div className="profile">
+                <img src={mainImg} alt="" />
             </div>
         </div>
     );

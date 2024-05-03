@@ -9,11 +9,18 @@ if (!fs.existsSync(uploads)) {
 
 // 이미지 파일
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/pdf"];
+    const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/pdf",
+        "image/heic",
+        "video/mp4",
+    ];
 
     if (!allowedTypes.includes(file.mimetype)) {
         const error = new Error(
-            "허용하지 않는 파일 형식입니다. \n허용 확장자: .jpg, .png, .jpeg, .pdf"
+            "허용하지 않는 파일 형식입니다. \n허용 확장자: .jpg, .png, .jpeg, .pdf, .HEIC, .mp4"
         );
         error.code = "INCORRECT_FILETYPE";
         return cb(error, false);

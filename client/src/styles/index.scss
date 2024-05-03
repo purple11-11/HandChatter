@@ -35,11 +35,14 @@ button {
     margin: 0 auto;
 }
 section {
-    height: 960px;
+    min-height: 1000px;
     border-bottom: 2px solid #d4d4ba;
     padding: 80px;
 }
-
+.profile-img {
+    border: 1px solid #d4d4ba;
+    overflow: hidden;
+}
 // Header
 .header {
     position: fixed;
@@ -47,7 +50,7 @@ section {
     background-color: #016a70;
     color: #ffffdd;
     top: 0;
-    z-index: 1;
+    z-index: 99;
     .container {
         position: relative;
         display: flex;
@@ -64,13 +67,29 @@ section {
                 list-style-type: none;
                 padding: 0;
                 margin: 0;
+                display: flex;
                 li {
-                    display: inline;
                     margin: 0 1rem;
-
                     a {
                         text-decoration: none;
                         color: #ffffdd;
+                    }
+                    .header-nickname {
+                        cursor: pointer;
+                        .small {
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 15px;
+                            overflow: hidden;
+                            img {
+                                height: 20px;
+                            }
+                        }
+                    }
+                    .header-nickname {
+                        width: 80px;
+                        display: flex;
+                        justify-content: space-between;
                     }
                 }
             }
@@ -83,13 +102,42 @@ section {
 }
 .sidebar {
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     top: 70px;
     right: 0;
     background-color: #ffffdd;
     padding: 1rem;
     border-radius: 5px;
     box-shadow: 3px 3px 3px gray;
-
+    .big {
+        width: 130px;
+        height: 130px;
+        border-radius: 65px;
+        overflow: hidden;
+        img {
+            height: 130px;
+            vertical-align: middle;
+        }
+    }
+    .sidebar-profile {
+        width: 100%;
+        color: #004d51;
+        p {
+            text-align: center;
+            margin: 0;
+        }
+        p:first-child {
+            font-size: 30px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        p:last-child {
+            margin-bottom: 15px;
+        }
+    }
     ul {
         display: flex;
         li {
@@ -132,16 +180,82 @@ section {
         height: 450px;
         border: 1px solid #c9c9aa;
         border-radius: 10px;
-        box-shadow: 1px 1px 1px gray;
-        color: #ffffdd;
-        background-color: #016a70;
+        box-shadow: 3px 3px 3px gray;
+        color: #ffffeb;
         margin: 0 22.5px;
+        overflow: hidden;
+        position: relative;
+        .gradi {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            max-height: 100%;
+            background: linear-gradient(to bottom, rgba(#fffff3, 0.2), rgba(#000000, 0.3));
+            &:hover {
+                background: linear-gradient(to bottom, rgba(#ffffff, 0.01), rgba(#000000, 0.5));
+            }
+        }
+        .profile {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            img {
+                max-height: 100%;
+                vertical-align: middle;
+                opacity: 0.8;
+            }
+        }
         .profile-info {
+            // border: 1px solid red;
+            width: 240px;
+            height: 180px;
+            position: absolute;
+            z-index: 1;
+            bottom: 30px;
+            left: 30px;
+            color: #fcfcec;
+            ul {
+                li:first-child {
+                    font-size: 35px;
+                }
+                li:nth-child(2) {
+                    font-size: 15px;
+                    margin-bottom: 20px;
+                }
+                li:nth-child(3) {
+                    font-size: 18px;
+                    padding-bottom: 25px;
+                    margin-bottom: 20px;
+                    border-bottom: 1px solid #d4d4ba;
+                }
+                li:last-child {
+                    font-size: 20px;
+                }
+            }
         }
     }
 }
 
 // Main
+.main-banner {
+    position: relative;
+    background-image: url("../assets/mainImg.jpg");
+    background-size: cover;
+    background-position: center;
+    opacity: 0.8;
+    div {
+        position: absolute;
+        right: 40px;
+        bottom: 250px;
+        font-size: 50px;
+        background-color: rgba(#c0c0c0, 0.4);
+        border-radius: 20px;
+        padding: 30px;
+    }
+}
 .ourtutor {
     div {
         position: relative;
@@ -174,7 +288,7 @@ section {
 // Mypage
 .mypage-button-container {
     width: 700px;
-    margin: 0 auto;
+    margin: 20px auto;
     display: flex;
     justify-content: space-between;
     button {
@@ -185,6 +299,163 @@ section {
         &:hover {
             background-color: #016a70;
             color: #ffff;
+        }
+    }
+}
+
+.like-container {
+    margin-top: 50px;
+}
+
+// Instructor Detail Page
+.instructor-profile {
+    width: 100%;
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #004d51;
+    .big {
+        width: 130px;
+        height: 130px;
+        border-radius: 65px;
+        margin-right: 50px;
+        img {
+            width: 130px;
+        }
+    }
+    .profile-content {
+        width: 250px;
+        display: flex;
+        flex-direction: column;
+        h2 {
+            padding: 0;
+            margin: 0;
+        }
+        div {
+            .dm {
+                width: 205px;
+                height: 30px;
+            }
+            .favorite {
+                margin-left: 13px;
+                width: 30px;
+                height: 30px;
+                overflow: hidden;
+                img {
+                    width: 15px;
+                }
+            }
+        }
+    }
+}
+
+.tutor-introduce-content {
+    width: 100%;
+    min-height: 580px;
+    border: 1px solid #d4d4ba;
+    box-shadow: 1px 1px 1px gray;
+    border-radius: 10px;
+    background-color: #016a70;
+    .tutor-video-introduce {
+        // border: 1px solid red;
+        height: 300px;
+        margin: 25px;
+        display: flex;
+        justify-content: space-between;
+        div {
+            border: 1px solid #d4d4ba;
+            height: 100%;
+            background-color: #ffffdd;
+            border-radius: 10px;
+            color: #004d51;
+            p {
+                margin: 20px;
+            }
+        }
+        .tutor-video {
+            width: 42%;
+            overflow: hidden;
+            video {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .tutor-introduce {
+            width: 55%;
+        }
+    }
+    .course {
+        width: 95%;
+        .total-course-review {
+            width: 100%;
+            display: flex;
+            // border: 1px solid red;
+            margin: 25px 25px -15px;
+            align-items: flex-end;
+            p {
+                padding: 0;
+                margin: 0;
+            }
+            p:first-child {
+                color: #f3f3b2;
+                font-size: 20px;
+                margin-right: 20px;
+                span {
+                    color: #f3f3b2;
+                }
+            }
+            p:last-child {
+                color: #ffffdd;
+                font-size: 15px;
+            }
+        }
+        .course-review {
+            width: 100%;
+            min-height: 150px;
+            background-color: #ffffdd;
+            margin: 25px;
+            padding-bottom: 2px;
+            border: #d4d4ba;
+            border-radius: 10px;
+            color: #004d51;
+            .course-review-container {
+                display: flex;
+                padding: 20px 20px 10px 20px;
+                align-items: center;
+                .middle {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 25px;
+                    overflow: hidden;
+                    img {
+                        width: 50px;
+                    }
+                }
+                .reviewer-profile {
+                    width: 100%;
+                    margin-left: 30px;
+                    // border: 1px solid red;
+                    .reviewer-nickname {
+                        margin-bottom: 3px;
+                    }
+                    .reviewer-date-score {
+                        display: flex;
+                        justify-content: space-between;
+                        p {
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+            .review-content {
+                margin: 0 20px 20px 20px;
+                padding: 20px;
+                background-color: #fcfcec;
+                border: 1px solid #d4d4ba;
+                border-radius: 10px;
+                white-space: normal;
+            }
         }
     }
 }

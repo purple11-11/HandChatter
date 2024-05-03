@@ -3,26 +3,24 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
+import { useInfoStore } from "../store/store"; // Importing the store
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [userInfo, setUserInfo] = useState<any>(null);
     const navigate = useNavigate();
-    // useEffect(() => {
-    //     console.log("하하");
-    //     getUser();
-    // }, []);
+
+    // Using Zustand store
+    const isLogin = useInfoStore((state) => state.isLogin);
+    const userInfo = useInfoStore((state) => state.userInfo);
+    const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
+    const logout = useInfoStore((state) => state.logout);
+    let mypageIndex = userInfo?.tutor_idx ? userInfo.tutor_idx : userInfo?.stu_idx;
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
 
     const handleLeftClick = () => {
-        navigate("/mypage");
-    };
-
-    const handleRightClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.preventDefault();
         setIsMenuOpen(true);
         toggleMenu();
     };
@@ -31,42 +29,19 @@ const Header = () => {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/logout`;
             await axios.post(url);
-
-            localStorage.removeItem("isLoggedIn");
-            setIsMenuOpen(false); // 로그아웃 후 메뉴 닫기
-            setUserInfo(null); // 로그아웃 후 사용자 정보 초기화
+            setIsMenuOpen(false);
+            logout();
         } catch (error) {
             console.error("로그아웃 오류:", error);
         }
     };
 
-    const getUser = async () => {
-        try {
-            const url = `${process.env.REACT_APP_API_SERVER}/api/userInfo`;
-            const res = await axios.get(url);
-            setUserInfo(res.data.studentInfo[0]);
-            const myInfo = JSON.stringify(res.data.studentInfo[0]);
-            localStorage.setItem("userInfo", myInfo);
-            console.log(myInfo);
-        } catch (error) {
-            setUserInfo(null);
-        }
-    };
-
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    useEffect(() => {
-        console.log(isLoggedIn + "-------");
-        if (isLoggedIn) {
-            getUser();
-        }
-    }, [isLoggedIn]);
-
+    console.log(isLogin, userInfo, profileImgUrl);
     return (
         <>
             <header className="header">
                 <div className="container">
                     <div className="logo">
-                        {/* <img src={Logo} alt="" /> */}
                         <Link to="/">HandChatter</Link>
                     </div>
                     <nav className="menu">
@@ -77,7 +52,7 @@ const Header = () => {
                             <li>
                                 <Link to="/quiz">퀴즈</Link>
                             </li>
-                            {!userInfo ? (
+                            {!isLogin ? (
                                 <>
                                     <li>
                                         <Link to="/login">로그인</Link>
@@ -88,18 +63,21 @@ const Header = () => {
                                 </>
                             ) : (
                                 <li>
-                                    <Link
-                                        to="/mypage"
-                                        onClick={handleLeftClick}
-                                        onContextMenu={handleRightClick}
-                                    >
-                                        {userInfo.nickname} 님
-                                    </Link>
+                                    <div className="header-nickname" onClick={handleLeftClick}>
+                                        <div className="profile-img small">
+                                            <img src={profileImgUrl} alt="" />
+                                        </div>
+                                        <div>{userInfo?.nickname} 님</div>
+                                    </div>
                                 </li>
                             )}
                         </ul>
                     </nav>
-                    <Sidebar isMenuOpen={isMenuOpen} onLogout={handleLogout} />
+                    <Sidebar
+                        isMenuOpen={isMenuOpen}
+                        onLogout={handleLogout}
+                        mypageIndex={mypageIndex}
+                    />
                 </div>
             </header>
         </>

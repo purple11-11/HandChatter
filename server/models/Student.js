@@ -30,7 +30,8 @@ const Student = function (Sequelize, DataTypes) {
             },
             profile_img: {
                 type: DataTypes.STRING(255),
-                allowNull: true,
+                allowNull: false,
+                defaultValue: "public/default.jpg",
             },
             authority: {
                 type: DataTypes.TINYINT, //튜터로 임명할지 안할지에 대한 권한 여부, 관리자가 관리(0/1로 담김)

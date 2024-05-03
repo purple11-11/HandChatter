@@ -1,6 +1,7 @@
-const { Tutor, Student, Favorites, Review } = require("../models");
+const { Tutor, Student, Favorites, Review, Message, sequelize } = require("../models");
 const { Op } = require("sequelize");
 const { transporter } = require("../modules/nodemailer/nodemailer");
+const fs = require("fs");
 
 const bcrypt = require("bcrypt");
 
@@ -17,7 +18,6 @@ function comparePW(inputpw, hashedpw) {
 exports.getInfo = async (req, res) => {
     try {
         const { userId, role } = req.session;
-        console.log(userId, role);
 
         if (!userId) return res.status(401).send("로그인을 해주세요.");
 
@@ -69,19 +69,19 @@ exports.getTutors = async (req, res) => {
                         [Op.like]: `%${q}%`,
                     },
                 },
-                attributes: ["nickname", "description", "profile_img", "price"],
+                attributes: ["tutor_idx", "nickname", "description", "profile_img", "price"],
             });
             if (searchTutorsInfo && searchTutorsInfo.length > 0) {
                 res.send({ searchTutorsInfo: searchTutorsInfo });
             } else {
-                res.status(404).send("검색 결과가 없습니다.");
+                res.status(404).send("강사 검색 결과가 없습니다.");
             }
         } else {
             const tutorsInfo = await Tutor.findAll();
             if (tutorsInfo && tutorsInfo.length > 0) {
                 res.send({ tutorsInfo: tutorsInfo });
             } else {
-                res.status(404).send("검색 결과가 없습니다.");
+                res.status(404).send("강사 검색 결과가 없습니다.");
             }
         }
     } catch (err) {
@@ -131,18 +131,6 @@ exports.getTutorDetail = async (req, res) => {
     }
 };
 
-// GET /api/signUpTutor
-exports.signUpTutor = (req, res) => {
-    res.send({ isLogin: false });
-};
-// GET /api/signUpStudent
-exports.signUpStudent = (req, res) => {
-    res.send({ isLogin: false });
-};
-// GET /api/login
-exports.login = (req, res) => {
-    res.send({ isLogin: false });
-};
 // GET /api/checkStudentId
 // GET /api/checkTutorId
 exports.checkId = async (req, res) => {
@@ -237,7 +225,7 @@ exports.searchPassword = async (req, res) => {
     }
 };
 
-// GET /api/email
+// POST /api/email
 exports.sendEmail = async (req, res) => {
     const { email } = req.body;
     const randomNum = (Math.floor(Math.random() * 1000000) + 100000).toString().substring(0, 6);
@@ -372,7 +360,6 @@ exports.loginStudent = async (req, res) => {
                 id,
             },
         });
-        // console.log(resultId);
         if (!resultStudent)
             return res.status(400).send("존재하지 않는 아이디입니다. 다시 시도해주세요.");
 
@@ -419,9 +406,9 @@ exports.logout = (req, res) => {
 
 // POST /api/favorites
 exports.addFavorites = async (req, res) => {
-    const id = req.session.student;
-    if (!id) res.status(401).send("로그인을 해주세요.");
-    const { stu_idx, tutor_idx } = req.body;
+    const { userId, stu_idx } = req.session;
+    if (!userId) res.status(401).send("로그인을 해주세요.");
+    const { tutor_idx } = req.body;
 
     try {
         const existingFavorite = await Favorites.findOne({
@@ -430,18 +417,18 @@ exports.addFavorites = async (req, res) => {
                 tutor_idx,
             },
         });
-
+        console.log(existingFavorite);
         if (!existingFavorite) {
             await Favorites.create({ stu_idx, tutor_idx });
             res.status(200).send("찜 목록에 추가되었습니다.");
-        } else return res.status(500).send("SERVER ERROR!!!");
+        } else return res.status(400).send("올바른 요청이 아닙니다.");
     } catch (error) {
         console.error(error);
         res.status(500).send("SERVER ERROR!!!");
     }
 };
 
-// POST /api/favoritesTutor
+// GET /api/favoritesTutor
 exports.searchFavorites = async (req, res) => {
     try {
         const id = req.session.userId;
@@ -467,7 +454,7 @@ exports.searchFavorites = async (req, res) => {
                     },
                 ],
             });
-            if (!favorites) {
+            if (favorites.length <= 0) {
                 res.status(200).send(
                     "찜한 튜터가 없습니다. 관심 있는 튜터를 찜 목록에 추가해보세요!"
                 );
@@ -483,19 +470,19 @@ exports.searchFavorites = async (req, res) => {
 exports.addReviews = async (req, res) => {
     try {
         const stu_idx = req.session.stu_idx;
-        if (!stu_idx) return res.send("로그인을 해주세요.");
+        if (!stu_idx) return res.status(400).send("올바른 요청이 아닙니다."); //로그인 해야 함.
 
         const { content, rating, tutor_idx } = req.body;
-        if (!content || !rating) return res.status(400).send("빈칸을 입력해주세요.");
+        if (!(content || rating)) return res.status(400).send("빈칸을 입력해주세요.");
         const review = await Review.create({
             content,
             rating,
             tutor_idx,
             stu_idx,
         });
-        if (!review) {
-            throw new Error("SERVER ERROR!!!");
-        } else res.status(200).send("리뷰를 성공적으로 달았습니다!");
+        if (review) {
+            res.status(200).send("리뷰를 성공적으로 달았습니다!");
+        } else throw new Error("SERVER ERROR!!!");
     } catch (error) {
         console.log(error);
         res.status(500).send("SERVER ERROR!!!");
@@ -505,12 +492,13 @@ exports.addReviews = async (req, res) => {
 // PATCH /api/tutorProfile
 exports.editTutorProfile = async (req, res) => {
     try {
-        const { id, nickname, password, level, price, desVideo, description } = req.body;
-        if (!nickname || !price || !password) res.status(400).send("빈칸을 입력해주세요.");
-        // desVideo 유효성 검사 해야하나? 일단 대기
-        let defaultImg = "./uploads/default.jpg";
-        const realPrice = Number(price);
+        const id = req.session.userId;
+        if (!id) return res.status(400).send("로그인을 해주세요.");
 
+        const { nickname, password, level, price, description } = req.body;
+        if (!nickname || !price || !password) res.status(400).send("빈칸을 입력해주세요.");
+
+        const realPrice = Number(price);
         const tutor = await Tutor.findOne({
             where: {
                 id,
@@ -523,11 +511,9 @@ exports.editTutorProfile = async (req, res) => {
             } else {
                 await Tutor.update(
                     {
-                        profile_img: defaultImg,
                         nickname,
                         level,
                         price: realPrice,
-                        des_video: desVideo,
                         description,
                     },
                     {
@@ -539,6 +525,7 @@ exports.editTutorProfile = async (req, res) => {
                 return res.status(200).send({ result: true, msg: "프로필을 변경하였습니다." });
             }
         }
+        return res.status(400).send("올바른 요청이 아닙니다.");
     } catch (error) {
         res.status(500).send(error);
     }
@@ -548,6 +535,7 @@ exports.editTutorProfile = async (req, res) => {
 exports.editTutorPassword = async (req, res) => {
     const { password, newPassword } = req.body;
     const id = req.session.userId;
+    if (!id) return res.status(400).send("로그인을 해주세요.");
     try {
         if (!password || !newPassword) res.status(400).send("빈칸을 입력해주세요.");
         const tutor = await Tutor.findOne({
@@ -570,7 +558,7 @@ exports.editTutorPassword = async (req, res) => {
                 );
                 res.status(200).send({ result: true, msg: "비밀번호가 변경되었습니다." });
             }
-        }
+        } else return res.status(400).send("올바른 요청이 아닙니다.");
     } catch (error) {
         res.status(500).send(error);
     }
@@ -579,10 +567,11 @@ exports.editTutorPassword = async (req, res) => {
 // PATCH /api/studentProfile
 exports.editStudentProfile = async (req, res) => {
     try {
-        const { id, nickname, password } = req.body;
-        if (!nickname || !password) res.status(400).send("빈칸을 입력해주세요.");
+        const id = req.session.userId;
+        if (!id) return res.status(400).send("로그인을 해주세요.");
 
-        let defaultImg = "./uploads/default.jpg";
+        const { nickname, password } = req.body;
+        if (!nickname || !password) res.status(400).send("빈칸을 입력해주세요.");
 
         const student = await Student.findOne({
             where: {
@@ -596,7 +585,6 @@ exports.editStudentProfile = async (req, res) => {
             } else {
                 await Student.update(
                     {
-                        profile_img: defaultImg,
                         nickname,
                     },
                     {
@@ -608,6 +596,7 @@ exports.editStudentProfile = async (req, res) => {
                 return res.status(200).send({ result: true, msg: "프로필을 변경하였습니다." });
             }
         }
+        return res.status(400).send("올바른 요청이 아닙니다.");
     } catch (error) {
         res.status(500).send(error);
     }
@@ -615,7 +604,8 @@ exports.editStudentProfile = async (req, res) => {
 //PATCH / api / editStudentPassword;
 exports.editStudentPassword = async (req, res) => {
     const { password, newPassword } = req.body;
-    const id = req.session.id;
+    const id = req.session.userId;
+    if (!id) return res.status(400).send("로그인을 해주세요.");
     try {
         if (!password || !newPassword) res.status(400).send("빈칸을 입력해주세요.");
         const student = await Student.findOne({
@@ -641,6 +631,182 @@ exports.editStudentPassword = async (req, res) => {
         }
     } catch (error) {
         res.status(500).send(error);
+    }
+};
+
+//PATCH /api/editPhoto
+exports.editPhoto = async (req, res) => {
+    console.log(req);
+    try {
+        const { userId, role } = req.session;
+        if (!userId) return res.status(400).send("로그인을 해주세요.");
+
+        if (role === "tutor") {
+            const pastImg = await Tutor.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const defaultImg = "public/default.jpg";
+            if (pastImg.profile_img === defaultImg) {
+                console.log("사진이 성공적으로 변경되었습니다.");
+            } else {
+                fs.unlink(pastImg.profile_img, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("파일이 성공적으로 삭제되었습니다.");
+                });
+            }
+            await Tutor.update(
+                {
+                    profile_img: req.file.path,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        } else {
+            const pastImg = await Student.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            const defaultImg = "public/default.jpg";
+            if (pastImg.profile_img === defaultImg) {
+                console.log("사진이 성공적으로 변경되었습니다.");
+            } else {
+                fs.unlink(pastImg.profile_img, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+
+                    console.log("파일이 성공적으로 삭제되었습니다.");
+                });
+            }
+            await Student.update(
+                {
+                    profile_img: req.file.path,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+//PATCH /api/backDefault
+exports.editDefaultPhoto = async (req, res) => {
+    try {
+        const { userId, role } = req.session;
+        const defaultImg = "public/default.jpg";
+
+        if (!userId) return res.status(400).send("로그인을 해주세요.");
+
+        if (role === "tutor") {
+            const pastImg = await Tutor.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            if (pastImg.profile_img === defaultImg) {
+                console.log("사진이 성공적으로 변경되었습니다.");
+            } else {
+                fs.unlink(pastImg.profile_img, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("파일이 성공적으로 삭제되었습니다.");
+                });
+            }
+            await Tutor.update(
+                {
+                    profile_img: defaultImg,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        } else {
+            const pastImg = await Student.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+            if (pastImg.profile_img === defaultImg) {
+                console.log("사진이 성공적으로 변경되었습니다.");
+            } else {
+                fs.unlink(pastImg.profile_img, (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("파일이 성공적으로 삭제되었습니다.");
+                });
+            }
+            await Student.update(
+                {
+                    profile_img: defaultImg,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
+// PATCH /api/uploadVideo
+exports.uploadVideo = async (req, res) => {
+    try {
+        const { userId, role } = req.session;
+        if (!userId) return res.status(400).send("로그인을 해주세요.");
+
+        if (role === "tutor") {
+            const pastVideo = await Tutor.findOne({
+                where: {
+                    id: userId,
+                },
+            });
+
+            fs.unlink(pastVideo.des_video, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log("파일이 성공적으로 삭제되었습니다.");
+            });
+            await Tutor.update(
+                {
+                    des_video: req.file.path,
+                },
+                {
+                    where: {
+                        id: userId,
+                    },
+                }
+            );
+            res.status(200).send({ result: true });
+        } else return res.status(400).send("올바른 요청이 아닙니다.");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
     }
 };
 
@@ -694,9 +860,9 @@ exports.deleteUser = async (req, res) => {
 
 // DELETE /api/favorites
 exports.deleteFavorites = async (req, res) => {
-    const id = req.session.student;
-    if (!id) res.status(401).send("로그인을 해주세요.");
-    const { stu_idx, tutor_idx } = req.body;
+    const { userId, stu_idx } = req.session;
+    if (!userId) res.status(401).send("로그인을 해주세요.");
+    const { tutor_idx } = req.body;
 
     try {
         const existingFavorite = await Favorites.findOne({
@@ -732,6 +898,97 @@ exports.deleteReviews = async (req, res) => {
             res.status(404).send("해당하는 리뷰가 없습니다.");
         }
     } catch (error) {
+        console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
+// GET /api/messages
+exports.getMessage = async (req, res) => {
+    const { stuIdx, tutorIdx } = req.query;
+    try {
+        // 특정 강사 메세지(채팅방 하나에 담긴) 조회
+        if (stuIdx && tutorIdx) {
+            const messages = await Message.findAll({
+                where: {
+                    stu_idx: stuIdx,
+                    tutor_idx: tutorIdx,
+                },
+            });
+            if (messages && messages.length > 0) {
+                res.send({ messages: messages });
+            } else {
+                res.status(404).send("메시지 검색 결과가 없습니다.");
+            }
+
+            // 모든 강사와의 메세지 조회(학생 로그인)후 강사들 인덱스 보내주기
+        } else if (stuIdx) {
+            const tutors = await Message.findAll({
+                where: {
+                    stu_idx: stuIdx,
+                },
+                attributes: [[sequelize.literal("DISTINCT tutor_idx"), "tutor_idx"]],
+            });
+            if (tutors && tutors.length > 0) {
+                const tutorsIdx = tutors.map((tutor) => {
+                    return tutor.tutor_idx;
+                });
+                res.send({ tutorsIdx: tutorsIdx });
+            } else {
+                res.status(404).send("메시지 검색 결과가 없습니다.");
+            }
+
+            // 모든 학생과의 메세지 조회(강사 로그인)
+        } else if (tutorIdx) {
+            const students = await Message.findAll({
+                where: {
+                    tutor_idx: tutorIdx,
+                },
+                attributes: [[sequelize.literal("DISTINCT stu_idx"), "stu_idx"]],
+            });
+            if (students && students.length > 0) {
+                const studentsIdx = students.map((student) => {
+                    return student.stu_idx;
+                });
+                res.send({ studentsIdx: studentsIdx });
+            } else {
+                res.status(404).send("메시지 검색 결과가 없습니다.");
+            }
+        } else {
+            res.status(404).send("메시지 검색 결과가 없습니다.");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
+// 채팅 중인 강사들 정보 조회
+exports.getChatTutors = async (req, res) => {
+    try {
+        const { tutorsIdx } = req.query;
+        const chatTutorsInfo = await Promise.all(
+            tutorsIdx.map(async (tutorIdx) => {
+                return await Tutor.findOne({
+                    where: {
+                        tutor_idx: tutorIdx,
+                    },
+                    attributes: [
+                        ["tutor_idx", "id"],
+                        ["nickname", "name"],
+                        "email",
+                        ["description", "intro"],
+                    ],
+                });
+            })
+        );
+
+        if (chatTutorsInfo && chatTutorsInfo.length > 0) {
+            res.send({ chatTutorsInfo });
+        } else {
+            res.status(404).send("채팅 중인 강사 검색 결과가 없습니다.");
+        }
+    } catch (err) {
         console.error(error);
         res.status(500).send("SERVER ERROR!!!");
     }

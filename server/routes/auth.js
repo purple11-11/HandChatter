@@ -12,10 +12,10 @@ router.get(
     "/kakao/callback",
     passport.authenticate("kakao", {
         // 로그인에대한 결과를 GET /auth/kakao/callback 로 받는다.
-        failureRedirect: "/",
+        failureRedirect: "http://localhost:3000/",
     }),
     (req, res) => {
-        res.redirect("/");
+        res.redirect("http://localhost:3000/");
     }
 );
 

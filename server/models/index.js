@@ -67,6 +67,13 @@ StudentModel.hasMany(FavoritesModel, {
         allowNull: false,
     },
 });
+FavoritesModel.belongsTo(StudentModel, {
+    onDelete: "CASCADE",
+    foreignKey: {
+        name: "stu_idx",
+        allowNull: false,
+    },
+});
 // 학생 : 메시지
 StudentModel.hasMany(MessageModel, {
     onDelete: "CASCADE",

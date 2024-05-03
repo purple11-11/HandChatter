@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import ModifyEmail from "./ModifyEmail";
 import ModifyPassword from "./ModifyPassword";
+import { useInfoStore } from "../../store/store";
+import axios from "axios";
 
 export default function MypageProfile() {
+    const userInfo = useInfoStore((state) => state.userInfo);
+    const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
+    const getInfo = useInfoStore((state) => state.getInfo);
     const [activeTab, setActiveTab] = useState<string>("chatting"); // 활성화된 탭을 관리하는 state
     const [userData, setUserData] = useState<any>({
-        id: "dlrlgur789",
-        nickname: "rekey", // 닉네임 초기값
-        email: "789rlgur@naver.com", // 이메일 초기값
-        password: "Ctywo9631!", // 비밀번호 초기값
+        id: userInfo?.id,
+        nickname: userInfo?.nickname,
+        email: userInfo?.email,
+        password: userInfo?.password,
+        profileImgUrl: profileImgUrl,
     });
 
     const handleTabChange = (tab: string) => {
@@ -19,19 +25,79 @@ export default function MypageProfile() {
         setUserData({ ...userData, [fieldName]: value });
     };
 
-    const handleSubmit = () => {
-        console.log("전송할 userData:", userData);
+    const handleSubmit = async () => {
+        try {
+            const url = `${process.env.REACT_APP_API_SERVER}/api/studentProfile`;
+            const res = await axios.patch(url, {
+                nickname: userData.nickname,
+                password: userData.password,
+            });
+            console.log(res.data);
+            // 서버로부터 응답을 받은 후에 필요한 작업 수행
+        } catch (error) {
+            console.error("프로필 수정 오류:", error);
+            // 오류 처리
+        }
     };
 
-    console.log(userData);
+    const handleImageChange = async (file: File) => {
+        try {
+            const formData = new FormData();
+            formData.append("image", file);
+            console.log(file);
+            const url = `${process.env.REACT_APP_API_SERVER}/api/editPhoto`;
+            console.log("gkgkkg");
+            const res = await axios.patch(url, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            console.log(profileImgUrl);
+            getInfo();
+            console.log(profileImgUrl);
+        } catch (error) {
+            console.error("이미지 수정 오류:", error);
+        }
+    };
+    // getInfo();
+    const handleImageUpload = () => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.onchange = (e) => {
+            if (!e.target) {
+                console.error("이벤트 타겟이 존재하지 않습니다.");
+                return;
+            }
+            const file = (e.target as HTMLInputElement).files?.[0];
+            if (file) {
+                handleImageChange(file);
+            }
+        };
+        fileInput.click();
+    };
+
+    const handleDefaultImage = async () => {
+        try {
+            const url = `${process.env.REACT_APP_API_SERVER}/api/backDefault`;
+            const res = await axios.patch(url);
+            console.log(res.data);
+            getInfo();
+        } catch (error) {
+            console.error("기본 이미지로 변경하는 중 오류:", error);
+        }
+    };
+
     return (
         <section>
             <h1>내 정보 확인 및 수정</h1>
             <div>
-                <div>프로필 이미지</div>
                 <div>
-                    <button>기본 이미지</button>
-                    <button> 이미지 수정</button>
+                    <img src={profileImgUrl} alt="프로필 이미지" />
+                </div>
+                <div>
+                    <button onClick={handleDefaultImage}>기본 이미지</button>
+                    <button onClick={handleImageUpload}>이미지 수정</button>
                 </div>
             </div>
             <div>

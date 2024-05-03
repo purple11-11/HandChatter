@@ -41,11 +41,12 @@ const Tutor = function (Sequelize, DataTypes) {
             profile_img: {
                 type: DataTypes.STRING(255),
                 allowNull: false,
-                defaultValue: "./uploads/default.jpg", //TODO : 경로 수정될 수 있음.
+                defaultValue: "public/default.jpg", //TODO : 경로 수정될 수 있음.
             },
             des_video: {
                 type: DataTypes.STRING(255),
-                allowNull: true,
+                allowNull: false,
+                defaultValue: "자기소개 영상 파일 경로",
             },
             price: {
                 type: DataTypes.INTEGER,
