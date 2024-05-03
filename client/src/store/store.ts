@@ -47,7 +47,7 @@ export const useInfoStore = create<UserStore>((set) => ({
                 }));
             } else {
                 const newProfileImgUrl =
-                    process.env.REACT_APP_API_SERVER + res.data.tutorInfo[0].profile_img;
+                    process.env.REACT_APP_API_SERVER + "/" + res.data.tutorInfo[0].profile_img;
                 set((state) => ({
                     profileImgUrl: newProfileImgUrl,
                     userInfo: res.data.tutorInfo[0],
