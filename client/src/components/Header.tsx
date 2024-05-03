@@ -47,10 +47,10 @@ const Header = () => {
                     <nav className="menu">
                         <ul>
                             <li>
-                                <Link to="/personal-learning">개인학습</Link>
+                                <Link to="/learning">개인학습</Link>
                             </li>
                             <li>
-                                <Link to="/quiz">퀴즈</Link>
+                                <Link to="/learning/quiz">퀴즈</Link>
                             </li>
                             {!isLogin ? (
                                 <>

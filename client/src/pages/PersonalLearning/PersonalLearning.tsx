@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import Button from "../../components/button/Button";
 import ResultCard from "./ResultCard";
-import axios from "axios";
 import { SignRes } from "../../types/interface";
+import { Outlet, useLoaderData, useLocation } from "react-router-dom";
 
 type KORIndexType = {
     [key: string]: string[];
 };
 
 export default function PersonalLearning() {
-    const url = "http://api.kcisa.kr/openapi/service/rest/meta13/getCTE01701";
-    const apiKey = "5e912661-427a-40bb-814d-facab428d26f";
+    const results = useLoaderData() as SignRes[];
+    const location = useLocation();
 
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searchResults, setSearchResults] = useState<SignRes[]>([]);
@@ -23,32 +23,6 @@ export default function PersonalLearning() {
         if (fetchedDataRef.current.length > 0) return;
         setIsLoading(true);
         try {
-            const response = await axios.get(url, {
-                params: {
-                    serviceKey: apiKey,
-                    numOfRows: "10",
-                    pageNo: "1",
-                },
-            });
-
-            const items = response.data.response.body.items.item;
-            console.log(response.data.response.body);
-
-            let results: SignRes[] = items.map((item: SignRes, index: number) => ({
-                key: index,
-                title: item.title,
-                url: item.url,
-                description: item.description,
-                referenceIdentifier: item.referenceIdentifier,
-                subDescription: item.subDescription,
-            }));
-            /*           .sort((a: SignRes, b: SignRes) => {
-                    const titleA = a.title.substring(a.title.search(/[가-힣]/));
-                    const titleB = b.title.substring(b.title.search(/[가-힣]/));
-
-                    return titleA.localeCompare(titleB, "ko");
-                }); */
-
             fetchedDataRef.current = results;
             setSearchResults(results);
             setError("");
@@ -114,33 +88,42 @@ export default function PersonalLearning() {
 
     return (
         <section>
-            <h2>무엇을 검색하시겠어요?</h2>
+            {location.pathname !== "/learning/quiz" && (
+                <>
+                    <h2>무엇을 검색하시겠어요?</h2>
 
-            <div className="search_bar">
-                <input
-                    type="text"
-                    placeholder="수어 검색"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <Button onClick={handleSearch} text="검색" />
-                {error && <p>{error}</p>}
-            </div>
-            <div className="search_category">
-                <Button key={"all"} onClick={handleReset} text="전체" />
-                {Object.keys(KOR).map((keyword) => (
-                    <Button key={keyword} onClick={() => keywordSearch(keyword)} text={keyword} />
-                ))}
-            </div>
-            <ul>
-                <h3>
-                    {isSearched ? "검색 결과" : "전체"} ({searchResults.length})
-                </h3>
-                {isLoading && <p>데이터를 불러오고 있어요 😀</p>}
-                {searchResults.map((result) => (
-                    <ResultCard {...result} />
-                ))}
-            </ul>
+                    <div className="search_bar">
+                        <input
+                            type="text"
+                            placeholder="수어 검색"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <Button onClick={handleSearch} text="검색" />
+                        {error && <p>{error}</p>}
+                    </div>
+                    <div className="search_category">
+                        <Button key={"all"} onClick={handleReset} text="전체" />
+                        {Object.keys(KOR).map((keyword) => (
+                            <Button
+                                key={keyword}
+                                onClick={() => keywordSearch(keyword)}
+                                text={keyword}
+                            />
+                        ))}
+                    </div>
+                    <ul>
+                        <h3>
+                            {isSearched ? "검색 결과" : "전체"} ({searchResults.length})
+                        </h3>
+                        {isLoading && <p>데이터를 불러오고 있어요 😀</p>}
+                        {searchResults.map((result) => (
+                            <ResultCard {...result} />
+                        ))}
+                    </ul>
+                </>
+            )}
+            <Outlet />
         </section>
     );
 }

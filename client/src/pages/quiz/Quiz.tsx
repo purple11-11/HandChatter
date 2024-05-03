@@ -3,6 +3,7 @@ import Button from "../../components/button/Button";
 import QuizBox from "./QuizBox";
 import axios from "axios";
 import { SignRes } from "../../types/interface";
+import { useLoaderData } from "react-router-dom";
 
 const signData: SignRes[] = [
     {
@@ -51,9 +52,7 @@ function shuffle(array: SignRes[]) {
 }
 
 export default function Quiz() {
-    const url = "http://api.kcisa.kr/openapi/service/rest/meta13/getCTE01701";
-    const apiKey = "5e912661-427a-40bb-814d-facab428d26f";
-
+    const signData1 = useLoaderData() as SignRes[];
     const [currentQuiz, setCurrentQuiz] = useState<number>(0);
     const [score, setScore] = useState<number>(0);
     const [questions, setQuestions] = useState<SignRes[]>([]);
@@ -61,8 +60,8 @@ export default function Quiz() {
     const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
     useEffect(() => {
-        /* let shuffledQuestions = shuffle([...signData]).slice(0, 10); */
-        let shuffledQuestions = shuffle([...signData]).slice(0, signData.length);
+        let shuffledQuestions = shuffle([...(signData || [])]).slice(0, 10);
+        /*  let shuffledQuestions = shuffle([...signData]).slice(0, signData.length); */
         setQuestions(shuffledQuestions);
         let optionsForQuestions = shuffledQuestions.map((question) => {
             let titles = shuffle(
@@ -77,10 +76,10 @@ export default function Quiz() {
     }, []);
 
     /* const [answered, setAnswered] = useState<boolean[]>(new Array(10).fill(false)); */
-    const [answered, setAnswered] = useState<boolean[]>(new Array(signData.length).fill(false));
+    const [answered, setAnswered] = useState<boolean[]>(new Array(signData?.length).fill(false));
 
     useEffect(() => {
-        setAnswered(new Array(signData.length).fill(false));
+        setAnswered(new Array(signData?.length).fill(false));
     }, []);
 
     const handleAnswer = (isCorrect: boolean) => {
