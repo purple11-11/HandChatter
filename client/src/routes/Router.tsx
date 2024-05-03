@@ -26,7 +26,7 @@ const router = createBrowserRouter([
                         const response = await axios.get(process.env.REACT_APP_API_URL, {
                             params: {
                                 serviceKey: process.env.REACT_APP_API_KEY,
-                                numOfRows: "10",
+                                numOfRows: "100",
                                 pageNo: "1",
                             },
                         });
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
             { path: "find/id", element: <FindId /> },
             { path: "signup/student", element: <Signup role={"student"} /> },
             { path: "signup/tutor", element: <Signup role={"tutor"} /> },
-            { path: "mypage", element: <Mypage /> },
+            { path: "mypage/:id", element: <Mypage /> },
             { path: "tutors/:tutorIndex", element: <InstructorDetailPage /> },
             { path: "class", element: <Webcam /> },
         ],
