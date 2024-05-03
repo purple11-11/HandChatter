@@ -16,9 +16,11 @@ export default function MypageProfile() {
         password: userInfo?.password,
         profileImgUrl: profileImgUrl,
     });
+    const [showModal, setShowModal] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleTabChange = (tab: string) => {
-        setActiveTab(tab);
+        setShowPassword(true);
     };
 
     const handleUserDataChange = (fieldName: string, value: string) => {
@@ -32,11 +34,10 @@ export default function MypageProfile() {
                 nickname: userData.nickname,
                 password: userData.password,
             });
-            console.log(res.data);
-            // 서버로부터 응답을 받은 후에 필요한 작업 수행
+            alert(res.data.msg);
+            getInfo();
         } catch (error) {
             console.error("프로필 수정 오류:", error);
-            // 오류 처리
         }
     };
 
@@ -54,7 +55,7 @@ export default function MypageProfile() {
             });
             console.log(profileImgUrl);
             getInfo();
-            console.log(profileImgUrl);
+            return;
         } catch (error) {
             console.error("이미지 수정 오류:", error);
         }
@@ -83,11 +84,17 @@ export default function MypageProfile() {
             const res = await axios.patch(url);
             console.log(res.data);
             getInfo();
+            return;
         } catch (error) {
             console.error("기본 이미지로 변경하는 중 오류:", error);
         }
     };
-
+    const handleModal = (isModal: boolean) => {
+        setShowModal(isModal);
+    };
+    const onHideModifyPassword = () => {
+        setShowPassword(false);
+    };
     return (
         <section>
             <h1>내 정보 확인 및 수정</h1>
@@ -115,15 +122,6 @@ export default function MypageProfile() {
                         />
                     </div>
                     <div>
-                        <label htmlFor="">비밀번호</label>
-                        <input
-                            type="password"
-                            // value={userData.password}
-                            // onChange={(e) => handleUserDataChange("password", e.target.value)}
-                            readOnly
-                        />
-                    </div>
-                    <div>
                         <label htmlFor="">이메일</label>
                         <input
                             type="text"
@@ -138,17 +136,29 @@ export default function MypageProfile() {
                 <div>
                     <button onClick={() => handleTabChange("email")}>이메일 수정</button>
                     <button onClick={() => handleTabChange("password")}>비밀번호 수정</button>
-                    <button onClick={handleSubmit}>수정 내용 저장</button>
+                    <button onClick={() => handleModal(!showModal)}>수정 내용 저장</button>
                 </div>
-                <div>
-                    {activeTab === "email" && <ModifyEmail />}
-                    {activeTab === "password" && (
+                {showModal && (
+                    <div>
+                        <p>프로필을 변경하시려면 비밀번호를 입력하세요.</p>
+                        <label htmlFor="">비밀번호</label>
+                        <input
+                            type="password"
+                            // value={userData.password}
+                            onChange={(e) => handleUserDataChange("password", e.target.value)}
+                        />
+                        <button onClick={handleSubmit}>수정 내용 저장</button>
+                    </div>
+                )}
+                {showPassword && (
+                    <div>
                         <ModifyPassword
                             handleUserDataChange={handleUserDataChange}
                             currentPw={userData.password}
+                            onHide={onHideModifyPassword}
                         />
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </section>
     );
