@@ -1,13 +1,8 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, RouterProvider } from "react-router-dom";
 import "./axiosConfig";
+import router from "./routes/Router";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
-root.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
-);
+root.render(<RouterProvider router={router} />);
