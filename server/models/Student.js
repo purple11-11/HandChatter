@@ -33,11 +33,6 @@ const Student = function (Sequelize, DataTypes) {
                 allowNull: true,
                 defaultValue: "/uploads/default.jpg",
             },
-            authority: {
-                type: DataTypes.TINYINT, //튜터로 임명할지 안할지에 대한 권한 여부, 관리자가 관리(0/1로 담김)
-                allowNull: false,
-                defaultValue: false,
-            },
         },
         {
             tableName: "student",

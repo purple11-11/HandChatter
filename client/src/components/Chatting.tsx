@@ -4,6 +4,7 @@ import ChattingList from "./Chatting/ChattingList";
 import ChattingForOne from "./Chatting/ChattingForOne";
 import ChattingTutorIntroductor from "./Chatting/ChattingTutorIntroductor";
 import axios from "axios";
+import { useInfoStore } from "../store/store";
 
 // 예시로 하드코딩된 데이터
 // 상대방(강사) 정보 들어있는 배열, 상대방이 학생일 때(강사로그인)는 인덱스만 넣어주기
@@ -33,13 +34,21 @@ const Chatting: React.FC = (props?) => {
     const handleRoomClick = (roomId: number) => {
         setSelectedRoom(roomId); // 선택된 채팅방 변경
     };
+
+    const isLogin = useInfoStore((state) => state.isLogin);
+    const userInfo = useInfoStore((state) => state.userInfo);
+
     // 채팅방 셋팅
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_SERVER}/api/userInfo`).then((res) => {
-            // console.log(res.data.studentInfo[0].authority);
-            // 학생일 때
-            if (res.data.studentInfo[0]) {
-                const { stu_idx } = res.data.studentInfo[0];
+        // axios.get(`${process.env.REACT_APP_API_SERVER}/api/userInfo`).then((res) => {
+        if (isLogin) {
+            console.log("userInfo >>", userInfo);
+            const stu_idx = userInfo?.stu_idx;
+            const tutor_idx = userInfo?.tutor_idx;
+            console.log("stu_idx >>", stu_idx);
+            // 학생 로그인일 때
+            if (stu_idx) {
+                //  const { stu_idx } = userInfo;
                 // 해당 학생 인덱스로 메세지에 있는 강사들 인덱스 수집
                 axios
                     .get(`${process.env.REACT_APP_API_SERVER}/api/messages`, {
@@ -52,7 +61,7 @@ const Chatting: React.FC = (props?) => {
                         console.log(res.data.tutorsIdx);
                         // 강사들 인덱스로 강사들 정보 조회
                         axios
-                            .get(`${process.env.REACT_APP_API_SERVER}/api/chatTutors`, {
+                            .get(`${process.env.REACT_APP_API_SERVER}/api/chatInfo`, {
                                 params: {
                                     tutorsIdx: res.data.tutorsIdx,
                                 },
@@ -64,26 +73,32 @@ const Chatting: React.FC = (props?) => {
                             });
                     });
             }
-            // 강사일 때
-            else if (res.data.tutorInfo[0]) {
-                const { tutor_idx } = res.data.tutorInfo[0];
+            // 강사 로그인일 떄
+            else if (tutor_idx) {
                 axios
                     .get(`${process.env.REACT_APP_API_SERVER}/api/messages`, {
                         params: { tutorIdx: tutor_idx },
                     })
                     .then((res) => {
                         // setAllRoom에 학생들 인덱스 넣기
-                        // console.log("res.data.studentsIdx >>", res.data.studentsIdx);
+                        // console.log("res.data.tutorsIdx >>", res.data.tutorsIdx);
                         setAllRoom(res.data.studentsIdx);
-                        // 학생인덱스들 chatRooms에 넣기
-                        setChatRooms(
-                            res.data.studentsIdx.map((idx: number) => {
-                                return { id: idx };
+                        console.log("studentsIdx: ", res.data.studentsIdx);
+                        // 강사들 인덱스로 강사들 정보 조회
+                        axios
+                            .get(`${process.env.REACT_APP_API_SERVER}/api/chatInfo`, {
+                                params: {
+                                    studentsIdx: res.data.studentsIdx,
+                                },
                             })
-                        );
+                            .then((res) => {
+                                // chatRooms에 강사들 정보 넣기
+                                setChatRooms(res.data.chatStudentsInfo);
+                                console.log("chatRooms >>", chatRooms);
+                            });
                     });
             }
-        });
+        }
     }, []);
 
     useEffect(() => {

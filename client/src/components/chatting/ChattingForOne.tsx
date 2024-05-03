@@ -3,6 +3,7 @@ import { ChatRoom } from "../../types/interface";
 import { useState, useEffect, useCallback } from "react";
 import io from "socket.io-client";
 import axios from "axios";
+import { useInfoStore } from "../../store/store";
 
 const socket = io("http://localhost:8080", {
     autoConnect: false,
@@ -19,42 +20,49 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
         // 학생으로 로그인한 경우
         socket.emit("join", { role: "student", idx: 1 });
     };
+
+    const userInfo = useInfoStore((state) => state.userInfo);
+
     useEffect(() => {
         initSocketConnect();
         const fetchData = async () => {
             try {
                 // 이전 메세지 내역 세팅
                 // 학생일 때 (로그인 정보의 권한여부[authority]가 0일 떄)
-                const response = await axios.get(
-                    `${process.env.REACT_APP_API_SERVER}/api/messages`,
-                    {
-                        params: {
-                            // 학생(로그인)일 때 stuIdx -> 로그인 정보 인덱스
-                            stuIdx: 1,
-                            tutorIdx: room.id, // room.id -> 강사 인덱스
-                        },
-                    }
-                );
-                const messages = response.data.messages;
-                const contents: string[] = messages.map((msg: any) => msg.content);
-                // 응답 데이터를 상태로 설정
-                setMessages(contents);
+                if (userInfo?.authority === 0) {
+                    const response = await axios.get(
+                        `${process.env.REACT_APP_API_SERVER}/api/messages`,
+                        {
+                            params: {
+                                // 학생(로그인)일 때 stuIdx -> 로그인 정보 인덱스
+                                stuIdx: 1,
+                                tutorIdx: room.id, // room.id -> 강사 인덱스
+                            },
+                        }
+                    );
+                    const messages = response.data.messages;
+                    const contents: string[] = messages.map((msg: any) => msg.content);
+                    // 응답 데이터를 상태로 설정
+                    setMessages(contents);
+                }
 
                 // 강사일 때 (로그인 정보의 권한여부[authority]가 1일 떄)
-                // const response = await axios.get(
-                //     `${process.env.REACT_APP_API_SERVER}/api/messages`,
-                //     {
-                //         params: {
-                //             // 학생(로그인)일 때 stuIdx -> 로그인 정보 인덱스
-                //             stuIdx: 1,
-                //             tutorIdx: room.id, // room.id -> 강사 인덱스
-                //         },
-                //     }
-                // );
-                // const messages = response.data.messages;
-                // const contents: string[] = messages.map((msg: any) => msg.content);
-                // // 응답 데이터를 상태로 설정
-                // setMessages(contents);
+                if (userInfo?.authority === 1) {
+                    // const response = await axios.get(
+                    //     `${process.env.REACT_APP_API_SERVER}/api/messages`,
+                    //     {
+                    //         params: {
+                    //             // 학생(로그인)일 때 stuIdx -> 로그인 정보 인덱스
+                    //             stuIdx: 1,
+                    //             tutorIdx: room.id, // room.id -> 강사 인덱스
+                    //         },
+                    //     }
+                    // );
+                    // const messages = response.data.messages;
+                    // const contents: string[] = messages.map((msg: any) => msg.content);
+                    // // 응답 데이터를 상태로 설정
+                    // setMessages(contents);
+                }
             } catch (error) {
                 console.error("Error fetching data:", error);
             }

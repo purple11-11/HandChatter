@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { ChatRoom } from "../../types/interface";
 
 const ChattingList: React.FC<{ rooms: ChatRoom[]; onRoomClick: (roomId: number) => void }> = ({

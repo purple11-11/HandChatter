@@ -25,15 +25,7 @@ exports.getInfo = async (req, res) => {
         if (role === "student") {
             const studentInfo = await Student.findAll({
                 where: { id: userId },
-                attributes: [
-                    "stu_idx",
-                    "id",
-                    "nickname",
-                    "email",
-                    "provider",
-                    "profile_img",
-                    "authority",
-                ],
+                attributes: ["stu_idx", "id", "nickname", "email", "provider", "profile_img"],
             });
             return res.status(200).send({ studentInfo });
         } else if (role === "tutor") {
@@ -953,33 +945,53 @@ exports.getMessage = async (req, res) => {
     }
 };
 
-// 채팅 중인 강사들 정보 조회
-exports.getChatTutors = async (req, res) => {
+// 채팅 목록 정보 조회
+exports.getChatInfo = async (req, res) => {
     try {
-        const { tutorsIdx } = req.query;
-        const chatTutorsInfo = await Promise.all(
-            tutorsIdx.map(async (tutorIdx) => {
-                return await Tutor.findOne({
-                    where: {
-                        tutor_idx: tutorIdx,
-                    },
-                    attributes: [
-                        ["tutor_idx", "id"],
-                        ["nickname", "name"],
-                        "email",
-                        ["description", "intro"],
-                    ],
-                });
-            })
-        );
-
-        if (chatTutorsInfo && chatTutorsInfo.length > 0) {
-            res.send({ chatTutorsInfo });
-        } else {
-            res.status(404).send("채팅 중인 강사 검색 결과가 없습니다.");
+        const { tutorsIdx, studentsIdx } = req.query;
+        // 학생 로그인 - 채팅방 목록(강사들)
+        if (tutorsIdx) {
+            const chatTutorsInfo = await Promise.all(
+                tutorsIdx.map(async (tutorIdx) => {
+                    return await Tutor.findOne({
+                        where: {
+                            tutor_idx: tutorIdx,
+                        },
+                        attributes: [
+                            ["tutor_idx", "id"],
+                            ["nickname", "name"],
+                            "email",
+                            ["description", "intro"],
+                        ],
+                    });
+                })
+            );
+            if (chatTutorsInfo && chatTutorsInfo.length > 0) {
+                res.send({ chatTutorsInfo });
+            } else {
+                res.status(404).send("채팅 중인 강사가 없습니다.");
+            }
+        }
+        // 강사 로그인 - 채팅방 목록(학생들)
+        if (studentsIdx) {
+            const chatStudentsInfo = await Promise.all(
+                studentsIdx.map(async (studentIdx) => {
+                    return await Student.findOne({
+                        where: {
+                            stu_idx: studentIdx,
+                        },
+                        attributes: [["stu_idx", "id"], ["nickname", "name"], "email"],
+                    });
+                })
+            );
+            if (chatStudentsInfo && chatStudentsInfo.length > 0) {
+                res.send({ chatStudentsInfo });
+            } else {
+                res.status(404).send("채팅 중인 학생이 없습니다.");
+            }
         }
     } catch (err) {
-        console.error(error);
+        console.error(err);
         res.status(500).send("SERVER ERROR!!!");
     }
 };
