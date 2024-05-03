@@ -30,7 +30,7 @@ const Student = function (Sequelize, DataTypes) {
             },
             profile_img: {
                 type: DataTypes.STRING(255),
-                allowNull: true,
+                allowNull: false,
                 defaultValue: "public/default.jpg",
             },
             authority: {
