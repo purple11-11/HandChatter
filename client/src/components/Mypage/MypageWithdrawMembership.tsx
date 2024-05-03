@@ -36,32 +36,35 @@ export default function MypageWithdrawMembership() {
     };
 
     return (
-        <>
-            <section>
-                <p>회원탈퇴를 위해 아이디와 비밀번호를 입력해주세요.</p>
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="userId">아이디:</label>
-                        <input
-                            type="text"
-                            id="userId"
-                            value={userId}
-                            onChange={handleUserIdChange}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="password">비밀번호:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            autoComplete="current-password"
-                        />
-                    </div>
-                    <button type="submit">회원탈퇴</button>
-                </form>
-            </section>
-        </>
+        <div>
+            <p className="title">회원탈퇴</p>
+            <div className="mypage-profile-container">
+                <div className="mypage-input-container">
+                    <p className="mypage-smalltitle">회원탈퇴를 위해 아이디와 비밀번호를 입력해주세요.</p>
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <label htmlFor="userId">아이디:</label>
+                            <input
+                                type="text"
+                                id="userId"
+                                value={userId}
+                                onChange={handleUserIdChange}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="password">비밀번호:</label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                                autoComplete="current-password"
+                            />
+                        </div>
+                        <button type="submit" className="withdraw-btn">회원탈퇴</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     );
 }

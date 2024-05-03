@@ -20,7 +20,7 @@ const MyPage: React.FC = () => {
                     <button onClick={() => handleTabChange("profile")}>프로필</button>
                     <button onClick={() => handleTabChange("withdraw")}>회원탈퇴</button>
                 </div>
-                <div>
+                <div className="mypage-components-container">
                     {/* 조건부 렌더링을 사용하여 활성화된 탭에 따라 해당 컴포넌트를 보여줍니다. */}
                     {activeTab === "chatting" && <Chatting />}
                     {activeTab === "lesson" && <StudentMypageLesson />}

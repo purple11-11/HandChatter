@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import "../styles/components/tutorList.scss";
+// import "../styles/components/tutorList.scss";
 import { Link } from "react-router-dom";
 
 interface Tutor {
