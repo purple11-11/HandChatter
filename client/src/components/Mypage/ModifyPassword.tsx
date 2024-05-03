@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
-
+import axios from "axios";
 interface Passwords {
     currentPassword: string;
     newPassword: string;
@@ -9,9 +9,14 @@ interface Passwords {
 interface ModifyPasswordProps {
     handleUserDataChange: (name: string, value: string) => void;
     currentPw: string;
+    onHide: () => void;
 }
 
-const ModifyPassword: React.FC<ModifyPasswordProps> = ({ handleUserDataChange, currentPw }) => {
+const ModifyPassword: React.FC<ModifyPasswordProps> = ({
+    handleUserDataChange,
+    currentPw,
+    onHide,
+}) => {
     const [passwords, setPasswords] = useState<Passwords>({
         currentPassword: "",
         newPassword: "",
@@ -22,22 +27,11 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({ handleUserDataChange, c
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        if (name === "currentPassword") {
-            if (value !== currentPw) {
-                setWrongPw1("비밀번호가 일치하지 않습니다.");
-            } else {
-                setWrongPw1("비밀번호가 일치합니다.");
-                setPasswords({
-                    ...passwords,
-                    [name]: value,
-                });
-            }
-        } else {
-            setPasswords({
-                ...passwords,
-                [name]: value,
-            });
-        }
+
+        setPasswords({
+            ...passwords,
+            [name]: value,
+        });
     };
 
     const handleCheckPassword = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,11 +47,24 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({ handleUserDataChange, c
         });
     };
 
-    const handleSaveChanges = () => {
-        if (passwords.newPassword === passwords.confirmPassword) {
-            handleUserDataChange("password", passwords.newPassword);
-        } else {
-            alert("새 비밀번호와 확인 비밀번호가 일치하지 않습니다.");
+    const handleSaveChanges = async () => {
+        try {
+            const url = `${process.env.REACT_APP_API_SERVER}/api/editStudentPassword`; // Update the URL according to your API endpoint
+            const response = await axios.patch(url, {
+                password: passwords.currentPassword,
+                newPassword: passwords.newPassword,
+            });
+            const { result, msg } = response.data;
+            if (result) {
+                handleUserDataChange("password", passwords.newPassword);
+                onHide();
+                alert(msg);
+            } else {
+                alert(msg);
+            }
+        } catch (error) {
+            console.error("Error updating password:", error);
+            alert("비밀번호 업데이트 중 오류가 발생했습니다.");
         }
     };
 
@@ -75,7 +82,6 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({ handleUserDataChange, c
                         onChange={handleInputChange}
                     />
                 </div>
-                <div>{wrongPw1}</div>
                 <div>
                     <label htmlFor="newPassword">새 비밀번호</label>
                     <br />

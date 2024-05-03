@@ -38,7 +38,6 @@ export const useInfoStore = create<UserStore>((set) => ({
             const res = await axios.get(url);
             console.log(res.data);
             if (!res.data.tutorInfo) {
-                console.log("하하");
                 const newProfileImgUrl =
                     process.env.REACT_APP_API_SERVER + "/" + res.data.studentInfo[0].profile_img;
                 set((state) => ({
@@ -47,7 +46,6 @@ export const useInfoStore = create<UserStore>((set) => ({
                     isLogin: true,
                 }));
             } else {
-                console.log("하하");
                 const newProfileImgUrl =
                     process.env.REACT_APP_API_SERVER + res.data.tutorInfo[0].profile_img;
                 set((state) => ({

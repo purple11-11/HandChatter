@@ -23,6 +23,28 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
     const favorite = useInfoStore((state) => state.favorite);
     const isFavorite = useInfoStore((state) => state.isFavorite);
     const navigate = useNavigate();
+    const [checkFavorite, setCheckFavorite] = useState<boolean>(false);
+
+    // useEffect(() => {
+    //     if (!isLogin) return;
+
+    //     const checkFavorite = async () => {
+    //         try {
+    //             const url = `${process.env.REACT_APP_API_SERVER}/api/favorites/${tutorIndex}`;
+    //             const res = await axios.get(url, {
+    //                 params: {
+    //                     stu_idx: userInfo?.stu_idx,
+    //                 },
+    //             });
+    //             setCheckFavorite(res.data.isFavorite);
+    //         } catch (error) {
+    //             console.error("찜하기 상태 확인 오류:", error);
+    //         }
+    //     };
+
+    //     checkFavorite();
+    // }, [isLogin, tutorIndex, userInfo?.stu_idx]);
+
     const handleAddFavorite = async () => {
         try {
             if (!isLogin) {
@@ -39,6 +61,8 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
             if (res.status === 200) {
                 isFavorite();
                 alert("찜 목록에 추가되었습니다.");
+            } else {
+                isFavorite();
             }
         } catch (error) {
             console.error("찜하기 오류:", error);
