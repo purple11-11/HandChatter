@@ -11,6 +11,8 @@ import Quiz from "../pages/quiz/Quiz";
 import axios from "axios";
 import { SignRes } from "../types/interface";
 import App from "../App";
+import Admin from "../pages/admin/Admin";
+import AdminLogin from "../pages/admin/AdminLogin";
 
 const router = createBrowserRouter([
     {
@@ -59,6 +61,8 @@ const router = createBrowserRouter([
             { path: "mypage/:id", element: <Mypage /> },
             { path: "tutors/:tutorIndex", element: <InstructorDetailPage /> },
             { path: "class", element: <Webcam /> },
+            { path: "admin", element: <Admin /> },
+            { path: "adminLogin", element: <AdminLogin /> },
         ],
     },
 ]);

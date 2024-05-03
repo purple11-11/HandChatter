@@ -3,18 +3,14 @@ const { Tutor, Student } = require("../models");
 //GET /admin
 exports.getUsers = async (req, res) => {
     try {
-        const id = req.session.adminId;
-        if (id) {
-            const users = await Promise.all([
-                Tutor.findAll({
-                    attributes: ["tutor_idx", "id", "nickname", "auth", "email", "authority"],
-                }),
-                Student.findAll({
-                    attributes: ["stu_idx", "id", "nickname", "email", "authority"],
-                }),
-            ]);
-            res.status(200).send({ users });
-        } else return res.status(400).send("관리자로 로그인을 해주세요.");
+        // const id = req.session.adminId;
+        // if (id) {
+        const users = await Tutor.findAll({
+            attributes: ["tutor_idx", "id", "nickname", "auth", "email", "authority"],
+        });
+
+        res.status(200).send({ users });
+        // } else return res.status(400).send("관리자로 로그인을 해주세요.");
     } catch (error) {
         console.log(error);
         res.status(500).send("SERVER ERROR!!!");

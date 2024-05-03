@@ -1,0 +1,27 @@
+@import "../util";
+
+section {
+    min-height: 1000px;
+    border-bottom: 2px solid #d4d4ba;
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+h1 {
+    text-align: center;
+    font-size: 30px;
+}
+table {
+    // border: 1px solid red;
+    width: 80%;
+    text-align: center;
+    .first_tr {
+        border: 1px solid black;
+        margin-bottom: 30px;
+        th {
+            font-size: 18px;
+            font-weight: 800;
+        }
+    }
+}
