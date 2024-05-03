@@ -23,27 +23,6 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
     const favorite = useInfoStore((state) => state.favorite);
     const isFavorite = useInfoStore((state) => state.isFavorite);
     const navigate = useNavigate();
-    const [checkFavorite, setCheckFavorite] = useState<boolean>(false);
-
-    // useEffect(() => {
-    //     if (!isLogin) return;
-
-    //     const checkFavorite = async () => {
-    //         try {
-    //             const url = `${process.env.REACT_APP_API_SERVER}/api/favorites/${tutorIndex}`;
-    //             const res = await axios.get(url, {
-    //                 params: {
-    //                     stu_idx: userInfo?.stu_idx,
-    //                 },
-    //             });
-    //             setCheckFavorite(res.data.isFavorite);
-    //         } catch (error) {
-    //             console.error("찜하기 상태 확인 오류:", error);
-    //         }
-    //     };
-
-    //     checkFavorite();
-    // }, [isLogin, tutorIndex, userInfo?.stu_idx]);
 
     const handleAddFavorite = async () => {
         try {
@@ -95,12 +74,12 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
     };
 
     useEffect(() => {
-        if (tutor && tutor.content) {
+        if (tutor && tutor.description) {
             const maxLength = 100;
-            const shortened = tutor.content.slice(0, maxLength);
+            const shortened = tutor.description.slice(0, maxLength);
             setShortenedContent(shortened);
         }
-    }, [tutor?.content]);
+    }, [tutor?.description]);
 
     if (!tutor) {
         return <div>Loading...</div>;

@@ -87,7 +87,7 @@ section {
                         }
                     }
                     .header-nickname {
-                        width: 80px;
+                        min-width: 90px;
                         display: flex;
                         justify-content: space-between;
                     }
@@ -376,9 +376,10 @@ section {
         .tutor-video {
             width: 42%;
             overflow: hidden;
-            video {
-                width: 100%;
-                height: 100%;
+            div {
+                video {
+                    vertical-align: middle;
+                }
             }
         }
         .tutor-introduce {

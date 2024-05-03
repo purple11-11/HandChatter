@@ -6,8 +6,9 @@ import mainImg from "../assets/mainImg.jpg";
 interface Tutor {
     nickname: string;
     email: string;
-    content: string;
+    description: string;
     price: string;
+    profile_img: string;
 }
 
 interface Props {
@@ -22,13 +23,13 @@ const InstructorCard: React.FC<Props> = ({ tutor }) => {
                     <ul>
                         <li>{tutor.nickname}</li>
                         <li>{tutor.email}</li>
-                        <li>{tutor.content}안녕하세요 제이름은 이기혁입니다</li>
+                        <li>{tutor.description}</li>
                         <li>{tutor.price} 원</li>
                     </ul>
                 </div>
             </div>
             <div className="profile">
-                <img src={mainImg} alt="" />
+                <img src={`${process.env.REACT_APP_API_SERVER}/${tutor.profile_img}`} alt="" />
             </div>
         </div>
     );

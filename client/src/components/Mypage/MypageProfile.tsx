@@ -16,6 +16,7 @@ export default function MypageProfile() {
         price: userInfo?.price,
         password: userInfo?.password,
         profileImgUrl: profileImgUrl,
+        description: userInfo?.description
     });
     const [showModal, setShowModal] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -44,7 +45,7 @@ export default function MypageProfile() {
                     password: userData.password,
                     level: userData.level,
                     price: userData.price,
-                    description: userData.discription,
+                    description: userData.description,
                 });
             }
             alert(res.data.msg);
@@ -193,14 +194,6 @@ export default function MypageProfile() {
                             readOnly
                         />
                     </div>
-                    <div>
-                        <label htmlFor="">가격</label>
-                        <input
-                            type="text"
-                            value={userData?.price}
-                            onChange={(e) => handleUserDataChange("price", e.target.value)}
-                        />
-                    </div>
                     {userInfo?.tutor_idx && (
                         <>
                             <div>
@@ -239,7 +232,7 @@ export default function MypageProfile() {
                             <div>
                                 <label htmlFor="">상세페이지 소개글</label>
                                 <textarea
-                                    value={userData.introText}
+                                    value={userData.description}
                                     onChange={(e) => handleIntroTextChange(e.target.value)}
                                     cols={30}
                                     rows={10}
