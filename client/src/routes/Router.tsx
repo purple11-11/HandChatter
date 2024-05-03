@@ -22,34 +22,28 @@ const router = createBrowserRouter([
                 path: "learning",
                 element: <PersonalLearning />,
                 loader: async () => {
-                    const url = "http://api.kcisa.kr/openapi/service/rest/meta13/getCTE01701";
-                    const apiKey = "5e912661-427a-40bb-814d-facab428d26f";
+                    if (process.env.REACT_APP_API_URL && process.env.REACT_APP_API_KEY) {
+                        const response = await axios.get(process.env.REACT_APP_API_URL, {
+                            params: {
+                                serviceKey: process.env.REACT_APP_API_KEY,
+                                numOfRows: "100",
+                                pageNo: "1",
+                            },
+                        });
+                        const items = response.data.response.body.items.item;
+                        console.log("App.tsx items ::", items);
 
-                    const response = await axios.get(url, {
-                        params: {
-                            serviceKey: apiKey,
-                            numOfRows: "10",
-                            pageNo: "1",
-                        },
-                    });
-                    const items = response.data.response.body.items.item;
-                    console.log("App.tsx items ::", items);
+                        let results: SignRes[] = items.map((item: SignRes, index: number) => ({
+                            key: index,
+                            title: item.title,
+                            url: item.url,
+                            description: item.description,
+                            referenceIdentifier: item.referenceIdentifier,
+                            subDescription: item.subDescription,
+                        }));
 
-                    let results: SignRes[] = items.map((item: SignRes, index: number) => ({
-                        key: index,
-                        title: item.title,
-                        url: item.url,
-                        description: item.description,
-                        referenceIdentifier: item.referenceIdentifier,
-                        subDescription: item.subDescription,
-                    }));
-                    /*           .sort((a: SignRes, b: SignRes) => {
-                            const titleA = a.title.substring(a.title.search(/[가-힣]/));
-                            const titleB = b.title.substring(b.title.search(/[가-힣]/));
-        
-                            return titleA.localeCompare(titleB, "ko");
-                        }); */
-                    return results;
+                        return results;
+                    }
                 },
                 children: [
                     {
@@ -62,7 +56,7 @@ const router = createBrowserRouter([
             { path: "find/id", element: <FindId /> },
             { path: "signup/student", element: <Signup role={"student"} /> },
             { path: "signup/tutor", element: <Signup role={"tutor"} /> },
-            { path: "mypage/:index", element: <Mypage /> },
+            { path: "mypage/:id", element: <Mypage /> },
             { path: "tutors/:tutorIndex", element: <InstructorDetailPage /> },
             { path: "class", element: <Webcam /> },
         ],
