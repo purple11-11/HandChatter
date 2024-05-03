@@ -77,6 +77,7 @@ const Header = () => {
                         isMenuOpen={isMenuOpen}
                         onLogout={handleLogout}
                         mypageIndex={mypageIndex}
+                        handleLeftClick={handleLeftClick}
                     />
                 </div>
             </header>

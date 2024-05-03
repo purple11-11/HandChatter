@@ -194,14 +194,6 @@ export default function MypageProfile() {
                             readOnly
                         />
                     </div>
-                    <div>
-                        <label htmlFor="">가격</label>
-                        <input
-                            type="text"
-                            value={userData?.price}
-                            onChange={(e) => handleUserDataChange("price", e.target.value)}
-                        />
-                    </div>
                     {userInfo?.tutor_idx && (
                         <>
                             <div>
