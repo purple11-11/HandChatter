@@ -86,13 +86,14 @@ export default function Main() {
                     </div>
                     {error && <p>{error}</p>}
                     <ul className="card-container">
-                        {searchResults.map((tutor, index) => (
-                            <li key={index}>
-                                <Link to={`/tutors/${index + 1}`}>
-                                    <InstructorCard tutor={tutor}></InstructorCard>
-                                </Link>
-                            </li>
-                        ))}
+                        {searchResults &&
+                            searchResults.map((tutor, index) => (
+                                <li key={index}>
+                                    <Link to={`/tutors/${index + 1}`}>
+                                        <InstructorCard tutor={tutor}></InstructorCard>
+                                    </Link>
+                                </li>
+                            ))}
                     </ul>
                 </div>
             </section>

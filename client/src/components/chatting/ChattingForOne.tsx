@@ -5,7 +5,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { useInfoStore } from "../../store/store";
 
-const socket = io("http://localhost:8080", {
+const socket = io(process.env.REACT_APP_API_SERVER, {
     autoConnect: false,
 });
 
