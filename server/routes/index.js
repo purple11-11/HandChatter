@@ -852,7 +852,7 @@ router.delete("/reviews", controller.deleteReviews);
 router.get("/messages", controller.getMessage);
 
 //
-router.get("/chatTutors", controller.getChatTutors);
+router.get("/chatInfo", controller.getChatInfo);
 
 router.get("*", (req, res) => {
     // res.render("404");

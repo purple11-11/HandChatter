@@ -12,7 +12,7 @@ type UserInfo = {
     profile_img: string;
     description?: string;
     des_video?: string;
-    authority: number;
+    authority?: number;
 };
 
 type UserStore = {

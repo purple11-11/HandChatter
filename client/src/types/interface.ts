@@ -38,7 +38,7 @@ export interface Tutor {
 
 export type UserInfo = {
     tutor_idx?: number;
-    student_idx?: number;
+    stu_idx?: number;
     id: string;
     password: string;
     nickname: string;
@@ -47,7 +47,7 @@ export type UserInfo = {
     profile_img: string;
     description?: string;
     des_video?: string;
-    authority: number;
+    authority?: number;
 };
 
 export type UserStore = {
