@@ -35,6 +35,7 @@ export const useInfoStore = create<UserStore>()(
             profileImgUrl: "",
             favorite: false,
 
+
             getInfo: async () => {
                 try {
                     const url = `${process.env.REACT_APP_API_SERVER}/api/userInfo`;
@@ -52,7 +53,7 @@ export const useInfoStore = create<UserStore>()(
                         }));
                     } else {
                         const newProfileImgUrl =
-                            process.env.REACT_APP_API_SERVER + res.data.tutorInfo[0].profile_img;
+                            process.env.REACT_APP_API_SERVER + "/"  + res.data.tutorInfo[0].profile_img;
                         set((state) => ({
                             profileImgUrl: newProfileImgUrl,
                             userInfo: res.data.tutorInfo[0],

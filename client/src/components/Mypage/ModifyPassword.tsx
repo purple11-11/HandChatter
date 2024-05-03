@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import axios from "axios";
+import { useInfoStore } from "../../store/store";
 interface Passwords {
     currentPassword: string;
     newPassword: string;
@@ -24,7 +25,7 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
     });
     const [wrongPw1, setWrongPw1] = useState<string>("");
     const [wrongPw2, setWrongPw2] = useState<string>("");
-
+    const userInfo = useInfoStore((state) => state.userInfo);
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -49,18 +50,35 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
 
     const handleSaveChanges = async () => {
         try {
-            const url = `${process.env.REACT_APP_API_SERVER}/api/editStudentPassword`; // Update the URL according to your API endpoint
-            const response = await axios.patch(url, {
-                password: passwords.currentPassword,
-                newPassword: passwords.newPassword,
-            });
-            const { result, msg } = response.data;
-            if (result) {
-                handleUserDataChange("password", passwords.newPassword);
-                onHide();
-                alert(msg);
+            let res;
+            if (!userInfo?.tutor_idx) {
+                const url = `${process.env.REACT_APP_API_SERVER}/api/editStudentPassword`; // Update the URL according to your API endpoint
+                res = await axios.patch(url, {
+                    password: passwords.currentPassword,
+                    newPassword: passwords.newPassword,
+                });
+                const { result, msg } = res.data;
+                if (result) {
+                    handleUserDataChange("password", passwords.newPassword);
+                    onHide();
+                    alert(msg);
+                } else {
+                    alert(msg);
+                }
             } else {
-                alert(msg);
+                const url = `${process.env.REACT_APP_API_SERVER}/api/editTutorPassword`; // Update the URL according to your API endpoint
+                res = await axios.patch(url, {
+                    password: passwords.currentPassword,
+                    newPassword: passwords.newPassword,
+                });
+                const { result, msg } = res.data;
+                if (result) {
+                    handleUserDataChange("password", passwords.newPassword);
+                    onHide();
+                    alert(msg);
+                } else {
+                    alert(msg);
+                }
             }
         } catch (error) {
             console.error("Error updating password:", error);

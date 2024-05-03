@@ -13,6 +13,7 @@ export default function MypageProfile() {
         id: userInfo?.id,
         nickname: userInfo?.nickname,
         email: userInfo?.email,
+        price: userInfo?.price,
         password: userInfo?.password,
         profileImgUrl: profileImgUrl,
     });
@@ -26,14 +27,26 @@ export default function MypageProfile() {
     const handleUserDataChange = (fieldName: string, value: string) => {
         setUserData({ ...userData, [fieldName]: value });
     };
-
     const handleSubmit = async () => {
         try {
-            const url = `${process.env.REACT_APP_API_SERVER}/api/studentProfile`;
-            const res = await axios.patch(url, {
-                nickname: userData.nickname,
-                password: userData.password,
-            });
+            let res;
+            if (!userInfo?.tutor_idx) {
+                const url = `${process.env.REACT_APP_API_SERVER}/api/studentProfile`;
+                res = await axios.patch(url, {
+                    nickname: userData.nickname,
+                    password: userData.password,
+                });
+            } else {
+                console.log(userData);
+                const url = `${process.env.REACT_APP_API_SERVER}/api/tutorProfile`;
+                res = await axios.patch(url, {
+                    nickname: userData.nickname,
+                    password: userData.password,
+                    level: userData.level,
+                    price: userData.price,
+                    description: userData.discription,
+                });
+            }
             alert(res.data.msg);
             getInfo();
         } catch (error) {
@@ -47,7 +60,6 @@ export default function MypageProfile() {
             formData.append("image", file);
             console.log(file);
             const url = `${process.env.REACT_APP_API_SERVER}/api/editPhoto`;
-            console.log("gkgkkg");
             const res = await axios.patch(url, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -89,12 +101,63 @@ export default function MypageProfile() {
             console.error("기본 이미지로 변경하는 중 오류:", error);
         }
     };
+    const handleLevelChange = (level: string) => {
+        const newLevels = Array.isArray(userData.levels) ? [...userData.levels] : [];
+
+        if (!newLevels.includes(level)) {
+            newLevels.push(level);
+            setUserData({ ...userData, levels: newLevels });
+        }
+    };
+
+    const handleIntroVideoUpload = async (file: File) => {
+        try {
+            if (!file) {
+                console.error("파일이 선택되지 않았습니다.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("video", file);
+
+            const url = `${process.env.REACT_APP_API_SERVER}/api/uploadVideo`;
+            const res = await axios.patch(url, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            console.log("영상 업로드 완료:", res.data);
+        } catch (error) {
+            console.error("영상 업로드 오류:", error);
+        }
+    };
+
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        try {
+            const file = e.target.files?.[0];
+            if (!file) {
+                console.error("파일이 선택되지 않았습니다.");
+                return;
+            }
+
+            // 파일이 선택되면 영상 업로드 함수 호출
+            handleIntroVideoUpload(file);
+        } catch (error) {
+            console.error("파일 선택 오류:", error);
+        }
+    };
+    const handleIntroTextChange = (text: string) => {
+        setUserData({ ...userData, description: text });
+    };
+
     const handleModal = (isModal: boolean) => {
         setShowModal(isModal);
     };
     const onHideModifyPassword = () => {
         setShowPassword(false);
     };
+
     return (
         <section>
             <h1>내 정보 확인 및 수정</h1>
@@ -130,6 +193,60 @@ export default function MypageProfile() {
                             readOnly
                         />
                     </div>
+                    <div>
+                        <label htmlFor="">가격</label>
+                        <input
+                            type="text"
+                            value={userData?.price}
+                            onChange={(e) => handleUserDataChange("price", e.target.value)}
+                        />
+                    </div>
+                    {userInfo?.tutor_idx && (
+                        <>
+                            <div>
+                                <label htmlFor="">강의 레벨</label>
+                                <div>
+                                    <input
+                                        type="checkbox"
+                                        id="beginner"
+                                        name="levels"
+                                        value="beginner"
+                                        onChange={(e) => handleLevelChange(e.target.value)}
+                                    />
+                                    <label htmlFor="beginner">초급</label>
+                                    <input
+                                        type="checkbox"
+                                        id="intermediate"
+                                        name="levels"
+                                        value="intermediate"
+                                        onChange={(e) => handleLevelChange(e.target.value)}
+                                    />
+                                    <label htmlFor="intermediate">중급</label>
+                                    <input
+                                        type="checkbox"
+                                        id="advanced"
+                                        name="levels"
+                                        value="advanced"
+                                        onChange={(e) => handleLevelChange(e.target.value)}
+                                    />
+                                    <label htmlFor="advanced">고급</label>
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="">자기소개 영상</label>
+                                <input type="file" onChange={handleFileSelect} />
+                            </div>
+                            <div>
+                                <label htmlFor="">상세페이지 소개글</label>
+                                <textarea
+                                    value={userData.introText}
+                                    onChange={(e) => handleIntroTextChange(e.target.value)}
+                                    cols={30}
+                                    rows={10}
+                                ></textarea>
+                            </div>
+                        </>
+                    )}
                 </form>
             </div>
             <div>

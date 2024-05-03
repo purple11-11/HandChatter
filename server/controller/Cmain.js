@@ -488,7 +488,8 @@ exports.editTutorProfile = async (req, res) => {
         if (!id) return res.status(400).send("로그인을 해주세요.");
 
         const { nickname, password, level, price, description } = req.body;
-        if (!nickname || !price || !password) res.status(400).send("빈칸을 입력해주세요.");
+        console.log(req.body);
+        if (!nickname || !price || !password) return res.status(400).send("빈칸을 입력해주세요.");
 
         const realPrice = Number(price);
         const tutor = await Tutor.findOne({
