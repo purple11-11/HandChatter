@@ -23,9 +23,8 @@ function App() {
                 <Route path="/find/id" element={<FindId />} />
                 <Route path="/signup/student" element={<Signup role={"student"} />} />
                 <Route path="/signup/tutor" element={<Signup role={"tutor"} />} />
-                {/* <Route path="/personal-learning" element={<PersonalLearning />} /> */}
+                <Route path="/personal-learning" element={<PersonalLearning />} />
                 <Route path="/quiz" element={<Quiz />} />
-
                 <Route path="/mypage/:stuIndex" element={<Mypage />} />
                 <Route path="/tutors/:tutorIndex" element={<InstructorDetailPage />} />
                 <Route path="/class" element={<Webcam />} />
