@@ -17,7 +17,6 @@ function socketHandler(server) {
     io.on("connection", (socket) => {
         // 소켓 연결이 이루어졌을 때
         console.log("새로운 소켓이 연결되었습니다:", socket.id);
-
         socket.on("join", (data) => {
             console.log("새로운 학생 추가");
             // 클라이언트가 튜터인지 학생인지에 따라 소켓 ID를 저장
@@ -46,6 +45,10 @@ function socketHandler(server) {
                 console.error("메시지 저장 중 오류 발생:", error);
             }
 
+            console.log("total", tutorSockets);
+            console.log("tutorIdx", tutorIdx);
+            console.log(tutorSockets[tutorIdx]); // undef
+            console.log("-------");
             // 특정 튜터나 학생에게 메시지 전송
             if (sender === "tutor" && studentSockets[stuIdx]) {
                 io.to(studentSockets[stuIdx]).emit("message", msg);
