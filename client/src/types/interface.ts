@@ -30,10 +30,10 @@ export interface SignRes {
 export interface Tutor {
     nickname: string;
     email: string;
-    content: string;
+    description: string;
     price: string;
     des_video?: string;
-    profile_img?: string;
+    profile_img: string;
 }
 
 export type UserInfo = {
