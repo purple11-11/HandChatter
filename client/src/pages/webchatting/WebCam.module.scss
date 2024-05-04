@@ -1,0 +1,124 @@
+.chatBox {
+    background-color: #9bbbd4;
+    height: 500px;
+    margin-top: 20px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  
+    .webchatheader {
+      width: 100%;
+      box-shadow: 0px 2px 2px #7a7a7a20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-basis: 10%;
+      background-color: #ffffff; 
+    }
+  
+    .chat_box {
+      padding: 16px;
+      overflow-y: auto;
+      flex-basis: 80%;
+  
+      // &::-webkit-scrollbar {
+      //   width: 4px;
+      // }
+      // &::-webkit-scrollbar-thumb {
+      //   background-color: #888;
+      //   border-radius: 10px;
+      //   padding: 1px;
+      //   margin: 1px;
+      // }
+      // &::-webkit-scrollbar-track {
+      //   padding: 1px;
+      //   background-color: #ccc;
+      //   border-radius: 10px;
+      //   box-shadow: inset 0px 0px 2px white;
+      // }
+  
+      .speech {
+        .msg-box {
+          display: inline-block;
+          box-shadow: 1px 1px 5px #7a7a7a;
+          border-radius: 8px;
+          padding: 0.3rem;
+          margin: 0.5rem 0;
+          max-width: 60%;
+          background-color: #ffffff; /* 말풍선 배경색 추가 */
+        }
+  
+        &.me {
+          text-align: right;
+          .msg-box {
+            background-color: #fef01b;
+          }
+        }
+  
+        &.other {
+          position: relative;
+          margin: 10px 0;
+  
+          .nickname {
+            font-size: 10px;
+            position: absolute;
+            top: -8px;
+          }
+  
+          .msg-box {
+            background-color: #ffffff;
+          }
+  
+          &.dm .msg-box {
+            background-color: #fff5;
+          }
+        }
+      }
+    }
+  
+    .msg_form {
+      justify-content: space-between;
+      padding: 8px 16px;
+      flex-basis: 10%;
+  
+      input {
+        flex-basis: 75%;
+        border: none;
+        outline: none;
+        border-radius: 100px;
+        padding: 8px 16px;
+  
+        &:focus + button {
+          background-color: #fef01b;
+        }
+      }
+  
+      button {
+        flex-basis: 12%;
+        border: none;
+        border-radius: 3px;
+      }
+  
+      #dm-select {
+        flex-basis: 12%;
+        border: none;
+        outline: none;
+        border-radius: 3px;
+        text-align: center;
+      }
+    }
+  
+    .notice {
+      width: 80%;
+      height: 10%;
+      background-color: #fff5;
+      border-radius: 50px;
+      text-align: center;
+      padding: 2px;
+      color: #4449;
+      margin: 8px auto;
+      font-size: 14px;
+    }
+  }
+
+// me other class 말풍선 css 적용하기
