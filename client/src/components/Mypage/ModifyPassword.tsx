@@ -88,11 +88,9 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
 
     return (
         <>
-            <section>
-                <h1>비밀번호 변경</h1>
+            <div className="modal-content">
                 <div>
                     <label htmlFor="currentPassword">현재 비밀번호</label>
-                    <br />
                     <input
                         type="password"
                         id="currentPassword"
@@ -102,7 +100,6 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
                 </div>
                 <div>
                     <label htmlFor="newPassword">새 비밀번호</label>
-                    <br />
                     <input
                         type="password"
                         id="newPassword"
@@ -113,7 +110,6 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
                 </div>
                 <div>
                     <label htmlFor="confirmPassword">비밀번호 확인</label>
-                    <br />
                     <input
                         type="password"
                         id="confirmPassword"
@@ -122,9 +118,10 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
                         onChange={handleCheckPassword}
                     />
                 </div>
-                <div>{wrongPw2}</div>
+                <div className="check">{wrongPw2}</div>
                 <button onClick={handleSaveChanges}>변경사항 저장</button>
-            </section>
+                <button className="hide" onClick={onHide}>X</button>
+            </div>
         </>
     );
 };

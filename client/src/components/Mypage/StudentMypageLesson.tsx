@@ -16,7 +16,6 @@ export default function StudentMypageLesson() {
     const [tutor, setTutor] = useState<Tutor | null>(null);
     const [profileImgUrl, setProfileImgUrl] = useState<string>("");
     useEffect(() => {
-        // API 호출 함수 정의
         const fetchSearchResults = async () => {
             try {
                 const url = `${process.env.REACT_APP_API_SERVER}/api/favoritesTutor`;
@@ -27,9 +26,8 @@ export default function StudentMypageLesson() {
                 console.error("API 호출 오류:", error);
             }
         };
-        // 페이지 로드 시 API 호출 함수 실행
         fetchSearchResults();
-    }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때 한 번만 실행
+    }, []); 
 
     return (
         <div className="like-container">
@@ -43,7 +41,7 @@ export default function StudentMypageLesson() {
                         </li>
                     ))
                 ) : (
-                    <li>No data available</li>
+                    <li>현재 찜 목록이 비어있습니다.</li>
                 )}
             </ul>
         </div>

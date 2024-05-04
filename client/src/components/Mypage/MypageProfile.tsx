@@ -16,7 +16,7 @@ export default function MypageProfile() {
         price: userInfo?.price,
         password: userInfo?.password,
         profileImgUrl: profileImgUrl,
-        description: userInfo?.description
+        description: userInfo?.description,
     });
     const [showModal, setShowModal] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -150,6 +150,7 @@ export default function MypageProfile() {
     };
     const handleIntroTextChange = (text: string) => {
         setUserData({ ...userData, description: text });
+        console.log(userData);
     };
 
     const handleModal = (isModal: boolean) => {
@@ -160,108 +161,143 @@ export default function MypageProfile() {
     };
 
     return (
-        <section>
-            <h1>내 정보 확인 및 수정</h1>
-            <div>
-                <div>
-                    <img src={profileImgUrl} alt="프로필 이미지" />
+        <>
+            <p className="title">내 정보 확인 및 수정</p>
+            <div className="mypage-profile-container">
+                <div className="mypage-profile">
+                    <div className="mypage-profile-img">
+                        <div className="profile-img big">
+                            <img src={profileImgUrl} alt="프로필 이미지" />
+                        </div>
+                    </div>
+                    <div className="mypage-profile-img-btn">
+                        <button onClick={handleDefaultImage}>기본 이미지</button>
+                        <button onClick={handleImageUpload}>이미지 수정</button>
+                    </div>
                 </div>
-                <div>
-                    <button onClick={handleDefaultImage}>기본 이미지</button>
-                    <button onClick={handleImageUpload}>이미지 수정</button>
-                </div>
-            </div>
-            <div>
-                <form action="">
-                    <div>
-                        <label htmlFor="">아이디</label>
-                        <input type="text" value={userData.id} readOnly />
-                    </div>
-                    <div>
-                        <label htmlFor="">닉네임</label>
-                        <input
-                            type="text"
-                            value={userData.nickname}
-                            onChange={(e) => handleUserDataChange("nickname", e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="">이메일</label>
-                        <input
-                            type="text"
-                            value={userData.email}
-                            // onChange={(e) => handleUserDataChange("email", e.target.value)}
-                            readOnly
-                        />
-                    </div>
-                    {userInfo?.tutor_idx && (
-                        <>
-                            <div>
-                                <label htmlFor="">강의 레벨</label>
-                                <div>
-                                    <input
-                                        type="checkbox"
-                                        id="beginner"
-                                        name="levels"
-                                        value="beginner"
-                                        onChange={(e) => handleLevelChange(e.target.value)}
-                                    />
-                                    <label htmlFor="beginner">초급</label>
-                                    <input
-                                        type="checkbox"
-                                        id="intermediate"
-                                        name="levels"
-                                        value="intermediate"
-                                        onChange={(e) => handleLevelChange(e.target.value)}
-                                    />
-                                    <label htmlFor="intermediate">중급</label>
-                                    <input
-                                        type="checkbox"
-                                        id="advanced"
-                                        name="levels"
-                                        value="advanced"
-                                        onChange={(e) => handleLevelChange(e.target.value)}
-                                    />
-                                    <label htmlFor="advanced">고급</label>
+                <div className="mypage-input-container">
+                    <form action="">
+                        <div>
+                            <label htmlFor="">아이디</label>
+                            <input type="text" value={userData.id} readOnly />
+                        </div>
+                        <div>
+                            <label htmlFor="">닉네임</label>
+                            <input
+                                type="text"
+                                value={userData.nickname}
+                                onChange={(e) => handleUserDataChange("nickname", e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="">이메일</label>
+                            <input
+                                type="text"
+                                value={userData.email}
+                                // onChange={(e) => handleUserDataChange("email", e.target.value)}
+                                readOnly
+                            />
+                        </div>
+                        {userInfo?.tutor_idx && (
+                            <>
+                                <div className="level-check">
+                                    <label htmlFor="">강의 레벨</label>
+                                    <div>
+                                        <input
+                                            type="checkbox"
+                                            id="beginner"
+                                            name="levels"
+                                            value="beginner"
+                                            onChange={(e) => handleLevelChange(e.target.value)}
+                                        />
+                                        <label htmlFor="beginner">초급</label>
+                                        <input
+                                            type="checkbox"
+                                            id="intermediate"
+                                            name="levels"
+                                            value="intermediate"
+                                            onChange={(e) => handleLevelChange(e.target.value)}
+                                        />
+                                        <label htmlFor="intermediate">중급</label>
+                                        <input
+                                            type="checkbox"
+                                            id="advanced"
+                                            name="levels"
+                                            value="advanced"
+                                            onChange={(e) => handleLevelChange(e.target.value)}
+                                        />
+                                        <label htmlFor="advanced">고급</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <label htmlFor="">자기소개 영상</label>
-                                <input type="file" onChange={handleFileSelect} />
-                            </div>
-                            <div>
-                                <label htmlFor="">상세페이지 소개글</label>
-                                <textarea
-                                    value={userData.description}
-                                    onChange={(e) => handleIntroTextChange(e.target.value)}
-                                    cols={30}
-                                    rows={10}
-                                ></textarea>
-                            </div>
-                        </>
-                    )}
-                </form>
-            </div>
-            <div>
-                <div>
-                    <button onClick={() => handleTabChange("email")}>이메일 수정</button>
-                    <button onClick={() => handleTabChange("password")}>비밀번호 수정</button>
-                    <button onClick={() => handleModal(!showModal)}>수정 내용 저장</button>
+                                <div>
+                                    <label htmlFor="">가격</label>
+                                    <input
+                                        type="text"
+                                        value={userData.price}
+                                        onChange={(e) =>
+                                            handleUserDataChange("price", e.target.value)
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="">자기소개 영상</label>
+                                    <input type="file" onChange={handleFileSelect} />
+                                </div>
+                                <div className="textarea">
+                                    <label htmlFor="">자기소개</label>
+                                    <textarea
+                                        value={userData.description}
+                                        onChange={(e) => handleIntroTextChange(e.target.value)}
+                                        cols={30}
+                                        rows={10}
+                                    ></textarea>
+                                </div>
+                            </>
+                        )}
+                    </form>
+                    <div className="mypage-profile-btn">
+                        <button onClick={() => handleTabChange("password")}>비밀번호 수정</button>
+                        <button onClick={() => handleModal(!showModal)}>수정 내용 저장</button>
+                    </div>
                 </div>
+            </div>
+
+            <div>
                 {showModal && (
-                    <div>
-                        <p>프로필을 변경하시려면 비밀번호를 입력하세요.</p>
-                        <label htmlFor="">비밀번호</label>
-                        <input
-                            type="password"
-                            // value={userData.password}
-                            onChange={(e) => handleUserDataChange("password", e.target.value)}
-                        />
-                        <button onClick={handleSubmit}>수정 내용 저장</button>
+                    <div className="modal">
+                        <div className="modal-content">
+                            <p>프로필을 변경하시려면 비밀번호를 입력하세요.</p>
+                            <div className="modal-password">
+                                <label htmlFor="">비밀번호</label>
+                                <input
+                                    type="password"
+                                    // value={userData.password}
+                                    onChange={(e) =>
+                                        handleUserDataChange("password", e.target.value)
+                                    }
+                                />
+                                <button
+                                    onClick={() => {
+                                        handleSubmit();
+                                        handleModal(!showModal);
+                                    }}
+                                >
+                                    수정 내용 저장
+                                </button>
+                            </div>
+                            <button
+                                className="hide"
+                                onClick={() => {
+                                    handleModal(!showModal);
+                                }}
+                            >
+                                X
+                            </button>
+                        </div>
                     </div>
                 )}
                 {showPassword && (
-                    <div>
+                    <div className="modal">
                         <ModifyPassword
                             handleUserDataChange={handleUserDataChange}
                             currentPw={userData.password}
@@ -270,6 +306,6 @@ export default function MypageProfile() {
                     </div>
                 )}
             </div>
-        </section>
+        </>
     );
 }

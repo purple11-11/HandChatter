@@ -85,7 +85,7 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
         return <div>Loading...</div>;
     }
 
-    const handleDM = () => {
+    const handleDM = (tutorInex: string) => {
         if (!isLogin) {
             alert("로그인이 필요합니다. 로그인 후 이용해주세요.");
             navigate("/login");
@@ -95,7 +95,7 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
             alert("강사가 강사에게 메시지를 보낼 수 없습니다.");
             return;
         }
-        navigate(`/mypage/${userInfo?.stu_idx}`);
+        navigate(`/mypage/${tutorIndex}`);
     };
 
     return (
@@ -107,7 +107,7 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
                 <h2>{tutor.nickname}</h2>
                 <p>{shortenedContent ? shortenedContent : "안녕하세요"}</p>
                 <div>
-                    <button className="dm" onClick={handleDM}>
+                    <button className="dm" onClick={() => tutorIndex && handleDM(tutorIndex)}>
                         DM 보내기
                     </button>
                     {favorite ? (
