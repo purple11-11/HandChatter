@@ -150,6 +150,7 @@ export default function MypageProfile() {
     };
     const handleIntroTextChange = (text: string) => {
         setUserData({ ...userData, description: text });
+        console.log(userData);
     };
 
     const handleModal = (isModal: boolean) => {
@@ -227,6 +228,16 @@ export default function MypageProfile() {
                                         />
                                         <label htmlFor="advanced">고급</label>
                                     </div>
+                                </div>
+                                <div>
+                                    <label htmlFor="">가격</label>
+                                    <input
+                                        type="text"
+                                        value={userData.price}
+                                        onChange={(e) =>
+                                            handleUserDataChange("price", e.target.value)
+                                        }
+                                    />
                                 </div>
                                 <div>
                                     <label htmlFor="">자기소개 영상</label>

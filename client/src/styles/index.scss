@@ -525,7 +525,7 @@ section {
                 background-color: #ffffff;
             }
         }
-        .modal-password{
+        .modal-password {
             height: 90px;
         }
         .check {
@@ -543,9 +543,9 @@ section {
             border: none;
             background-color: #fcfcec;
             box-shadow: none;
-            top: 5px;
+            top: -5px;
             right: 5px;
-            &:hover{
+            &:hover {
                 color: #004d51;
             }
         }
@@ -596,7 +596,7 @@ section {
 }
 
 .tutor-introduce-content {
-    width: 100%;
+    width: 1000px;
     min-height: 580px;
     border: 1px solid #d4d4ba;
     box-shadow: 1px 1px 1px gray;
@@ -604,8 +604,9 @@ section {
     background-color: #016a70;
     .tutor-video-introduce {
         // border: 1px solid red;
+        width: 95%;
         height: 300px;
-        margin: 25px;
+        margin: 25px auto;
         display: flex;
         justify-content: space-between;
         div {
