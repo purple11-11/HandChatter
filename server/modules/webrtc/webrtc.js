@@ -5,13 +5,13 @@ const socketToRoom = {};
 const maximum = 2;
 
 function socketWebRTC(server) {
-  const io = socketIO(server, {
-    cors: {
-      origin: "http://localhost:3000",
-    },
-  });
+    const io = socketIO(server, {
+        cors: {
+            origin: true,
+        },
+    });
 
-  io.on("connection", (socket) => {
+     io.on("connection", (socket) => {
     socket.on("join_room", (data) => {
       if (users[data.room]) {
         const length = users[data.room].length;

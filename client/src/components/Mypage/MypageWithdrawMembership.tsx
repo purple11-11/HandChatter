@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useInfoStore } from "../../store/store";
 
 export default function MypageWithdrawMembership() {
     const navigate = useNavigate();
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
-
+    const isLogin = useInfoStore((state) => state.logout);
     const handleUserIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUserId(event.target.value);
     };
@@ -27,6 +28,7 @@ export default function MypageWithdrawMembership() {
 
         if (res.data.success) {
             alert("회원탈퇴가 완료되었습니다.");
+            isLogin();
             navigate("/");
         } else {
             alert(res.data);

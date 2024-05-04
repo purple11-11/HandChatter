@@ -7,9 +7,15 @@ interface SidebarProps {
     isMenuOpen: boolean;
     onLogout: () => void;
     mypageIndex?: number;
+    handleLeftClick: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, onLogout, mypageIndex }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+    isMenuOpen,
+    onLogout,
+    mypageIndex,
+    handleLeftClick,
+}) => {
     const userInfo = useInfoStore((state) => state.userInfo);
     const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
     console.log(profileImgUrl);
@@ -26,10 +32,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isMenuOpen, onLogout, mypageIndex }) 
                         <p>{userInfo?.email}</p>
                     </div>
                     <ul>
-                        <li>
+                        <li onClick={handleLeftClick}>
                             <Link to={`/mypage/${mypageIndex}`}>마이페이지</Link>
                         </li>
-                        <li onClick={onLogout}>
+                        <li
+                            onClick={() => {
+                                onLogout();
+                                handleLeftClick();
+                            }}
+                        >
                             <Link to="/">로그아웃</Link>
                         </li>
                     </ul>
