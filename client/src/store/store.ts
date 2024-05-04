@@ -21,9 +21,11 @@ type UserStore = {
     isLogin: boolean;
     profileImgUrl: string;
     favorite: boolean;
+    tutorIdx: string;
     isFavorite: () => void;
     getInfo: () => Promise<void>;
     logout: () => void;
+    dmToTutor: (tutorIdx: string) => void;
 };
 
 export const useInfoStore = create<UserStore>()(
@@ -34,7 +36,7 @@ export const useInfoStore = create<UserStore>()(
             role: "student",
             profileImgUrl: "",
             favorite: false,
-
+            tutorIdx: "",
 
             getInfo: async () => {
                 try {
@@ -53,7 +55,9 @@ export const useInfoStore = create<UserStore>()(
                         }));
                     } else {
                         const newProfileImgUrl =
-                            process.env.REACT_APP_API_SERVER + "/"  + res.data.tutorInfo[0].profile_img;
+                            process.env.REACT_APP_API_SERVER +
+                            "/" +
+                            res.data.tutorInfo[0].profile_img;
                         set((state) => ({
                             profileImgUrl: newProfileImgUrl,
                             userInfo: res.data.tutorInfo[0],
@@ -69,6 +73,9 @@ export const useInfoStore = create<UserStore>()(
             },
             isFavorite: () => {
                 set((state) => ({ favorite: !state.favorite }));
+            },
+            dmToTutor: (index: string) => {
+                set((state) => ({ tutorIdx: index }));
             },
         }),
         {
