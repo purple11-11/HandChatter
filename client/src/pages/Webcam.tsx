@@ -5,7 +5,7 @@ import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-ico
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {Tutor} from "../types/interface";
-
+import WebChatting from "./webchatting/WebChatting";
 
   const pc_config = {
     iceServers: [
@@ -19,8 +19,7 @@ import {Tutor} from "../types/interface";
 
 
   const Webcam = () => {
-    const [tutorIndex, setTutorIndex] = useState<number>(1); // 예시로 초기값 1로 설정
-
+    const [tutorIndex, setTutorIndex] = useState<number>(1); 
     const socketRef = useRef<SocketIOClient.Socket>();
     const pcRef = useRef<RTCPeerConnection>();
     const pcRef2 = useRef<RTCPeerConnection>();
@@ -31,7 +30,7 @@ import {Tutor} from "../types/interface";
     const [showModal, setShowModal] = useState(false); // 모달 상태를 저장하는 상태 변수
     const [rating, setRating] = useState(0); // 별점을 저장하는 상태 변수
     const [review, setReview] = useState(""); // 후기를 저장하는 상태 변수
-
+    
     const navigate = useNavigate()
     const setVideoTracks = async () => {
       try {
@@ -60,7 +59,6 @@ import {Tutor} from "../types/interface";
         };
   
         pcRef.current.ontrack = (ev) => {
-          console.log("add remotetrack success");
           if (remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = ev.streams[0];
           }
@@ -75,7 +73,6 @@ import {Tutor} from "../types/interface";
     };
   
     const createOffer = async () => {
-      console.log("create offer");
       if (!(pcRef.current && socketRef.current)) return;
       try {
         const sdp = await pcRef.current.createOffer({
@@ -92,28 +89,23 @@ import {Tutor} from "../types/interface";
     const createAnswer = async (sdp: RTCSessionDescription) => {
       if (!(pcRef.current && socketRef.current)) return;
       try {
-        console.log("bbbbbbb");
         await pcRef.current.setRemoteDescription(
           new RTCSessionDescription(sdp)
         );
-        console.log("answer set remote description success");
   
         const mySdp = await pcRef.current.createAnswer({
           offerToReceiveVideo: true,
           offerToReceiveAudio: true,
         });
-        console.log("create answer");
   
         await pcRef.current.setLocalDescription(new RTCSessionDescription(mySdp));
   
         socketRef.current.emit("answer", mySdp);
   
         pcRef.current.ontrack = (event) => {
-          console.log("Received remote track");
           if (remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = event.streams[0];
-          }
-        };
+          }};
       } catch (e) {
         console.error(e);
       }
@@ -124,7 +116,6 @@ import {Tutor} from "../types/interface";
       pcRef.current = new RTCPeerConnection(pc_config);
   
       socketRef.current.on("all_users", (allUsers: Array<{ id: string }>) => {
-        console.log("allUsers", allUsers);
         if (allUsers.length > 0) {
           createOffer();
         }
@@ -132,13 +123,11 @@ import {Tutor} from "../types/interface";
   
       socketRef.current.on("getOffer", (sdp: RTCSessionDescription) => {
         pcRef2.current = new RTCPeerConnection(pc_config);
-        console.log("get offer");
         pcRef2.current.createOffer();
         createAnswer(sdp);
       });
   
       socketRef.current.on("getAnswer", (sdp: RTCSessionDescription) => {
-        console.log("get answer");
         if (!pcRef.current) return;
         pcRef.current.setRemoteDescription(new RTCSessionDescription(sdp));
       });
@@ -146,10 +135,7 @@ import {Tutor} from "../types/interface";
       socketRef.current.on("getCandidate", async (candidate: RTCIceCandidateInit) => {
         if (!pcRef.current) return;
         await pcRef.current.addIceCandidate(new RTCIceCandidate(candidate));
-        console.log("candidate add success");
       });
-  
-      console.log(navigator.mediaDevices);
       setVideoTracks();
   
       return () => {
@@ -190,47 +176,37 @@ import {Tutor} from "../types/interface";
         });
       }
     }
-    // 카메라 상태 변경 후 버튼 
     setIsCameraOn((prev) => !prev);
   };
 
-  // 모달이 열릴 때 호출되는 함수
   const closeModal = () => {
     setShowModal(false);
   };
 
   const sendReview = async () => {
-    console.log("별점:", rating);
-    console.log("후기:", review);
-      
     try {
-      // 후기와 별점이 입력되었는지 확인
       if (!review || !rating) {
         console.log("후기와 별점을 모두 입력하세요.");
         return;
       }
       const url = `${process.env.REACT_APP_API_SERVER}/api/reviews`;
       const response = await axios.post(url, {
-        content: review, 
+        content: review,
         rating: rating,
         tutor_idx: tutorIndex, 
       });
   
-      // 서버로부터의 응답 확인
       if (response.status === 200) {
         console.log("후기 작성 성공");
-        navigate('/mypage'); // 후기 작성 성공 시 마이페이지로 이동
+        navigate('/mypage'); 
       } else {
         console.log("서버에서 응답을 받을 수 없습니다.");
       }
-    } catch (error) {
-      console.error("후기 전송 중 오류 발생:", error);
-    }
+      } catch (error) {
+        console.error("후기 전송 중 오류 발생:", error);
+      }
   };
       
-
-
-    const MemoIngress = () => {};
 
     const ChattExit = () => {
       setShowModal(true); 
@@ -272,9 +248,8 @@ import {Tutor} from "../types/interface";
           {micText}
         </button>
         <button onClick={CamMute}>카메라 {isCameraOn ? '켜기' : '끄기'}</button>
-        <button onClick={MemoIngress}>채팅 켜기</button>
         <button onClick={ChattExit}>나가기</button>
-
+          <WebChatting/>
         {showModal && (
           <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 999 }}>
             <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ffffdd", padding: 20, borderRadius: 10 }}>
