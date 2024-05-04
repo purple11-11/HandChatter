@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import PasswordInput from "../input/PasswordInput";
 import { RoleProps } from "../../types/interface";
 import { Link } from "react-router-dom";
+import styles from "./login.module.scss";
 
 interface SigninData {
     id: string;
@@ -36,9 +37,9 @@ export default function LoginForm({ role, login }: RoleProps & LoginProps) {
 
     return (
         <>
-            <div className="login_wrapper">
-                <div className="basic_login">
-                    <form name="login_form" onSubmit={handleSubmit(onSubmit)}>
+            <div className={`${styles.login_wrapper}`}>
+                <form name="login_form" onSubmit={handleSubmit(onSubmit)}>
+                    <div className={`${styles.id_wrap}`}>
                         <label htmlFor="id">ID</label>
                         <input
                             type="text"
@@ -46,17 +47,20 @@ export default function LoginForm({ role, login }: RoleProps & LoginProps) {
                             id="id"
                             autoComplete="username"
                         />
+                    </div>
+                    <div className={`${styles.pw_wrap}`}>
                         <label htmlFor="pw">비밀번호</label>
                         <PasswordInput
                             type="password"
                             {...register("pw", { required: true })}
                             id="pw"
                         />
-
-                        <button type="submit">로그인</button>
-                    </form>
+                    </div>
+                    <button className={`${styles.login_btn}`} type="submit">
+                        로그인
+                    </button>
                     {role === "student" && (
-                        <div className="social_login">
+                        <div className={`${styles.social_login}`}>
                             <Link to={`${process.env.REACT_APP_API_SERVER}/auth/kakao`}>
                                 <button type="button">
                                     <img src={kakaoLogo} alt="카카오 로그인 버튼" width={25} />
@@ -65,7 +69,7 @@ export default function LoginForm({ role, login }: RoleProps & LoginProps) {
                             </Link>
                         </div>
                     )}
-                </div>
+                </form>
             </div>
         </>
     );
