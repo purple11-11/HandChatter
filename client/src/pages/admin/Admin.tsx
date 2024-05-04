@@ -15,8 +15,8 @@ interface Tutor {
 export default function Admin() {
     const [tutorResults, setTutorResults] = useState<Tutor[]>([]);
     const [error, setError] = useState<string>("");
-    const [userData, setUserData] = useState("");
-
+    const [authority, setAuthority] = useState<number>(0);
+    const [tutorId, setTutorId] = useState<string>("");
     const handleTutor = async () => {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/admin`;
@@ -29,29 +29,20 @@ export default function Admin() {
             setError("튜터 조회 중 오류 발생");
         }
     };
-    const handleSubmit = async () => {
-        try {
-            const url = `${process.env.REACT_APP_API_SERVER}/admin/access`;
-            const res = await axios.patch(url, {
-                authority: userData,
-            });
-        } catch (error) {
-            console.error("권한 수정 오류:", error);
-        }
-    };
+
+    useEffect(() => {});
 
     useEffect(() => {
         handleTutor();
         console.log(tutorResults);
     }, []);
 
-    useEffect(() => {}, [tutorResults]);
+    // useEffect(() => {}, [tutorResults]);
 
     return (
         <>
             <section>
                 <h1>Our Tutors</h1>
-                <button onClick={handleSubmit}>변경사항 저장</button>
                 <table>
                     <tr className="first_tr">
                         <th>인덱스</th>
