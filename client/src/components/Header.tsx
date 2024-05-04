@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 import { useInfoStore } from "../store/store"; // Importing the store
+import menuIconWhite from "../assets/menu-icon-white.png";
+import cancleIcon from "../assets/cancle-icon.png";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,12 +41,22 @@ const Header = () => {
     console.log(isLogin, userInfo, profileImgUrl);
     return (
         <>
-            <header className="header">
-                <div className="container">
+            <header className={`header ${!isMenuOpen ? "mobile-sidebar-open" : ""}`}>
+                <div className="mobile-logo">
+                    <Link to="/">HandChatter</Link>
+                </div>
+                <div className="header-icon" onClick={handleLeftClick}>
+                    {isMenuOpen ? (
+                        <img src={menuIconWhite} alt="" />
+                    ) : (
+                        <img src={cancleIcon} alt="" />
+                    )}
+                </div>
+                <div className={`container mobile-sidebar `}>
                     <div className="logo">
                         <Link to="/">HandChatter</Link>
                     </div>
-                    <nav className="menu">
+                    <nav className="menu mobile-sidebar-content">
                         <ul>
                             <li>
                                 <Link to="/learning">개인학습</Link>
@@ -62,14 +74,30 @@ const Header = () => {
                                     </li>
                                 </>
                             ) : (
-                                <li>
-                                    <div className="header-nickname" onClick={handleLeftClick}>
-                                        <div className="profile-img small">
-                                            <img src={profileImgUrl} alt="" />
+                                <>
+                                    <li className="computer-mypage">
+                                        <div className="header-nickname" onClick={handleLeftClick}>
+                                            <div className="profile-img small">
+                                                <img src={profileImgUrl} alt="" />
+                                            </div>
+                                            <div>{userInfo?.nickname} 님</div>
                                         </div>
-                                        <div>{userInfo?.nickname} 님</div>
-                                    </div>
-                                </li>
+                                    </li>
+                                    <li className="mobile-mypage">
+                                        <div>
+                                            <Link to={`/mypage/${mypageIndex}`}>마이페이지</Link>
+                                        </div>
+                                    </li>
+                                    <li
+                                        className="mobile-logout"
+                                        onClick={() => {
+                                            handleLogout();
+                                            handleLeftClick();
+                                        }}
+                                    >
+                                        <Link to="/">로그아웃</Link>
+                                    </li>
+                                </>
                             )}
                         </ul>
                     </nav>
