@@ -18,32 +18,32 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
     const userInfo = useInfoStore((state) => state.userInfo);
     const stu_idx = userInfo?.stu_idx;
     const tutor_idx = userInfo?.tutor_idx;
-    const authority = userInfo?.authority;
 
     const initSocketConnect = async () => {
         if (!socket.connected) socket.connect();
         // 로그인 상황(강사 or 학생)에 따라 emit 다르게 작동
+        // 채팅 중인 상대방 소켓 아이디 저장하는 이벤트
+        // room.id(강사 인덱스)를 소켓 연결시 서버로 보내주고
+        // 그 소켓이 존재하면 서버에서 소켓 아이디를 보내줘서 other state에 저장
         // 튜터로 로그인한 경우
         if (tutor_idx) {
-            // 권한이 있는 강사
-            // if (authority === 1) {
-            socket.emit("join", { role: "tutor", idx: tutor_idx });
-            // } else {
-            // 권한 없는 (채팅 불가) 강사
-            // 채팅방 접근 불가능하게끔 처리
-            //     alert("강사 권한이 없어 채팅이 불가합니다.");
-            // }
+            socket.emit("join", { role: "tutor", idx: tutor_idx, other: room.id });
+            // 상대방 소켓이 접속 중이여만 other이벤트 작동
+            socket.on("other", (other: string) => {
+                setOther(other);
+            });
         }
         // 학생으로 로그인한 경우
-        if (stu_idx) socket.emit("join", { role: "student", idx: stu_idx });
+        if (stu_idx) {
+            socket.emit("join", { role: "student", idx: stu_idx, other: room.id });
+            socket.on("other", (other: string) => {
+                setOther(other);
+            });
+        }
     };
 
     useEffect(() => {
         initSocketConnect();
-        // 채팅 중인 상대방 소켓 아이디 저장하는 이벤트
-        socket.on("other", (other: string) => {
-            setOther(other);
-        });
 
         const fetchData = async () => {
             try {
@@ -122,15 +122,21 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
         }
     };
     const addMessage = useCallback(
-        (msg: string) => {
-            // 서버에서 받아온 소켓아이디와 위에서 저장한 채팅중인 소켓아이디와 같을 때
-
+        (data: any) => {
             // 메세지 추가 아니면 추가 안되게
-            const newMessages = [...messages, msg];
-
-            setMessages(newMessages);
+            // 서버에서 받아온 소켓아이디와 위에서 저장한 채팅중인 소켓아이디와 같을 때
+            // other state가 비어있지 않으면 상대방이 소켓 접속 중
+            // other state의 값과 서버에서 보낸 소켓id가 같으면
+            // 화면에 추가 및 표시 (addMessage)
+            console.log("other >> ", other);
+            console.log("서버에서보낸 socketId >>", data.socketId);
+            console.log("other과 상대방 소켓이 같은가? >>", other === data.socketId);
+            if (other === data.socketId) {
+                const newMessages = [...messages, data.msg];
+                setMessages(newMessages);
+            }
         },
-        [messages]
+        [messages, other]
     );
     useEffect(() => {
         socket.on("message", addMessage);

@@ -48,7 +48,6 @@ const Chatting: React.FC = (props?) => {
             console.log("stu_idx >>", stu_idx);
             // 학생 로그인일 때
             if (stu_idx) {
-                //  const { stu_idx } = userInfo;
                 // 해당 학생 인덱스로 메세지에 있는 강사들 인덱스 수집
                 axios
                     .get(`${process.env.REACT_APP_API_SERVER}/api/messages`, {
@@ -56,7 +55,6 @@ const Chatting: React.FC = (props?) => {
                     })
                     .then((res) => {
                         // setAllRoom에 강사들 인덱스 넣기
-                        // console.log("res.data.tutorsIdx >>", res.data.tutorsIdx);
                         setAllRoom(res.data.tutorsIdx);
                         console.log(res.data.tutorsIdx);
                         // 강사들 인덱스로 강사들 정보 조회
@@ -81,7 +79,6 @@ const Chatting: React.FC = (props?) => {
                     })
                     .then((res) => {
                         // setAllRoom에 학생들 인덱스 넣기
-                        // console.log("res.data.tutorsIdx >>", res.data.tutorsIdx);
                         setAllRoom(res.data.studentsIdx);
                         console.log("studentsIdx: ", res.data.studentsIdx);
                         // 강사들 인덱스로 강사들 정보 조회

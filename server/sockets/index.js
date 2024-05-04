@@ -20,11 +20,18 @@ function socketHandler(server) {
         socket.on("join", (data) => {
             console.log("새로운 학생 추가");
             // 클라이언트가 튜터인지 학생인지에 따라 소켓 ID를 저장
-            const { role, idx } = data;
+            const { role, idx, other } = data;
             if (role === "tutor") {
                 tutorSockets[idx] = socket.id;
+                // 상대방 소켓 존재하면 보내주기
+                if (studentSockets[other]) socket.emit("other", studentSockets[other]);
             } else if (role === "student") {
                 studentSockets[idx] = socket.id;
+                console.log("otherIndex >> ", other);
+                console.log("otherSocket >> ", tutorSockets[other]);
+                console.log(tutorSockets);
+                if (tutorSockets[other]) console.log("otherSocket >> ", tutorSockets[other]);
+                socket.emit("other", tutorSockets[other]);
             }
             // console.log(studentSockets);
         });
@@ -51,9 +58,9 @@ function socketHandler(server) {
             console.log("-------");
             // 특정 튜터나 학생에게 메시지 전송
             if (sender === "tutor" && studentSockets[stuIdx]) {
-                io.to(studentSockets[stuIdx]).emit("message", msg);
+                io.to(studentSockets[stuIdx]).emit("message", { msg: msg, socketId: socket.id });
             } else if (sender === "student" && tutorSockets[tutorIdx]) {
-                io.to(tutorSockets[tutorIdx]).emit("message", msg);
+                io.to(tutorSockets[tutorIdx]).emit("message", { msg: msg, socketId: socket.id });
             }
         });
         socket.on("disconnect", () => {
