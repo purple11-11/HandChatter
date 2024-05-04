@@ -1,7 +1,6 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-// import "../styles/components/tutorList.scss";
 import { Link } from "react-router-dom";
 
 interface Tutor {
@@ -18,6 +17,24 @@ interface Props {
 }
 
 const TutorList: React.FC<Props> = ({ tutor }) => {
+    const [authority, setAuthority] = useState<number>(0);
+    const [tutorId, setTutorId] = useState<string>("");
+
+    const handleSubmit = async () => {
+        try {
+            console.log("here");
+            const url = `${process.env.REACT_APP_API_SERVER}/admin/access`;
+            const res = await axios.patch(url, {
+                // patchData: [{ authority: authority, id: tutorId }],
+
+                authority: authority,
+                id: tutorId,
+            });
+            console.log(res.data);
+        } catch (error) {
+            console.error("권한 수정 오류:", error);
+        }
+    };
     return (
         <>
             <td>{tutor.tutor_idx}</td>
@@ -31,10 +48,24 @@ const TutorList: React.FC<Props> = ({ tutor }) => {
                 </Link>
             </td>
             <td>
-                <select name="authority" id="authority">
-                    <option value="0">예비튜터</option>
-                    <option value="1">튜터</option>
+                <select
+                    name="authority"
+                    id="authority"
+                    onChange={(e) => {
+                        setAuthority(Number(e.target.value));
+                        setTutorId(tutor.id);
+                    }}
+                >
+                    <option value="0" selected={tutor.authority === 0}>
+                        예비튜터
+                    </option>
+                    <option value="1" selected={tutor.authority === 1}>
+                        튜터
+                    </option>
                 </select>
+            </td>
+            <td>
+                <button onClick={handleSubmit}>저장</button>
             </td>
         </>
     );

@@ -46,27 +46,55 @@ exports.login = (req, res) => {
 //PATCH /admin/access
 exports.approveTutor = async (req, res) => {
     try {
-        const adminId = req.session.adminId;
-        const { id } = req.body;
-        if (adminId) {
-            if (!id) {
-                res.status(400).send("튜터로 변경할 회원을 선택해주세요.");
-            } else {
-                await Tutor.update(
-                    {
-                        authority: 1,
+        // const adminId = req.session.adminId;
+        console.log("req.body", req.body);
+        const { id, authority } = req.body;
+        // if (adminId) {
+        console.log(id);
+        if (!id) {
+            res.status(400).send("튜터로 변경할 회원을 선택해주세요.");
+        } else {
+            await Tutor.update(
+                {
+                    authority: authority,
+                },
+                {
+                    where: {
+                        id,
                     },
-                    {
-                        where: {
-                            id,
-                        },
-                    }
-                );
-            }
-            return res.status(200).send({ result: true, msg: `${id}님을 튜터로 변경되었습니다.` });
+                }
+            );
         }
+        return res.status(200).send({
+            result: true,
+            msg: `${id}님을 ${authority === 0 ? "예비튜터" : "튜터"}로 변경하였습니다.`,
+        });
+        // }
     } catch (error) {
         console.log(error);
         res.status(500).send("SERVER ERROR!!!");
     }
 };
+
+// exports.patchAllName = async (req, res) => {
+//     try {
+//         const { patchData } = req.body;
+//         console.log("req.body", req.body);
+//         for (let visitor of patchData) {
+//             const [updated] = await models.Visitor.update(
+//                 {
+//                     authority: visitor.authority,
+//                 },
+//                 {
+//                     where: {
+//                         id: visitor.id,
+//                     },
+//                 }
+//             );
+//         }
+
+//         res.status(200).send("수정 성공");
+//     } catch (err) {
+//         // errorlog(err, '이름전체 수정중 에러 발생');
+//     }
+// };

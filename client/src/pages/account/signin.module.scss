@@ -1,0 +1,57 @@
+@import "../../styles/util";
+
+.login_container {
+    display: flex;
+    flex-direction: column;
+    h2 {
+        color: $color-primary;
+        padding: 5px;
+    }
+}
+
+.go_to_sign_up {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    a {
+        color: $color-primary;
+        font-weight: bold;
+    }
+}
+
+.login_area {
+    border-radius: 10px;
+    background-color: #ffffff59;
+    border: 2px solid rgba(145, 145, 145, 0.377);
+    backdrop-filter: blur(30px);
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+    padding: 30px 30px 0 30px;
+    margin-top: 10px;
+    height: 410px;
+}
+
+.role_toggle_btn {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 10px 20px 10px;
+    button {
+        width: 15vw;
+        height: 40px;
+        border-radius: 25px;
+        color: $color-text;
+        &:hover {
+            background-color: $color-second;
+            transition: 0.3s;
+        }
+    }
+}
+
+.find_id_pw {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 15px;
+    a {
+        color: $color-primary-light;
+        font-weight: bold;
+    }
+}
