@@ -15,7 +15,7 @@ import { useInfoStore } from "../store/store";
 // ];
 
 // 메인 채팅 컴포넌트
-const Chatting: React.FC = (props?) => {
+const Chatting: React.FC = () => {
     // 강사 상세(dm보내기)에서 props로 받아온 강사인덱스 넣어주기 -> 학생이 dm보내기로 채팅방 생성
     // 즉 모든 강사들과의 채팅방을 보기위한 state
     // 추후 채팅방 삭제시 이 state 배열에서 해당 강사인덱스 삭제해야함
