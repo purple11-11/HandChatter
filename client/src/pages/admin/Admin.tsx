@@ -34,6 +34,15 @@ export default function Admin() {
             }
         }
     };
+    const handleLogout = async () => {
+        try {
+            const url = `${process.env.REACT_APP_API_SERVER}/admin/logout`;
+            await axios.post(url);
+            document.location.href = "/adminLogin";
+        } catch (error) {
+            console.error("로그아웃 오류:", error);
+        }
+    };
 
     useEffect(() => {});
 
@@ -63,6 +72,9 @@ export default function Admin() {
                         </tr>
                     ))}
                 </table>
+                <button onClick={handleLogout} className="logout_btn">
+                    로그아웃
+                </button>
             </section>
         </>
     );
