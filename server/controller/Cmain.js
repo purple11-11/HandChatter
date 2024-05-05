@@ -1006,3 +1006,24 @@ exports.getChatInfo = async (req, res) => {
         res.status(500).send("SERVER ERROR!!!");
     }
 };
+
+exports.deleteMessage = async (req, res) => {
+    try {
+        const { tutorIdx, stuIdx } = req.query;
+        await Message.destroy({
+            where: {
+                tutor_idx: tutorIdx,
+                stu_Idx: stuIdx,
+            },
+        })
+            .then(() => {
+                console.log("메시지 및 채팅방 삭제 완료");
+            })
+            .catch((err) => {
+                res.status(500).send("메시지 및 채팅방 삭제 실패!!!");
+            });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
