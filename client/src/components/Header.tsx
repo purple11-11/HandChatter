@@ -101,12 +101,14 @@ const Header = () => {
                             )}
                         </ul>
                     </nav>
-                    <Sidebar
-                        isMenuOpen={isMenuOpen}
-                        onLogout={handleLogout}
-                        mypageIndex={mypageIndex}
-                        handleLeftClick={handleLeftClick}
-                    />
+                    {isLogin && (
+                        <Sidebar
+                            isMenuOpen={isMenuOpen}
+                            onLogout={handleLogout}
+                            mypageIndex={mypageIndex}
+                            handleLeftClick={handleLeftClick}
+                        />
+                    )}
                 </div>
             </header>
         </>
