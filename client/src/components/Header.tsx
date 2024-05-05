@@ -14,6 +14,8 @@ const Header = () => {
     // Using Zustand store
     const isLogin = useInfoStore((state) => state.isLogin);
     const userInfo = useInfoStore((state) => state.userInfo);
+    const getInfo = useInfoStore((state) => state.getInfo);
+    // getInfo();
     const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
     const logout = useInfoStore((state) => state.logout);
     let mypageIndex = userInfo?.tutor_idx ? userInfo.tutor_idx : userInfo?.stu_idx;
@@ -37,7 +39,9 @@ const Header = () => {
             console.error("로그아웃 오류:", error);
         }
     };
-
+    useEffect(() => {
+        getInfo();
+    }, []);
     console.log(isLogin, userInfo, profileImgUrl);
     return (
         <>

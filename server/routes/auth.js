@@ -18,6 +18,9 @@ router.get(
                 : process.env.CLIENT_URL_DEV,
     }),
     (req, res) => {
+        req.session.userId = req.user.id;
+        req.session.stu_idx = req.user.stu_idx;
+        req.session.role = "student"; // 사용자 역할에 따라 조정 가능
         res.redirect(
             process.env.NODE_ENV === "production"
                 ? process.env.CLIENT_URL_PROD
