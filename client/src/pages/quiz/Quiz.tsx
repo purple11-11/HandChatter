@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import QuizBox from "./QuizBox";
 import { SignRes } from "../../types/interface";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
+import styles from "./quiz.module.scss";
+import { useInfoStore } from "../../store/store";
 
 const signData: SignRes[] = [
     {
@@ -51,6 +53,9 @@ function shuffle(array: SignRes[]) {
 
 export default function Quiz() {
     const signData1 = useLoaderData() as SignRes[];
+    const navigation = useNavigate();
+    const userInfo = useInfoStore((state) => state.userInfo);
+
     const [currentQuiz, setCurrentQuiz] = useState<number>(0);
     const [score, setScore] = useState<number>(0);
     const [questions, setQuestions] = useState<SignRes[]>([]);
@@ -58,6 +63,11 @@ export default function Quiz() {
     const [quizFinished, setQuizFinished] = useState<boolean>(false);
 
     useEffect(() => {
+        if (!userInfo) {
+            alert("로그인이 필요합니다.");
+            return navigation("/login");
+        }
+
         let shuffledQuestions = shuffle([...(signData || [])]).slice(0, 10);
         /*  let shuffledQuestions = shuffle([...signData]).slice(0, signData.length); */
         setQuestions(shuffledQuestions);
@@ -121,25 +131,33 @@ export default function Quiz() {
 
     return (
         <section>
-            <h1>Quiz</h1>
+            <h1 className={`${styles.title}`}>Quiz</h1>
 
             {!quizFinished ? (
-                <div className="quiz">
+                <div className={`${styles.quiz}`}>
+                    <p>{userInfo?.nickname}님의 수어 실력을 퀴즈로 확인해보세요 🙌🏻</p>
                     <QuizBox
                         question={questions[currentQuiz]}
                         options={options[currentQuiz]}
                         onAnswer={handleAnswer}
                     />
-                    <div className="menu_btn">
-
+                    <div className={`${styles.menu_btn}`}>
                         <button onClick={handlePrev}>이전</button>
                         <button onClick={handleNext}>다음</button>
                     </div>
                 </div>
             ) : (
-                <div className="answer">
-                    <h2>맞춘 문제</h2>
+                <div
+                    className={score !== signData.length ? `${styles.answer}` : `${styles.allPass}`}
+                >
+                    <h2>🎊 맞춘 문제 🎉</h2>
                     <p>{score}개</p>
+                    {score === signData.length && (
+                        <div className={`${styles.ending}`}>
+                            <p>축하합니다!!</p>
+                            <p>만점을 맞은 당신은 수어 고수!</p>
+                        </div>
+                    )}
                     <button onClick={handleReset}> 다시 하기 </button>
                 </div>
             )}
