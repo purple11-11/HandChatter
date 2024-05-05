@@ -3,16 +3,8 @@ import { ChatRoom } from "../types/interface";
 import ChattingList from "./Chatting/ChattingList";
 import ChattingForOne from "./Chatting/ChattingForOne";
 import ChattingTutorIntroductor from "./Chatting/ChattingTutorIntroductor";
-import axios from "axios";
+import axios, { all } from "axios";
 import { useInfoStore } from "../store/store";
-
-// 예시로 하드코딩된 데이터
-// 상대방(강사) 정보 들어있는 배열, 상대방이 학생일 때(강사로그인)는 인덱스만 넣어주기
-// let chatRooms: ChatRoom[] = [
-// { id(idx): 1, name: "상대방1", email: "example1@example.com", intro: "안녕하세요! 상대방1입니다." },
-// { id(idx): 2, name: "상대방2", email: "example2@example.com", intro: "안녕하세요! 상대방2입니다." },
-// 추가 채팅방 데이터...
-// ];
 
 // 메인 채팅 컴포넌트
 const Chatting: React.FC = () => {
@@ -23,7 +15,6 @@ const Chatting: React.FC = () => {
     // 강사인덱스(해당 강사와의 채팅방), 학생인덱스(해당 학생과의 채팅방) 선택값 담는 채팅방 선택 state
     const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
 
-    // 예시로 하드코딩된 데이터
     // 상대방(강사) 정보 들어있는 배열, 상대방이 학생일 때(강사로그인)는 인덱스만 넣어주기
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
     // { id(idx): 1, name: "상대방1", email: "example1@example.com", intro: "안녕하세요! 상대방1입니다." },
@@ -35,8 +26,16 @@ const Chatting: React.FC = () => {
         setSelectedRoom(roomId); // 선택된 채팅방 변경
     };
 
+    // 채팅리스트(자식) 컴포넌트에 넘겨줄 콜백 함수(allRoom에서 room.id 삭제 수행할)
+    const deleteRoom = (roomId: number) => {
+        // 해당 값을 제외한 새로운 배열을 생성
+        console.log("deleteRoom 실행");
+        setAllRoom((prevAllRoom) => prevAllRoom.filter((room) => room !== roomId));
+    };
+
     const isLogin = useInfoStore((state) => state.isLogin);
     const userInfo = useInfoStore((state) => state.userInfo);
+    const tutorIdx = useInfoStore((state) => state.tutorIdx);
 
     // 채팅방 셋팅
     useEffect(() => {
@@ -139,7 +138,13 @@ const Chatting: React.FC = () => {
     // allRoom은 인덱스로 채팅방 추가 및 삭제하는 채팅방 관리 state
     useEffect(() => {
         // allRoom 상태가 업데이트될 때마다 실행됨
-        // console.log("allRoom >>", allRoom);
+        // dm보내기로 넘겨받아온 강사인덱스 추가 (단, 이미 존재하는 인덱스라면 추가 x)
+        if (tutorIdx && !allRoom.includes(Number(tutorIdx))) {
+            const newAllRoom: (string | number)[] = [...allRoom, tutorIdx]; // 예시 데이터
+            const numbers: number[] = newAllRoom.map((item) => Number(item)); // 문자열을 숫자로 변환
+            setAllRoom(numbers);
+        }
+        // 나가기로 삭제 시 allRoom에서 room.id(채팅방 별 강사인덱스) 삭제 및 db메세지도 모두 삭제
     }, [allRoom]);
 
     const room = selectedRoom !== null ? chatRooms.find((room) => room.id === selectedRoom) : null;
@@ -149,7 +154,11 @@ const Chatting: React.FC = () => {
             <h1>카카오톡처럼 채팅</h1>
             <div style={{ display: "flex" }}>
                 <div style={{ flex: 1 }}>
-                    <ChattingList rooms={chatRooms} onRoomClick={handleRoomClick} />
+                    <ChattingList
+                        rooms={chatRooms}
+                        onRoomClick={handleRoomClick}
+                        deleteRoom={deleteRoom}
+                    />
                 </div>
                 <div style={{ flex: 2 }}>
                     {room ? (
