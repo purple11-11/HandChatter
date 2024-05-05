@@ -43,54 +43,50 @@ const Chatting: React.FC = (props?) => {
         if (isLogin) {
             const stu_idx = userInfo?.stu_idx;
             const tutor_idx = userInfo?.tutor_idx;
-
             // 학생 로그인일 때
             if (stu_idx) {
                 // 해당 학생 인덱스로 메세지에 있는 강사들 인덱스 수집
-                // 학생 로그인일 때
-                if (stu_idx) {
-                    // 해당 학생 인덱스로 메세지에 있는 강사들 인덱스 수집
-                    axios
-                        .get(`${process.env.REACT_APP_API_SERVER}/api/messages`, {
-                            params: { stuIdx: stu_idx },
-                        })
-                        .then((res) => {
-                            // setAllRoom에 강사들 인덱스 넣기
-                            setAllRoom(res.data.tutorsIdx);
+                axios
+                    .get(`${process.env.REACT_APP_API_SERVER}/api/messages`, {
+                        params: { stuIdx: stu_idx },
+                    })
+                    .then((res) => {
+                        // setAllRoom에 강사들 인덱스 넣기
+                        setAllRoom(res.data.tutorsIdx);
 
-                            // 강사들 인덱스로 강사들 정보 조회
-                            axios
-                                .get(`${process.env.REACT_APP_API_SERVER}/api/chatInfo`, {
-                                    params: {
-                                        tutorsIdx: res.data.tutorsIdx,
-                                    },
-                                })
-                                .then((res) => {
-                                    // chatRooms에 강사들 정보 넣기
-                                    setChatRooms(res.data.chatTutorsInfo);
-                                    console.log("chatRooms >>", chatRooms);
-                                })
-                                .catch((error) => {
-                                    if (error.response && error.response.status === 404) {
-                                        // 요청이 실패하고 404 오류인 경우, 빈 배열을 채팅방 정보로 설정합니다.
-                                        setChatRooms([]);
-                                    } else {
-                                        // 다른 오류 처리
-                                        console.error("An error occurred:", error);
-                                    }
-                                });
-                        })
-                        .catch((error) => {
-                            if (error.response && error.response.status === 404) {
-                                // 요청이 실패하고 404 오류인 경우, 빈 배열을 채팅방 정보로 설정합니다.
-                                setChatRooms([]);
-                            } else {
-                                // 다른 오류 처리
-                                console.error("An error occurred:", error);
-                            }
-                        });
-                }
+                        // 강사들 인덱스로 강사들 정보 조회
+                        axios
+                            .get(`${process.env.REACT_APP_API_SERVER}/api/chatInfo`, {
+                                params: {
+                                    tutorsIdx: res.data.tutorsIdx,
+                                },
+                            })
+                            .then((res) => {
+                                // chatRooms에 강사들 정보 넣기
+                                setChatRooms(res.data.chatTutorsInfo);
+                                console.log("chatRooms >>", chatRooms);
+                            })
+                            .catch((error) => {
+                                if (error.response && error.response.status === 404) {
+                                    // 요청이 실패하고 404 오류인 경우, 빈 배열을 채팅방 정보로 설정합니다.
+                                    setChatRooms([]);
+                                } else {
+                                    // 다른 오류 처리
+                                    console.error("An error occurred:", error);
+                                }
+                            });
+                    })
+                    .catch((error) => {
+                        if (error.response && error.response.status === 404) {
+                            // 요청이 실패하고 404 오류인 경우, 빈 배열을 채팅방 정보로 설정합니다.
+                            setChatRooms([]);
+                        } else {
+                            // 다른 오류 처리
+                            console.error("An error occurred:", error);
+                        }
+                    });
             }
+
             // 강사 로그인일 떄
             else if (tutor_idx) {
                 axios
