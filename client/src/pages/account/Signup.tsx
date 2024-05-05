@@ -1,5 +1,5 @@
 import { RoleProps, SignupData } from "../../types/interface";
-import "../../styles/pages/account/signup.scss";
+import styles from "./signup.module.scss";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { FormProvider, set, useForm } from "react-hook-form";
@@ -146,9 +146,9 @@ export default function StudentSignup({ role }: RoleProps) {
 
     return (
         <section>
-            <div className="signup_container">
+            <div className={`${styles.signup_container}`}>
                 <h2>{role === "student" ? "학생 " : "강사 "} 회원가입</h2>
-                <div className="go_to_other_sign_up">
+                <div className={`${styles.go_to_other_sign_up}`}>
                     {role === "student" ? (
                         <button type="button" onClick={() => navigateAndReset("/signup/tutor")}>
                             강사로 가입하기
@@ -159,9 +159,10 @@ export default function StudentSignup({ role }: RoleProps) {
                         </button>
                     )}
                 </div>
-                <span>이미 계정이 있으신가요?</span>
-                &nbsp;
-                <Link to="/login">로그인</Link>
+                <div className={`${styles.go_to_login}`}>
+                    <span>이미 계정이 있으신가요?</span>
+                    <Link to="/login">로그인</Link>
+                </div>
                 <FormProvider {...methods}>
                     <SignupForm
                         role={role}
