@@ -851,8 +851,11 @@ router.delete("/reviews", controller.deleteReviews);
 // 채팅방 메시지 조회
 router.get("/messages", controller.getMessage);
 
-//
+// 채팅방 상대 정보 조회
 router.get("/chatInfo", controller.getChatInfo);
+
+// 채팅방 및 메세지 삭제
+router.delete("/messages", controller.deleteMessage);
 
 router.get("*", (req, res) => {
     // res.render("404");

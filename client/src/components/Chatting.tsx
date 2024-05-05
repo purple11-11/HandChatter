@@ -17,6 +17,13 @@ const Chatting: React.FC = () => {
     // { id(idx): 2, name: "상대방2", email: "example2@example.com", intro: "안녕하세요! 상대방2입니다." },
     // 추가 채팅방 데이터...
 
+    const isLogin = useInfoStore((state) => state.isLogin);
+    const userInfo = useInfoStore((state) => state.userInfo);
+    const tutorIdx = useInfoStore((state) => state.tutorIdx);
+    const dmToTutor = useInfoStore((state) => state.dmToTutor);
+    const stu_idx = userInfo?.stu_idx;
+    const tutor_idx = userInfo?.tutor_idx;
+
     // roomid -> tutorIdx(강사인덱스)
     const handleRoomClick = (roomId: number) => {
         setSelectedRoom(roomId); // 선택된 채팅방 변경
@@ -25,14 +32,21 @@ const Chatting: React.FC = () => {
     // 채팅리스트(자식) 컴포넌트에 넘겨줄 콜백 함수(allRoom에서 room.id 삭제 수행할)
     const deleteRoom = (roomId: number) => {
         // 해당 값을 제외한 새로운 배열을 생성
-        console.log("deleteRoom 실행");
+        setChatRooms((prevChatRooms) => prevChatRooms.filter((room) => room.id !== roomId));
+        // db에서 삭제
+        if (isLogin) {
+            if (stu_idx) {
+                axios.delete(`${process.env.REACT_APP_API_SERVER}/api/messages`, {
+                    params: { stuIdx: stu_idx, tutorIdx: roomId },
+                });
+            }
+            if (tutor_idx) {
+                axios.delete(`${process.env.REACT_APP_API_SERVER}/api/messages`, {
+                    params: { stuIdx: roomId, tutorIdx: tutor_idx },
+                });
+            }
+        }
     };
-
-    const isLogin = useInfoStore((state) => state.isLogin);
-    const userInfo = useInfoStore((state) => state.userInfo);
-    const tutorIdx = useInfoStore((state) => state.tutorIdx);
-    const stu_idx = userInfo?.stu_idx;
-    const tutor_idx = userInfo?.tutor_idx;
 
     // 채팅방 셋팅
     useEffect(() => {
@@ -55,7 +69,6 @@ const Chatting: React.FC = () => {
                             .then((res) => {
                                 // chatRooms에 강사들 정보 넣기
                                 setChatRooms(res.data.chatTutorsInfo);
-                                console.log("chatRooms >>", chatRooms);
                             })
                             .catch((error) => {
                                 if (error.response && error.response.status === 404) {
@@ -117,7 +130,7 @@ const Chatting: React.FC = () => {
                     });
             }
         }
-    }, [tutorIdx, isLogin, userInfo]);
+    }, [isLogin, userInfo]);
 
     useEffect(() => {
         // 채팅방 목록이 업데이트되었으므로 ChattingList를 다시 렌더링합니다.
@@ -141,11 +154,9 @@ const Chatting: React.FC = () => {
                             console.error("An error occurred:", error);
                         });
                 }
-                console.log("채팅중인 강사들 >> ", chatRooms);
-                console.log("채팅방 생성", tutorIdx);
             }
         }
-    }, [tutorIdx, chatRooms]);
+    }, [chatRooms]);
 
     const room = selectedRoom !== null ? chatRooms.find((room) => room.id === selectedRoom) : null;
 
