@@ -78,6 +78,18 @@ exports.approveTutor = async (req, res) => {
     }
 };
 
+exports.logout = (req, res) => {
+    try {
+        if (req.session) {
+            req.session.destroy(() => {
+                res.status(200).send({ msg: "로그아웃 되었습니다." });
+            });
+        } else res.status(401).send({ msg: "이미 세션이 만료되었습니다." });
+    } catch (err) {
+        res.status(500).send("SERVER ERROR");
+    }
+};
+
 // exports.patchAllName = async (req, res) => {
 //     try {
 //         const { patchData } = req.body;
