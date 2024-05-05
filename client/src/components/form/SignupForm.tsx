@@ -61,7 +61,13 @@ export default function SignupForm({
 
     return (
         <>
-            <div className={`${styles.signup_wrapper}`}>
+            <div
+                className={
+                    role === "student"
+                        ? `${styles.signup_stu_wrapper}`
+                        : `${styles.signup_tu_wrapper}`
+                }
+            >
                 <form name="signup_form" onSubmit={handleSubmit(onSubmit)}>
                     <div className={`${styles.signup_input}`}>
                         <div className={`${styles.signup_id}`}>

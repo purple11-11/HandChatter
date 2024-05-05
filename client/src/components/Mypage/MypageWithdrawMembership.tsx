@@ -20,6 +20,9 @@ export default function MypageWithdrawMembership() {
         event.preventDefault();
         if (!userId || !password) return alert("아이디와 비밀번호를 입력해주세요.");
 
+        const confirm = window.confirm("정말로 회원탈퇴를 진행하시겠습니까?");
+        if (!confirm) return;
+
         const res = await axios({
             method: "delete",
             url: `${process.env.REACT_APP_API_SERVER}/api/withdrawal`,
@@ -40,7 +43,9 @@ export default function MypageWithdrawMembership() {
             <p className="title">회원탈퇴</p>
             <div className="mypage-profile-container">
                 <div className="mypage-input-container">
-                    <p className="mypage-smalltitle">회원탈퇴를 위해 아이디와 비밀번호를 입력해주세요.</p>
+                    <p className="mypage-smalltitle">
+                        회원탈퇴를 위해 아이디와 비밀번호를 입력해주세요.
+                    </p>
                     <form onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="userId">아이디:</label>
@@ -61,7 +66,9 @@ export default function MypageWithdrawMembership() {
                                 autoComplete="current-password"
                             />
                         </div>
-                        <button type="submit" className="withdraw-btn">회원탈퇴</button>
+                        <button type="submit" className="withdraw-btn">
+                            회원탈퇴
+                        </button>
                     </form>
                 </div>
             </div>

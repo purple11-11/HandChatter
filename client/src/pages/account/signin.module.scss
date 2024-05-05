@@ -39,10 +39,10 @@
         width: 150px;
         height: 40px;
         border-radius: 25px;
-        color: $color-text;
+        color: $color-text-dark;
         &:hover {
             background-color: $color-second;
-            color: $color-text;
+            color: $color-text-dark;
             transition: 0.3s;
         }
     }

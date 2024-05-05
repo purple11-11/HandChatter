@@ -61,14 +61,14 @@ form {
         gap: 10px;
         border: none;
         background-color: #f8e539;
-        color: $color-text;
+        color: $color-text-dark;
         border-radius: 10px;
         padding: 8px;
         width: 310px;
         cursor: pointer;
         &:hover {
             background-color: #f8e539;
-            color: $color-text;
+            color: $color-text-dark;
             transition: 0.2s;
         }
     }
