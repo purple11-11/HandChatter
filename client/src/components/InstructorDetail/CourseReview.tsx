@@ -56,34 +56,41 @@ const CourseReview: React.FC<CourseReviewProps> = ({ tutorIdx }) => {
                 <p>수강후기</p>
                 {/* 평점을 표시하는 부분 */}
                 <p>
-                    평점: ⭐
-                    <span>{averageRating ? averageRating.toFixed(1) : "평점 없음"}</span>
+                    평점: ⭐<span>{averageRating ? averageRating.toFixed(1) : "평점 없음"}</span>
                 </p>
             </div>
             {/* 수강후기를 표시하는 부분 */}
-            {reviews.map((review, index) => (
-                <div className="course-review" key={index}>
-                    <div className="course-review-container">
-                        {/* 리뷰어 프로필 이미지 */}
-                        <div className="profile-img middle">
-                            <img src="" alt="" />
-                        </div>
-                        <div className="reviewer-profile">
-                            {/* 리뷰어 닉네임 */}
-                            <div className="reviewer-nickname">닉네임 님</div>
-                            <div className="reviewer-date-score">
-                                {/* 리뷰 평점 및 작성 날짜 */}
-                                <p>
-                                    평점: ⭐<span>{review.rating}</span>
-                                </p>
-                                <p>{review.created_at}</p>
+            {reviews[0] === null ? (
+                <>
+                    {reviews.map((review, index) => (
+                        <div className="course-review" key={index}>
+                            <div className="course-review-container">
+                                {/* 리뷰어 프로필 이미지 */}
+                                <div className="profile-img middle">
+                                    <img src="" alt="" />
+                                </div>
+                                <div className="reviewer-profile">
+                                    {/* 리뷰어 닉네임 */}
+                                    <div className="reviewer-nickname">닉네임 님</div>
+                                    <div className="reviewer-date-score">
+                                        {/* 리뷰 평점 및 작성 날짜 */}
+                                        <p>
+                                            평점: ⭐<span>{review.rating}</span>
+                                        </p>
+                                        <p>{review.created_at}</p>
+                                    </div>
+                                </div>
                             </div>
+                            {/* 리뷰 내용 */}
+                            <div className="review-content">{review.content}</div>
                         </div>
-                    </div>
-                    {/* 리뷰 내용 */}
-                    <div className="review-content">{review.content}</div>
+                    ))}
+                </>
+            ) : (
+                <div className="course-review">
+                    <div className="none-review-content">리뷰 내용이 없습니다.</div>
                 </div>
-            ))}
+            )}
         </div>
     );
 };
