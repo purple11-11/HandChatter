@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ModifyEmail from "./ModifyEmail";
 import ModifyPassword from "./ModifyPassword";
 import { useInfoStore } from "../../store/store";
@@ -105,7 +105,7 @@ export default function MypageProfile() {
         }
     };
     const handleLevelChange = (level: string) => {
-        const currentLevels = [...userData.levels];
+        const currentLevels = [...userData.levels, userInfo?.level];
         const isLevelSelected = currentLevels.includes(level);
 
         const newLevels = isLevelSelected ? currentLevels.filter((l) => l !== level) : [level];
@@ -166,6 +166,7 @@ export default function MypageProfile() {
     const handleModal = (isModal: boolean) => {
         setShowModal(isModal);
     };
+
     const onHideModifyPassword = () => {
         setShowPassword(false);
     };
@@ -277,40 +278,44 @@ export default function MypageProfile() {
 
             <div>
                 {showModal && (
-                    <div className="modal">
-                        <div className="modal-content">
-                            <p>프로필을 변경하시려면 비밀번호를 입력하세요.</p>
-                            <div className="modal-password">
-                                <label htmlFor="">비밀번호</label>
-                                <input
-                                    type="password"
-                                    // value={userData.password}
-                                    onChange={(e) =>
-                                        handleUserDataChange("password", e.target.value)
-                                    }
-                                />
+                    <>
+                        <div className="modal">
+                            <div className="modal" onClick={() => handleModal(!showModal)}></div>
+                            <div className="modal-content">
+                                <p>프로필을 변경하시려면 비밀번호를 입력하세요.</p>
+                                <div className="modal-password">
+                                    <label htmlFor="">비밀번호</label>
+                                    <input
+                                        type="password"
+                                        // value={userData.password}
+                                        onChange={(e) =>
+                                            handleUserDataChange("password", e.target.value)
+                                        }
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            handleSubmit();
+                                            handleModal(!showModal);
+                                        }}
+                                    >
+                                        수정 내용 저장
+                                    </button>
+                                </div>
                                 <button
+                                    className="hide"
                                     onClick={() => {
-                                        handleSubmit();
                                         handleModal(!showModal);
                                     }}
                                 >
-                                    수정 내용 저장
+                                    X
                                 </button>
                             </div>
-                            <button
-                                className="hide"
-                                onClick={() => {
-                                    handleModal(!showModal);
-                                }}
-                            >
-                                X
-                            </button>
                         </div>
-                    </div>
+                    </>
                 )}
                 {showPassword && (
                     <div className="modal">
+                        <div className="modal" onClick={onHideModifyPassword}></div>
                         <ModifyPassword
                             handleUserDataChange={handleUserDataChange}
                             currentPw={userData.password}

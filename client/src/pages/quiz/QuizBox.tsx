@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import Button from "../../components/button/Button";
 import { SignRes } from "../../types/interface";
 
 interface QuizBoxProps {
@@ -13,13 +12,13 @@ export default function QuizBox({ question, options, onAnswer }: QuizBoxProps) {
         <div className="quiz_box">
             <video controls src={question?.subDescription}></video>
             <div className="answer_btn">
-                {/* {options?.map((option, index) => (
-                    <Button
-                        key={index}
-                        text={`${index + 1}. ${option.title}`}
-                        onClick={() => onAnswer(option.key === question.key)}
-                    />
-                ))} */}
+
+                {options?.map((option, index) => (
+                    <button key={index} onClick={() => onAnswer(option.key === question.key)}>{`${
+                        index + 1
+                    }. ${option.title}`}</button>
+                ))}
+
             </div>
         </div>
     );
