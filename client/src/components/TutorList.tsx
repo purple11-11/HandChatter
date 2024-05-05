@@ -22,7 +22,6 @@ const TutorList: React.FC<Props> = ({ tutor }) => {
 
     const handleSubmit = async () => {
         try {
-            console.log("here");
             const url = `${process.env.REACT_APP_API_SERVER}/admin/access`;
             const res = await axios.patch(url, {
                 // patchData: [{ authority: authority, id: tutorId }],
@@ -30,22 +29,30 @@ const TutorList: React.FC<Props> = ({ tutor }) => {
                 authority: authority,
                 id: tutorId,
             });
-            console.log(res.data);
-        } catch (error) {
-            console.error("권한 수정 오류:", error);
+            alert(res.data.msg);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                alert("권한 수정 오류 \n" + (error.response?.data.msg || error.message));
+            } else if (error instanceof Error) {
+                alert("권한 수정 오류 \n" + error.message);
+            }
         }
     };
+
     return (
         <>
-            <td>{tutor.tutor_idx}</td>
             <td>{tutor.id}</td>
             <td> {tutor.nickname}</td>
             <td>{tutor.email}</td>
             <td>
                 {/* 이거 새 페이지로 가게 하기 */}
-                <Link to={`${process.env.REACT_APP_API_SERVER}/${tutor.auth}`}>
+                <a
+                    href={`${process.env.REACT_APP_API_SERVER}/${tutor.auth}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     {tutor.id}_첨부파일
-                </Link>
+                </a>
             </td>
             <td>
                 <select
