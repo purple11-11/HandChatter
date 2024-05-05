@@ -81,7 +81,7 @@ export default function StudentMypageLesson() {
                             </Link>
                         </div>
                     ))): (
-                        <div>현재 찜 목록이 비어있습니다.</div>
+                        <div className="none-like">현재 찜 목록이 비어있습니다.</div>
                     )}
             </div>
         </div>

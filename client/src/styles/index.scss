@@ -313,6 +313,14 @@ button {
 
 .like-container {
     margin-top: 50px;
+    .card-container {
+        .none-like {
+            width: 100%;
+            // border: 1px solid red;
+            text-align: center;
+            font-size: 20px;
+        }
+    }
 }
 
 .mypage-components-container {
@@ -467,7 +475,6 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-
     .modal-content {
         width: 500px;
         background-color: #fcfcec;
