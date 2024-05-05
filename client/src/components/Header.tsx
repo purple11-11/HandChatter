@@ -52,7 +52,7 @@ const Header = () => {
                         <img src={cancleIcon} alt="" />
                     )}
                 </div>
-                <div className={`container mobile-sidebar `}>
+                <div className={`header-container mobile-sidebar `}>
                     <div className="logo">
                         <Link to="/">HandChatter</Link>
                     </div>

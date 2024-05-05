@@ -17,7 +17,7 @@ interface Props {
 
 const InstructorCard: React.FC<Props> = ({ tutor }) => {
     return (
-        <div className="card">
+        <>
             <div className="gradi">
                 <div className="profile-info">
                     <ul>
@@ -31,7 +31,7 @@ const InstructorCard: React.FC<Props> = ({ tutor }) => {
             <div className="profile">
                 <img src={`${process.env.REACT_APP_API_SERVER}/${tutor.profile_img}`} alt="" />
             </div>
-        </div>
+        </>
     );
 };
 
