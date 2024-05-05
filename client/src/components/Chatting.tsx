@@ -15,7 +15,7 @@ import { useInfoStore } from "../store/store";
 // ];
 
 // 메인 채팅 컴포넌트
-const Chatting: React.FC = (props?) => {
+const Chatting: React.FC = () => {
     // 강사 상세(dm보내기)에서 props로 받아온 강사인덱스 넣어주기 -> 학생이 dm보내기로 채팅방 생성
     // 즉 모든 강사들과의 채팅방을 보기위한 state
     // 추후 채팅방 삭제시 이 state 배열에서 해당 강사인덱스 삭제해야함
@@ -40,12 +40,9 @@ const Chatting: React.FC = (props?) => {
 
     // 채팅방 셋팅
     useEffect(() => {
-        // axios.get(`${process.env.REACT_APP_API_SERVER}/api/userInfo`).then((res) => {
         if (isLogin) {
-            console.log("userInfo >>", userInfo);
             const stu_idx = userInfo?.stu_idx;
             const tutor_idx = userInfo?.tutor_idx;
-            console.log("stu_idx >>", stu_idx);
             // 학생 로그인일 때
             if (stu_idx) {
                 // 해당 학생 인덱스로 메세지에 있는 강사들 인덱스 수집
@@ -56,7 +53,7 @@ const Chatting: React.FC = (props?) => {
                     .then((res) => {
                         // setAllRoom에 강사들 인덱스 넣기
                         setAllRoom(res.data.tutorsIdx);
-                        console.log(res.data.tutorsIdx);
+
                         // 강사들 인덱스로 강사들 정보 조회
                         axios
                             .get(`${process.env.REACT_APP_API_SERVER}/api/chatInfo`, {
@@ -68,9 +65,28 @@ const Chatting: React.FC = (props?) => {
                                 // chatRooms에 강사들 정보 넣기
                                 setChatRooms(res.data.chatTutorsInfo);
                                 console.log("chatRooms >>", chatRooms);
+                            })
+                            .catch((error) => {
+                                if (error.response && error.response.status === 404) {
+                                    // 요청이 실패하고 404 오류인 경우, 빈 배열을 채팅방 정보로 설정합니다.
+                                    setChatRooms([]);
+                                } else {
+                                    // 다른 오류 처리
+                                    console.error("An error occurred:", error);
+                                }
                             });
+                    })
+                    .catch((error) => {
+                        if (error.response && error.response.status === 404) {
+                            // 요청이 실패하고 404 오류인 경우, 빈 배열을 채팅방 정보로 설정합니다.
+                            setChatRooms([]);
+                        } else {
+                            // 다른 오류 처리
+                            console.error("An error occurred:", error);
+                        }
                     });
             }
+
             // 강사 로그인일 떄
             else if (tutor_idx) {
                 axios
@@ -80,7 +96,7 @@ const Chatting: React.FC = (props?) => {
                     .then((res) => {
                         // setAllRoom에 학생들 인덱스 넣기
                         setAllRoom(res.data.studentsIdx);
-                        console.log("studentsIdx: ", res.data.studentsIdx);
+
                         // 강사들 인덱스로 강사들 정보 조회
                         axios
                             .get(`${process.env.REACT_APP_API_SERVER}/api/chatInfo`, {
@@ -90,9 +106,26 @@ const Chatting: React.FC = (props?) => {
                             })
                             .then((res) => {
                                 // chatRooms에 강사들 정보 넣기
-                                setChatRooms(res.data.chatStudentsInfo);
-                                console.log("chatRooms >>", chatRooms);
+                                setChatRooms(res.data.chatStudentsInfo || []);
+                            })
+                            .catch((error) => {
+                                if (error.response && error.response.status === 404) {
+                                    // 요청이 실패하고 404 오류인 경우, 빈 배열을 채팅방 정보로 설정합니다.
+                                    setChatRooms([]);
+                                } else {
+                                    // 다른 오류 처리
+                                    console.error("An error occurred:", error);
+                                }
                             });
+                    })
+                    .catch((error) => {
+                        if (error.response && error.response.status === 404) {
+                            // 요청이 실패하고 404 오류인 경우, 빈 배열을 채팅방 정보로 설정합니다.
+                            setChatRooms([]);
+                        } else {
+                            // 다른 오류 처리
+                            console.error("An error occurred:", error);
+                        }
                     });
             }
         }
@@ -104,10 +137,10 @@ const Chatting: React.FC = (props?) => {
 
     // 아래 코드는 추후에 dm보내기로 채팅방 생성 코드 작성
     // allRoom은 인덱스로 채팅방 추가 및 삭제하는 채팅방 관리 state
-    // useEffect(() => {
-    //     // allRoom 상태가 업데이트될 때마다 실행됨
-    //     // console.log("allRoom >>", allRoom);
-    // }, [allRoom]);
+    useEffect(() => {
+        // allRoom 상태가 업데이트될 때마다 실행됨
+        // console.log("allRoom >>", allRoom);
+    }, [allRoom]);
 
     const room = selectedRoom !== null ? chatRooms.find((room) => room.id === selectedRoom) : null;
 
