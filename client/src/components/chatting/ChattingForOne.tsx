@@ -128,9 +128,9 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
             // other state가 비어있지 않으면 상대방이 소켓 접속 중
             // other state의 값과 서버에서 보낸 소켓id가 같으면
             // 화면에 추가 및 표시 (addMessage)
-            console.log("other >> ", other);
-            console.log("서버에서보낸 socketId >>", data.socketId);
-            console.log("other과 상대방 소켓이 같은가? >>", other === data.socketId);
+            // console.log("other >> ", other);
+            // console.log("서버에서보낸 socketId >>", data.socketId);
+            // console.log("other과 상대방 소켓이 같은가? >>", other === data.socketId);
             if (other === data.socketId) {
                 const newMessages = [...messages, data.msg];
                 setMessages(newMessages);
