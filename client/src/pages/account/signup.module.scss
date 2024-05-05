@@ -1,0 +1,39 @@
+@import "../../styles/util";
+
+.signup_container {
+    display: flex;
+    flex-direction: column;
+    h2 {
+        color: $color-primary;
+        padding: 5px;
+    }
+}
+
+.go_to_other_sign_up {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    button {
+        width: 150px;
+        height: 40px;
+        border-radius: 25px;
+        color: $color-primary;
+        font-weight: 700;
+        &:hover {
+            background-color: $color-second;
+            color: $color-primary;
+            transition: 0.3s;
+        }
+    }
+}
+
+.go_to_login {
+    padding: 5px;
+    margin: 15px 0;
+    a {
+        color: $color-primary;
+        font-weight: 700;
+        text-decoration: none;
+        margin-left: 10px;
+    }
+}

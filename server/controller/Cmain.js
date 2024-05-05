@@ -249,7 +249,7 @@ exports.sendEmail = async (req, res) => {
         console.log("이메일 전송 성공", info.response);
         return res.status(200).send({ randomNum });
     } catch (error) {
-        console.log("이메일 전송 실패", err);
+        console.log("이메일 전송 실패", error);
         return res.status(500).send("이메일 전송 실패");
     }
 };
