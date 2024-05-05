@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Button from "../../components/button/Button";
+// import Button from "../../components/button/Button";
 import QuizBox from "./QuizBox";
 import axios from "axios";
 import { SignRes } from "../../types/interface";
@@ -133,15 +133,15 @@ export default function Quiz() {
                         onAnswer={handleAnswer}
                     />
                     <div className="menu_btn">
-                        <Button text="이전" onClick={handlePrev} />
-                        <Button text="다음" onClick={handleNext} />
+                        {/* <Button text="이전" onClick={handlePrev} />
+                        <Button text="다음" onClick={handleNext} /> */}
                     </div>
                 </div>
             ) : (
                 <div className="answer">
                     <h2>맞춘 문제</h2>
                     <p>{score}개</p>
-                    <Button text="다시 하기" onClick={handleReset} />
+                    {/* <Button text="다시 하기" onClick={handleReset} /> */}
                 </div>
             )}
         </section>

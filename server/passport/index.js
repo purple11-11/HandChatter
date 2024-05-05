@@ -3,18 +3,30 @@ const { Student } = require("../models");
 
 module.exports = (passport) => {
     passport.serializeUser((user, done) => {
-        //req.session 객체에 어떤 데이터를 저장할지 선택. 매개변수로 user를 받아서 done 함수에 두번째 인자로 user.id 를 넘기고 있다.(=세션에 사용자 id저장) done함수의 첫번째 인자는 에러 발생시 사용
-        done(null, user.id);
+        // 사용자 정보에서 필요한 정보를 세션에 저장합니다.
+        const sessionUser = {
+            userId: user.id,
+            stu_idx: user.stu_idx,
+            role: "student", // 일반적으로 학생으로 가정합니다. 필요에 따라 조정 가능합니다.
+        };
+        console.log("Serialized User:", sessionUser); // 세션에 저장된 데이터를 콘솔에 출력
+        done(null, sessionUser);
     });
 
-    passport.deserializeUser((id, done) => {
-        // 매요청시 실행된다. passport.session() 미들웨어가 이 메서드를 호출한다. serializeUser에서 세션에 저장했던 id를 받아 데이터베이스에서 사용자 정보를 조회한다. 조회한 정보를 req.user에 저장하므로 앞으로 req.user를 통해 로그인한 사용자의 정보를 가져올 수 있다.
-        Student.findOne({
-            where: { id },
-        })
-            .then((user) => done(null, user))
+    passport.deserializeUser((sessionUser, done) => {
+        // 세션에서 사용자 정보를 불러올 때 필요한 정보를 함께 불러옵니다.
+        console.log("Deserialized User:", sessionUser); // 세션에서 불러온 데이터를 콘솔에 출력
+        Student.findByPk(sessionUser.userId)
+            .then((user) => {
+                if (!user) {
+                    return done(null, false); // 사용자를 찾을 수 없는 경우
+                }
+                // 세션에 저장된 추가 정보도 함께 사용자 객체에 추가합니다.
+                user.stu_idx = sessionUser.stu_idx;
+                user.role = sessionUser.role;
+                done(null, user);
+            })
             .catch((err) => done(err));
     });
-
     kakao(passport);
 };
