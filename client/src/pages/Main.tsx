@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import InstructorCard from "../components/InstructorCard";
@@ -44,36 +44,58 @@ export default function Main() {
         handleSearchTutor(); // 초기 렌더링 시에 강사 정보를 불러옴
     }, []);
 
-    // const handleSearch = async () => {
-    //     try {
-    //         console.log("하이");
-    //         const response = await axios.get(url, {
-    //             params: {
-    //                 serviceKey: apiKey,
-    //                 // numOfRows: "10",
-    //                 // pageNo: "1",
-    //             },
-    //         });
-    //         const { data } = response;
-    //         console.log(data.response.body.items.item);
+    const cardContainerRef = useRef<HTMLDivElement>(null);
+    const sectionRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    //         const results: Sign[] = data.response.body.items.item;
-    //         console.log(results);
-    //         setSearchResults(results);
-    //         setError("");
-    //     } catch (error) {
-    //         setSearchResults([]);
-    //         setError("검색 중 오류가 발생했습니다.");
-    //     }
-    // };
+    useEffect(() => {
+        const cardContainer = cardContainerRef.current;
+        const section = sectionRef.current;
+        const container = containerRef.current;
+        const cards = cardContainer?.querySelectorAll(".card");
+
+        function adjustContainerHeight() {
+            if (!cardContainer || !section || !container || !cards) return;
+
+            // 카드 컨테이너의 높이를 0으로 초기화
+            cardContainer.style.height = "0px";
+            section.style.height = "auto";
+            container.style.height = "auto";
+
+            // 각 카드의 높이를 가져와 최대 높이를 계산합니다.
+            let maxHeight = 0;
+            cards.forEach((card) => {
+                const element = card as HTMLElement; // HTMLElement로 캐스팅
+                const cardHeight = element.offsetHeight;
+
+                maxHeight += cardHeight / 3;
+            });
+
+            // 카드 컨테이너의 높이를 최대 높이로 설정합니다.
+            cardContainer.style.height = `${maxHeight}px`;
+            section.style.height = `${maxHeight + 550}px`;
+            container.style.height = `${maxHeight + 600}px`;
+        }
+
+        // 페이지 로드 후 초기화 함수를 호출하여 높이를 조정합니다.
+        adjustContainerHeight();
+
+        // 윈도우 크기가 변경될 때마다 높이를 다시 조정합니다.
+        window.addEventListener("resize", adjustContainerHeight);
+
+        // cleanup 함수 등록
+        return () => {
+            window.removeEventListener("resize", adjustContainerHeight);
+        };
+    }, [searchResults]);
 
     return (
         <div>
             <section className="main-banner">
                 <div>WELCOME TO HAND CHATTER</div>
             </section>
-            <section className="ourtutor">
-                <div className="container">
+            <section className="ourtutor" ref={sectionRef}>
+                <div className="container" ref={containerRef}>
                     <p>Our Tutor</p>
                     <div className="search">
                         <input
@@ -85,44 +107,18 @@ export default function Main() {
                         <button onClick={handleSearchTutor}>검색</button>
                     </div>
                     {error && <p>{error}</p>}
-                    <ul className="card-container">
+                    <div ref={cardContainerRef} className="card-container">
                         {searchResults &&
                             searchResults.map((tutor, index) => (
-                                <li key={index}>
+                                <div className="card" key={index}>
                                     <Link to={`/tutors/${index + 1}`}>
                                         <InstructorCard tutor={tutor}></InstructorCard>
                                     </Link>
-                                </li>
+                                </div>
                             ))}
-                    </ul>
+                    </div>
                 </div>
             </section>
-            {/* <section>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="수어 검색"
-                        value={searchTerm}
-                        onChange={handleChange}
-                    />
-                    <button onClick={handleSearch}>검색</button>
-                    {error && <p>{error}</p>}
-                    <ul>
-                        {searchResults.map((sign, index) => (
-                            <li key={index}>
-                                {/* <img src={sign.url} alt={sign.title} /> 
-                                <p>
-                                    <a href={sign.url} target="_blank">
-                                        {sign.title}
-                                    </a>
-                                </p>
-                                <img src={sign.referenceIdentifier} alt="" />
-                                <p>{sign.title}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </section> */}
         </div>
     );
 }

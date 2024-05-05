@@ -52,7 +52,7 @@ const Header = () => {
                         <img src={cancleIcon} alt="" />
                     )}
                 </div>
-                <div className={`container mobile-sidebar `}>
+                <div className={`header-container mobile-sidebar `}>
                     <div className="logo">
                         <Link to="/">HandChatter</Link>
                     </div>
@@ -101,12 +101,14 @@ const Header = () => {
                             )}
                         </ul>
                     </nav>
-                    <Sidebar
-                        isMenuOpen={isMenuOpen}
-                        onLogout={handleLogout}
-                        mypageIndex={mypageIndex}
-                        handleLeftClick={handleLeftClick}
-                    />
+                    {isLogin && (
+                        <Sidebar
+                            isMenuOpen={isMenuOpen}
+                            onLogout={handleLogout}
+                            mypageIndex={mypageIndex}
+                            handleLeftClick={handleLeftClick}
+                        />
+                    )}
                 </div>
             </header>
         </>
