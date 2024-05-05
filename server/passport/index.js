@@ -24,6 +24,7 @@ module.exports = (passport) => {
                 // 세션에 저장된 추가 정보도 함께 사용자 객체에 추가합니다.
                 user.stu_idx = sessionUser.stu_idx;
                 user.role = sessionUser.role;
+                user.id = sessionUser.userId;
                 done(null, user);
             })
             .catch((err) => done(err));

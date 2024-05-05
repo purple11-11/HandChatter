@@ -20,7 +20,6 @@ const Chatting: React.FC = () => {
     const isLogin = useInfoStore((state) => state.isLogin);
     const userInfo = useInfoStore((state) => state.userInfo);
     const tutorIdx = useInfoStore((state) => state.tutorIdx);
-    const dmToTutor = useInfoStore((state) => state.dmToTutor);
     const stu_idx = userInfo?.stu_idx;
     const tutor_idx = userInfo?.tutor_idx;
 
@@ -135,28 +134,28 @@ const Chatting: React.FC = () => {
     useEffect(() => {
         // 채팅방 목록이 업데이트되었으므로 ChattingList를 다시 렌더링합니다.
         // dm보내기로 넘겨받아온 강사인덱스 추가 (단, 이미 존재하는 인덱스라면 추가 x)
-        if (isLogin) {
-            if (stu_idx) {
-                if (tutorIdx && !chatRooms.some((room) => room.id === Number(tutorIdx))) {
-                    axios
-                        .get(`${process.env.REACT_APP_API_SERVER}/api/chatInfo`, {
-                            params: { tutorsIdx: [tutorIdx] },
-                        })
-                        .then((res) => {
-                            console.log("res >>", res.data.chatTutorsInfo[0]);
-                            // 이전 채팅방 정보와 새로운 채팅방 정보를 병합하여 새로운 배열을 생성합니다.
-                            setChatRooms((prevChatRooms) => [
-                                ...prevChatRooms,
-                                res.data.chatTutorsInfo[0],
-                            ]);
-                        })
-                        .catch((error) => {
-                            console.error("An error occurred:", error);
-                        });
-                }
+        if (isLogin && stu_idx && tutorIdx) {
+            if (!chatRooms.some((room) => room.id === Number(tutorIdx))) {
+                axios
+                    .get(`${process.env.REACT_APP_API_SERVER}/api/chatInfo`, {
+                        params: { tutorsIdx: [tutorIdx] },
+                    })
+                    .then((res) => {
+                        console.log("res >>", res.data.chatTutorsInfo[0]);
+                        // 이전 채팅방 정보와 새로운 채팅방 정보를 병합하여 새로운 배열을 생성합니다.
+                        setChatRooms((prevChatRooms) => [
+                            ...prevChatRooms,
+                            res.data.chatTutorsInfo[0],
+                        ]);
+
+                        console.log("chat Rooms >> ", chatRooms);
+                    })
+                    .catch((error) => {
+                        console.error("An error occurred:", error);
+                    });
             }
         }
-    }, [chatRooms]);
+    }, [isLogin, stu_idx, tutorIdx]);
 
     const room = selectedRoom !== null ? chatRooms.find((room) => room.id === selectedRoom) : null;
 
