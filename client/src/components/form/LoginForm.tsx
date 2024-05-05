@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import PasswordInput from "../input/PasswordInput";
 import { RoleProps } from "../../types/interface";
 import { Link } from "react-router-dom";
-import styles from "./login.module.scss";
+import styles from "./loginForm.module.scss";
 
 interface SigninData {
     id: string;
@@ -40,7 +40,7 @@ export default function LoginForm({ role, login }: RoleProps & LoginProps) {
             <div className={`${styles.login_wrapper}`}>
                 <form name="login_form" onSubmit={handleSubmit(onSubmit)}>
                     <div className={`${styles.id_wrap}`}>
-                        <label htmlFor="id">ID</label>
+                        <label htmlFor="id">아이디</label>
                         <input
                             type="text"
                             {...register("id", { required: true })}

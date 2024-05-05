@@ -24,27 +24,38 @@ const router = createBrowserRouter([
                 path: "learning",
                 element: <PersonalLearning />,
                 loader: async () => {
-                    if (process.env.REACT_APP_API_URL && process.env.REACT_APP_API_KEY) {
-                        const response = await axios.get(process.env.REACT_APP_API_URL, {
-                            params: {
-                                serviceKey: process.env.REACT_APP_API_KEY,
-                                numOfRows: "100",
-                                pageNo: "1",
-                            },
-                        });
-                        const items = response.data.response.body.items.item;
-                        console.log("App.tsx items ::", items);
+                    try {
+                        if (process.env.REACT_APP_API_URL && process.env.REACT_APP_API_KEY) {
+                            const response = await axios.get(process.env.REACT_APP_API_URL, {
+                                params: {
+                                    serviceKey: process.env.REACT_APP_API_KEY,
+                                    numOfRows: "100",
+                                    pageNo: "1",
+                                },
+                            });
 
-                        let results: SignRes[] = items.map((item: SignRes, index: number) => ({
-                            key: index,
-                            title: item.title,
-                            url: item.url,
-                            description: item.description,
-                            referenceIdentifier: item.referenceIdentifier,
-                            subDescription: item.subDescription,
-                        }));
+                            let results: SignRes[] = [];
+                            if (!response.data.response.body.items) {
+                                return results;
+                            }
 
-                        return results;
+                            const items = response.data.response.body.items.item;
+                            console.log("App.tsx items ::", items);
+
+                            results = items.map((item: SignRes, index: number) => ({
+                                key: index,
+                                title: item.title,
+                                url: item.url,
+                                description: item.description,
+                                referenceIdentifier: item.referenceIdentifier,
+                                subDescription: item.subDescription,
+                            }));
+
+                            return results;
+                        }
+                    } catch (error) {
+                        console.error("API 오청 중 오류 발생 ::", error);
+                        return [];
                     }
                 },
                 children: [
