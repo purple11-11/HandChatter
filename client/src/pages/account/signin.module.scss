@@ -22,12 +22,13 @@
 .login_area {
     border-radius: 10px;
     background-color: #ffffff59;
-    border: 2px solid rgba(145, 145, 145, 0.377);
+    border: 1px solid rgba(145, 145, 145, 0.377);
     backdrop-filter: blur(30px);
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
     padding: 30px 30px 0 30px;
     margin-top: 10px;
     height: 410px;
+    width: 380px;
 }
 
 .role_toggle_btn {
@@ -35,12 +36,13 @@
     justify-content: space-around;
     margin: 10px 10px 20px 10px;
     button {
-        width: 15vw;
+        width: 150px;
         height: 40px;
         border-radius: 25px;
         color: $color-text;
         &:hover {
             background-color: $color-second;
+            color: $color-text;
             transition: 0.3s;
         }
     }
@@ -49,7 +51,7 @@
 .find_id_pw {
     display: flex;
     justify-content: space-evenly;
-    margin-top: 15px;
+    margin-top: 25px;
     a {
         color: $color-primary-light;
         font-weight: bold;
