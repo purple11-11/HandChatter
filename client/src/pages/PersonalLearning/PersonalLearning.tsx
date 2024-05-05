@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Button from "../../components/button/Button";
+import styles from "./personalLearning.module.scss";
 import ResultCard from "./ResultCard";
 import { SignRes } from "../../types/interface";
 import { Outlet, useLoaderData, useLocation } from "react-router-dom";
@@ -90,32 +90,36 @@ export default function PersonalLearning() {
         <section>
             {location.pathname !== "/learning/quiz" && (
                 <>
-                    <h2>무엇을 검색하시겠어요?</h2>
+                    <div className={`${styles.title}`}>
+                        <h1>무엇을 검색하시겠어요?</h1>
 
-                    <div className="search_bar">
-                        <input
-                            type="text"
-                            placeholder="수어 검색"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                        <Button onClick={handleSearch} text="검색" />
-                        {error && <p>{error}</p>}
-                    </div>
-                    <div className="search_category">
-                        <Button key={"all"} onClick={handleReset} text="전체" />
-                        {Object.keys(KOR).map((keyword) => (
-                            <Button
-                                key={keyword}
-                                onClick={() => keywordSearch(keyword)}
-                                text={keyword}
+                        <div className={`${styles.search_bar}`}>
+                            <input
+                                type="text"
+                                placeholder="수어 검색"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                             />
-                        ))}
+                            <button onClick={handleSearch}>검색</button>
+                            {error && <p>{error}</p>}
+                        </div>
+
+                        <div className={`${styles.search_category}`}>
+                            <button key={"all"} onClick={handleReset}>
+                                전체
+                            </button>
+                            {Object.keys(KOR).map((keyword) => (
+                                <button key={keyword} onClick={() => keywordSearch(keyword)}>
+                                    {keyword}
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                    <ul>
-                        <h3>
-                            {isSearched ? "검색 결과" : "전체"} ({searchResults.length})
-                        </h3>
+
+                    <h2>
+                        {isSearched ? "검색 결과" : "전체"} ({searchResults.length})
+                    </h2>
+                    <ul className={`${styles.results}`}>
                         {isLoading && <p>데이터를 불러오고 있어요 😀</p>}
                         {searchResults.map((result) => (
                             <ResultCard {...result} />

@@ -1,0 +1,71 @@
+@import "../../styles/util";
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    h1 {
+        color: $color-primary;
+    }
+    .search_bar {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        input {
+            position: relative;
+            width: 500px;
+            height: 40px;
+            border-radius: 5px;
+            padding: 0 40px 0 20px;
+        }
+        button {
+            position: absolute;
+            border: none;
+            background: none;
+            box-shadow: none;
+            padding: 10px;
+            &:hover {
+                color: $color-text-green;
+            }
+        }
+    }
+}
+
+.search_category {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #d4d4ba;
+    box-shadow: 1px 1px 3px gray;
+    background-color: #fff;
+    width: 508px;
+    border-radius: 5px;
+    flex-wrap: wrap;
+    margin: 30px 0;
+    padding: 25px;
+    button {
+        width: 70px;
+        height: 40px;
+        border-radius: 10px;
+        margin: 5px 10px;
+        background-color: $color-second;
+        color: $color-primary;
+        &:hover {
+            background-color: $color-primary;
+            color: $color-second;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+    }
+}
+
+h2 {
+    margin-left: -50vw;
+    margin-top: 20px;
+    color: $color-text-green;
+}
+.results {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 75vw;
+}
