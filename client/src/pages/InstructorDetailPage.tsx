@@ -58,7 +58,7 @@ export default function InstructorDetailPage() {
                             <p>{tutor?.description ? tutor.description : "내용이 없습니다."}</p>
                         </div>
                     </div>
-                    <CourseReview></CourseReview>
+                    <CourseReview tutorIdx={tutorIndex}></CourseReview>
                 </div>
             </div>
         </section>
