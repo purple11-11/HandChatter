@@ -15,8 +15,7 @@ interface Tutor {
 export default function Admin() {
     const [tutorResults, setTutorResults] = useState<Tutor[]>([]);
     const [error, setError] = useState<string>("");
-    const [authority, setAuthority] = useState<number>(0);
-    const [tutorId, setTutorId] = useState<string>("");
+
     const handleTutor = async () => {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/admin`;
@@ -25,8 +24,14 @@ export default function Admin() {
 
             console.log(tutorList);
             setTutorResults([...tutorResults, ...tutorList]);
-        } catch (error) {
-            setError("튜터 조회 중 오류 발생");
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                alert("튜터 조회 중 오류 발생 \n" + (error.response?.data || error.message));
+                document.location.href = "/adminLogin";
+            } else if (error instanceof Error) {
+                alert("튜터 조회 중 오류 발생 \n" + error.message);
+                document.location.href = "/adminLogin";
+            }
         }
     };
 
@@ -34,7 +39,6 @@ export default function Admin() {
 
     useEffect(() => {
         handleTutor();
-        console.log(tutorResults);
     }, []);
 
     // useEffect(() => {}, [tutorResults]);
@@ -45,7 +49,7 @@ export default function Admin() {
                 <h1>Our Tutors</h1>
                 <table>
                     <tr className="first_tr">
-                        <th>인덱스</th>
+                        <th></th>
                         <th>아이디</th>
                         <th>닉네임</th>
                         <th>메일</th>
@@ -54,6 +58,7 @@ export default function Admin() {
                     </tr>
                     {tutorResults.map((tutor, index) => (
                         <tr key={index}>
+                            <td>{index + 1}</td>
                             <TutorList tutor={tutor}></TutorList>
                         </tr>
                     ))}

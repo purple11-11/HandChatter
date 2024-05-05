@@ -7,21 +7,30 @@ section {
     display: flex;
     flex-direction: column;
     align-items: center;
+    h1 {
+        color: $color-primary;
+    }
 }
 h1 {
     text-align: center;
     font-size: 30px;
 }
 table {
-    // border: 1px solid red;
+    border: 2px solid rgba(145, 145, 145, 0.377);
+    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
     width: 80%;
     text-align: center;
+    background-color: #ffffff59;
     .first_tr {
-        border: 1px solid black;
-        margin-bottom: 30px;
+        // border: 1px solid black;
         th {
+            padding: 20px;
             font-size: 18px;
             font-weight: 800;
         }
+    }
+    td {
+        padding: 4px;
     }
 }
