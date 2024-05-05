@@ -116,7 +116,7 @@ export default function PersonalLearning() {
                         </div>
                     </div>
 
-                    <h2>
+                    <h2 className={`${styles.result_title}`}>
                         {isSearched ? "검색 결과" : "전체"} ({searchResults.length})
                     </h2>
                     <ul className={`${styles.results}`}>

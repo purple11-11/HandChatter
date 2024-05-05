@@ -159,10 +159,6 @@ export default function StudentSignup({ role }: RoleProps) {
                         </button>
                     )}
                 </div>
-                <div className={`${styles.go_to_login}`}>
-                    <span>이미 계정이 있으신가요?</span>
-                    <Link to="/login">로그인</Link>
-                </div>
                 <FormProvider {...methods}>
                     <SignupForm
                         role={role}
@@ -172,6 +168,10 @@ export default function StudentSignup({ role }: RoleProps) {
                         checkCertification={checkCertification}
                     />
                 </FormProvider>
+            </div>
+            <div className={`${styles.go_to_login}`}>
+                <span>이미 계정이 있으신가요?</span>
+                <Link to="/login">로그인</Link>
             </div>
         </section>
     );
