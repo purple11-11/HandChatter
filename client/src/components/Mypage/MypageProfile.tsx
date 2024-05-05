@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ModifyEmail from "./ModifyEmail";
 import ModifyPassword from "./ModifyPassword";
 import { useInfoStore } from "../../store/store";
@@ -17,6 +17,8 @@ export default function MypageProfile() {
         password: userInfo?.password,
         profileImgUrl: profileImgUrl,
         description: userInfo?.description,
+        level: userInfo?.level,
+        levels: [],
     });
     const [showModal, setShowModal] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -103,14 +105,22 @@ export default function MypageProfile() {
         }
     };
     const handleLevelChange = (level: string) => {
-        const newLevels = Array.isArray(userData.levels) ? [...userData.levels] : [];
+        const currentLevels = [...userData.levels];
+        const isLevelSelected = currentLevels.includes(level);
 
-        if (!newLevels.includes(level)) {
-            newLevels.push(level);
-            setUserData({ ...userData, levels: newLevels });
-        }
+        const newLevels = isLevelSelected ? currentLevels.filter((l) => l !== level) : [level];
+
+        setUserData({ ...userData, levels: newLevels });
+        const checkboxes = document.querySelectorAll<HTMLInputElement>('input[name="levels"]');
+        checkboxes.forEach((checkbox) => {
+            if (checkbox.value === level) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+            console.log(checkbox.checked);
+        });
     };
-
     const handleIntroVideoUpload = async (file: File) => {
         try {
             if (!file) {
@@ -208,7 +218,8 @@ export default function MypageProfile() {
                                             id="beginner"
                                             name="levels"
                                             value="beginner"
-                                            onChange={(e) => handleLevelChange(e.target.value)}
+                                            checked={userData.levels.includes("beginner")}
+                                            onChange={() => handleLevelChange("beginner")}
                                         />
                                         <label htmlFor="beginner">초급</label>
                                         <input
@@ -216,7 +227,8 @@ export default function MypageProfile() {
                                             id="intermediate"
                                             name="levels"
                                             value="intermediate"
-                                            onChange={(e) => handleLevelChange(e.target.value)}
+                                            checked={userData.levels.includes("intermediate")}
+                                            onChange={() => handleLevelChange("intermediate")}
                                         />
                                         <label htmlFor="intermediate">중급</label>
                                         <input
@@ -224,7 +236,8 @@ export default function MypageProfile() {
                                             id="advanced"
                                             name="levels"
                                             value="advanced"
-                                            onChange={(e) => handleLevelChange(e.target.value)}
+                                            checked={userData.levels.includes("advanced")}
+                                            onChange={() => handleLevelChange("advanced")}
                                         />
                                         <label htmlFor="advanced">고급</label>
                                     </div>
