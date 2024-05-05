@@ -99,10 +99,11 @@ button {
 
 // Main
 .main-banner {
+    min-height: 600px;
     position: relative;
-    background-image: url("../assets/mainImg.jpg");
-    background-size: cover;
-    background-position: center;
+    background-image: url("../assets/main-banner.png");
+    background-size: cover; /* 이미지를 화면에 맞게 크기 조절 */
+    background-position: center bottom;
     opacity: 0.8;
     div {
         position: absolute;
@@ -129,7 +130,7 @@ button {
             button {
                 position: absolute;
                 top: 6px;
-                right: 0;
+                right: 7px;
                 padding: 5px 10px;
                 border: none;
                 box-shadow: none;
@@ -303,6 +304,10 @@ button {
             color: #ffffff;
             font-weight: bold;
         }
+    }
+    button.active {
+        background-color: #016a70;
+        color: white;
     }
 }
 
@@ -565,6 +570,9 @@ button {
             top: 18px;
             left: 20px;
             a {
+                img {
+                    width: 15px;
+                }
                 color: #ffffdd;
                 font-size: 25px;
             }
@@ -587,7 +595,7 @@ button {
         position: fixed;
         top: 0;
         right: -350px;
-        width: 200px;
+        width: 130px;
         height: 100%;
         background-color: #ffffdd;
         padding: 1rem;
@@ -880,7 +888,7 @@ button {
         // border: 1px solid red;
     }
     section {
-        min-height: 1000px;
+        // min-height: 800px;
         // height: 100%;
         border-bottom: 2px solid #d4d4ba;
         padding: 80px;
@@ -906,12 +914,18 @@ button {
             }
         }
         .header-container {
+            width: 1080px;
             position: relative;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem;
+            margin: 0 auto;
+
             .logo {
+                img {
+                    width: 15px;
+                }
                 a {
                     color: #ffffdd;
                 }
@@ -923,6 +937,7 @@ button {
                     margin: 0;
                     display: flex;
                     li {
+                        // border: 1px solid red;
                         margin: 0 1rem;
                         a {
                             text-decoration: none;
@@ -931,6 +946,7 @@ button {
                         .header-nickname {
                             cursor: pointer;
                             .small {
+                                margin-right: 10px;
                                 width: 20px;
                                 height: 20px;
                                 border-radius: 15px;
@@ -941,7 +957,6 @@ button {
                             }
                         }
                         .header-nickname {
-                            min-width: 90px;
                             display: flex;
                             justify-content: space-between;
                         }
@@ -1055,9 +1070,9 @@ button {
     // Main
     .main-banner {
         div {
-            right: 40px;
-            bottom: 250px;
-            font-size: 50px;
+            right: 150px;
+            bottom: 150px;
+            font-size: 40px;
         }
     }
     .ourtutor {

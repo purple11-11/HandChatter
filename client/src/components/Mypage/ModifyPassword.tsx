@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent } from "react";
 import axios from "axios";
 import { useInfoStore } from "../../store/store";
+import PasswordInput from "../input/PasswordInput";
 interface Passwords {
     currentPassword: string;
     newPassword: string;
@@ -120,7 +121,9 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
                 </div>
                 <div className="check">{wrongPw2}</div>
                 <button onClick={handleSaveChanges}>변경사항 저장</button>
-                <button className="hide" onClick={onHide}>X</button>
+                <button className="hide" onClick={onHide}>
+                    X
+                </button>
             </div>
         </>
     );

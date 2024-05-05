@@ -11,6 +11,7 @@ type UserInfo = {
     price: number;
     email: string;
     profile_img: string;
+    level?: string;
     description?: string;
     des_video?: string;
     authority?: number;

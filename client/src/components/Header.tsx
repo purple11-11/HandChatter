@@ -1,4 +1,4 @@
-import Logo from "../assets/logo.jpg";
+import Logo from "../assets/header-logo.png";
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -41,12 +41,15 @@ const Header = () => {
     console.log(isLogin, userInfo, profileImgUrl);
     return (
         <>
-            <header className={`header ${!isMenuOpen ? "mobile-sidebar-open" : ""}`}>
+            <header className={`header ${isMenuOpen ? "mobile-sidebar-open" : ""}`}>
                 <div className="mobile-logo">
-                    <Link to="/">HandChatter</Link>
+                    <Link to="/">
+                        <img src={Logo} alt="" />
+                        andChatter
+                    </Link>
                 </div>
                 <div className="header-icon" onClick={handleLeftClick}>
-                    {isMenuOpen ? (
+                    {!isMenuOpen ? (
                         <img src={menuIconWhite} alt="" />
                     ) : (
                         <img src={cancleIcon} alt="" />
@@ -54,7 +57,10 @@ const Header = () => {
                 </div>
                 <div className={`header-container mobile-sidebar `}>
                     <div className="logo">
-                        <Link to="/">HandChatter</Link>
+                        <Link to="/">
+                            <img src={Logo} alt="" />
+                            andChatter
+                        </Link>
                     </div>
                     <nav className="menu mobile-sidebar-content">
                         <ul>
