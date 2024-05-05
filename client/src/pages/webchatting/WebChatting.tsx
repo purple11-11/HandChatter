@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useMemo, useRef, useState,} from "react";
 import io from "socket.io-client";
-import WebSpeech from "./WebSpeech";
-import styles from "./WebCam.module.scss"
-import { useInfoStore } from "../../store/store"; // Importing the store
-  
+// import WebSpeech from "./WebSpeech";
+// import styles from "./WebCam.module.scss"
+import { useInfoStore } from "../../store/store"; 
+
   const socket = io.connect("http://localhost:8080", {
   autoConnect: false,
 });
@@ -11,7 +11,6 @@ import { useInfoStore } from "../../store/store"; // Importing the store
 
 export default function WebChatting ({}) {
   const userInfo = useInfoStore((state) => state.userInfo);
-  console.log(userInfo?.nickname);
 
   const [msgInput, setMsgInput] = useState("");
   const [chatList, setChatList] = useState<any[]>([]);
@@ -22,7 +21,7 @@ export default function WebChatting ({}) {
     };
     initSocketConnect(); 
   }, []);
-  
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (msgInput.trim() === "") return setMsgInput("");
@@ -52,35 +51,32 @@ const addChatList = useCallback(
 useEffect(() => {
   socket.on("message", addChatList);
 }, [addChatList]);
-
-
-
-  console.log('chatList',chatList)
+    // console.log('chatList',chatList)
   return (
-    <section>
-        <div className={`${styles.chatBox}`}>
-          <header className={`${styles.webchatheader}`}>1:1 화상 수업방</header>
-          <div className = {`${styles.chat_box}`}>              
-            {/* <WebSpeech chat={{type:'me',content:'test content', isDm:false, name:'aaaa'}} /> */}
-              {chatList.map((chat, i) => {
-              return <WebSpeech key={i} chat={chat} />;
-              })}
-            </div>
-          <form
-            className={`${styles.msg_form}`}
-            id="msg_form"
-            onSubmit={handleSubmit}
-          >
-            <input
-              type="text"
-              placeholder="메세지 입력"
-              value={msgInput}
-              onChange={(e) => setMsgInput(e.target.value)}
-            />
-            <button className={`${styles.button}`}>전송</button>
-          </form>
-        </div>
-    </section>
+    <></>
+    // <div className={`${styles.chatPage}`}>
+    //     <div className={`${styles.chatBox}`}>
+    //       <header className={`${styles.webchatheader}`}>1:1 화상 수업방</header>
+    //       <div className = {`${styles.chat_box}`}>              
+    //         {/* <WebSpeech chat={{type:'me',content:'test content', isDm:false, name:'aaaa'}} /> */}
+    //           {chatList.map((chat, i) => {
+    //               return <WebSpeech key={i} chat={chat} />;
+    //             })}
+    //         </div>
+    //       <form
+    //         className={`${styles.msg_form}`}
+    //         id="msg_form"
+    //         onSubmit={handleSubmit}
+    //         >
+    //         <input
+    //           type="text"
+    //           placeholder="메세지 입력"
+    //           value={msgInput}
+    //           onChange={(e) => setMsgInput(e.target.value)}
+    //           />
+    //         <button className={`${styles.button}`}>전송</button>
+    //       </form>
+    //     </div>
+    // // </div>
   );
 };
-
