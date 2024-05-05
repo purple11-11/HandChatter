@@ -131,6 +131,7 @@ export default function Quiz() {
                         onAnswer={handleAnswer}
                     />
                     <div className="menu_btn">
+
                         <button onClick={handlePrev}>이전</button>
                         <button onClick={handleNext}>다음</button>
                     </div>
