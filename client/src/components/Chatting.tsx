@@ -181,7 +181,16 @@ const Chatting: React.FC = () => {
                                 setShowTutorInfo={setShowTutorInfo}
                                 showTutorInfo={showTutorInfo}
                             />
-                            <ChattingTutorIntroductor room={room} showTutorInfo={showTutorInfo} />
+                            {userInfo?.tutor_idx ? (
+                                <div>
+                                    <textarea name="" id=""></textarea>
+                                </div>
+                            ) : (
+                                <ChattingTutorIntroductor
+                                    room={room}
+                                    showTutorInfo={showTutorInfo}
+                                />
+                            )}
                         </>
                     ) : (
                         <>

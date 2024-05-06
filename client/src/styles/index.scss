@@ -668,7 +668,7 @@ button {
     .card-container {
         // border: 1px solid red;
         min-width: 500px;
-
+        justify-content: space-evenly;
         .card {
             width: 200px;
             height: 300px;
@@ -1003,12 +1003,24 @@ button {
                         padding: 20px;
                         .one-chat {
                             padding: 14px 0;
+                            position: relative;
+                            // border: 1px solid red;
+                            margin-bottom: 15px;
                             span {
+                                position: absolute;
                                 background-color: #fffffd;
                                 box-shadow: 1px 1px 3px gray;
                                 padding: 7px 12px;
                                 font-size: 14px;
                                 border-radius: 7px;
+                            }
+                            .me {
+                                top: 0;
+                                right: 0;
+                            }
+                            .you {
+                                top: 0;
+                                left: 0;
                             }
                         }
                     }
@@ -1576,12 +1588,24 @@ button {
                         padding: 20px;
                         .one-chat {
                             padding: 14px 0;
+                            position: relative;
+                            // border: 1px solid red;
+                            margin-bottom: 15px;
                             span {
+                                position: absolute;
                                 background-color: #fffffd;
                                 box-shadow: 1px 1px 3px gray;
                                 padding: 7px 12px;
                                 font-size: 14px;
                                 border-radius: 7px;
+                            }
+                            .me {
+                                top: 0;
+                                right: 0;
+                            }
+                            .you {
+                                top: 0;
+                                left: 0;
                             }
                         }
                     }
@@ -2126,12 +2150,24 @@ button {
                         padding: 20px;
                         .one-chat {
                             padding: 14px 0;
+                            position: relative;
+                            // border: 1px solid red;
+                            margin-bottom: 15px;
                             span {
+                                position: absolute;
                                 background-color: #fffffd;
                                 box-shadow: 1px 1px 3px gray;
                                 padding: 7px 12px;
                                 font-size: 14px;
                                 border-radius: 7px;
+                            }
+                            .me {
+                                top: 0;
+                                right: 0;
+                            }
+                            .you {
+                                top: 0;
+                                left: 0;
                             }
                         }
                     }

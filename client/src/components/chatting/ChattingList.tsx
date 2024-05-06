@@ -30,7 +30,7 @@ const ChattingList: React.FC<{
                 {rooms.map((room) => (
                     <li key={room.id} onClick={() => handleClick(room.id)}>
                         <div className="profile-img middle">
-                            <img src="" alt="" />
+                            <img src={`${process.env.REACT_APP_API_SERVER}/${room.profileImg}`} alt="" />
                         </div>
                         <div className="room-info">
                             <p>{room.name}</p>
