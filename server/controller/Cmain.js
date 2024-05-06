@@ -187,33 +187,41 @@ exports.searchId = async (req, res) => {
     }
 };
 
-// GET /api/searchPassword
+// POST /api/searchPassword
 exports.searchPassword = async (req, res) => {
     let searchIdStudent, searchIdTutor;
+    const { id, email } = req.body;
+    const randomNum = (Math.floor(Math.random() * 1000000) + 100000).toString().substring(0, 6);
+
+    if (!email || !id) return res.status(400).send("빈칸을 입력해주세요.");
+    [searchIdTutor, searchIdStudent] = await Promise.all([
+        Tutor.findOne({ where: { id, email } }),
+        Student.findOne({ where: { id, email } }),
+    ]);
+    if (!searchIdTutor && !searchIdStudent) {
+        res.status(400).send("유효하지 않은 값입니다. 다시 입력해주세요.");
+    }
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "[Hand Chatter 👐🏻] 이메일 인증",
+        html: `<h2>인증번호를 입력해주세요</h2>  <h3>${randomNum} 입니다.</h3>`,
+    };
     try {
-        const { id, email } = req.query;
-        if (!email || !id) return res.status(400).send("빈칸을 입력해주세요.");
-
-        [searchIdTutor, searchIdStudent] = await Promise.all([
-            Tutor.findOne({ where: { id, email } }),
-            Student.findOne({ where: { id, email } }),
-        ]);
-
-        if (!searchIdTutor && !searchIdStudent) {
-            res.status(400).send("유효하지 않은 값입니다. 다시 입력해주세요.");
-        } else if (searchIdStudent) {
-            res.status(200).send(`<script>
-            alert('새로운 비밀번호를 입력해주세요').
-            res.redirect('/inputPassword')
-            </script>`);
-        } else if (searchIdTutor) {
-            res.status(200).send(`<script>
-            alert('새로운 비밀번호를 입력해주세요').
-            res.redirect('/inputPassword')
-            </script>`);
-        } else return;
+        const info = await new Promise((resolve, reject) => {
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(info);
+                }
+            });
+        });
+        console.log("이메일 전송 성공", info.response);
+        return res.status(200).send({ randomNum });
     } catch (err) {
-        res.status(500).send("server error!!!");
+        console.log("이메일 전송 실패", error);
+        return res.status(500).send("이메일 전송 실패");
     }
 };
 

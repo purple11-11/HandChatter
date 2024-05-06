@@ -342,7 +342,7 @@ router.get("/searchId", controller.searchId);
  *               type: string
  *               example: "Internal Server Error"
  */
-router.get("/searchPassword", controller.searchPassword);
+router.post("/searchPassword", controller.searchPassword);
 /**
  * @swagger
  * /api/favoritesTutor:

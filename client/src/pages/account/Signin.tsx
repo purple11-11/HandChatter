@@ -72,7 +72,7 @@ export default function Signip() {
                         <LoginForm role={role.role} login={login} />
                         <div className={`${styles.find_id_pw}`}>
                             <Link to="/find/id">아이디 찾기</Link>
-                            <Link to="#">비밀번호 찾기</Link>
+                            <Link to="/find/pw">비밀번호 찾기</Link>
                         </div>
                     </div>
                 </div>

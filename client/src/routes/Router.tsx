@@ -13,6 +13,7 @@ import { SignRes } from "../types/interface";
 import App from "../App";
 import Admin from "../pages/admin/Admin";
 import AdminLogin from "../pages/admin/AdminLogin";
+import FindPw from "../pages/account/FindPw";
 
 const router = createBrowserRouter([
     {
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
             },
             { path: "login", element: <Signin /> },
             { path: "find/id", element: <FindId /> },
+            { path: "find/pw", element: <FindPw /> },
             { path: "signup/student", element: <Signup role={"student"} /> },
             { path: "signup/tutor", element: <Signup role={"tutor"} /> },
             { path: "mypage/:id", element: <Mypage /> },
