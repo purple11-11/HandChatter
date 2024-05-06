@@ -1161,7 +1161,7 @@ button {
             }
         }
         .header-container {
-            width: 1080px;
+            max-width: 1080px;
             position: relative;
             display: flex;
             justify-content: space-between;
