@@ -1,0 +1,22 @@
+@import "../../styles/util";
+
+.pagination {
+    display: flex;
+    margin-top: 20px;
+    button {
+        background-color: $color-second;
+        color: $color-primary;
+        border: none;
+        color: #000;
+        padding: 10px 15px;
+        margin: 0 5px;
+        cursor: pointer;
+        &:hover {
+            background-color: $color-primary;
+        }
+    }
+    .active {
+        background-color: $color-primary;
+        color: $color-second;
+    }
+}
