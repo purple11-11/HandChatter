@@ -4,12 +4,17 @@ import { useState, useEffect, useCallback } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { useInfoStore } from "../../store/store";
+import { Link } from "react-router-dom";
 
 const socket = io(process.env.REACT_APP_API_SERVER, {
     autoConnect: false,
 });
 
-const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
+const ChattingForOne: React.FC<{
+    room: ChatRoom;
+    setShowTutorInfo: (value: boolean) => void;
+    showTutorInfo: boolean;
+}> = ({ room, setShowTutorInfo, showTutorInfo }) => {
     // 로그인 상황(학생, 강사)마다 다르게 셋팅
     const [messages, setMessages] = useState<string[]>([]); // 메시지를 저장하는 상태
     const [newMessage, setNewMessage] = useState<string>(""); // 사용자가 입력한 새로운 메시지
@@ -141,20 +146,30 @@ const ChattingForOne: React.FC<{ room: ChatRoom }> = ({ room }) => {
     useEffect(() => {
         socket.on("message", addMessage);
     }, [addMessage]);
-
+    console.log(showTutorInfo);
     return (
-        <div>
-            <h2>{room.name}</h2>
-            <p>이메일: {room.email}</p>
-            <p>소개: {room.intro}</p>
+        <div className="chatting-for-one">
+            <ul>
+                <li className="btn-hide">
+                    <button onClick={() => setShowTutorInfo(!showTutorInfo)}>강사정보</button>
+                </li>
+                <li>{room.name}</li>
+                <li>
+                    <button>
+                        <Link to="/class">수업하기</Link>
+                    </button>
+                </li>
+            </ul>
             {/* 채팅 메시지 표시 */}
-            <div>
+            <div className="chatting-content">
                 {messages.map((message, index) => (
-                    <div key={index}>{message}</div>
+                    <div key={index} className="one-chat">
+                        <span>{message}</span>
+                    </div>
                 ))}
             </div>
             {/* 메시지 입력 필드와 전송 버튼 */}
-            <div>
+            <div className="chatting-input">
                 <input
                     type="text"
                     value={newMessage}

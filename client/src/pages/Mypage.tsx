@@ -15,7 +15,6 @@ const MyPage: React.FC = () => {
     return (
         <section>
             <div className="container">
-                <Link to="/class">수업하기</Link>
                 <div className="mypage-button-container">
                     <button
                         className={activeTab === "chatting" ? "active" : ""}
