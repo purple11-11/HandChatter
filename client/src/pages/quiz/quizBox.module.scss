@@ -7,7 +7,7 @@
     align-items: center;
     gap: 20px;
     width: 800px;
-    height: 610px;
+    height: 620px;
     box-shadow: 2px 2px 10px 2px gray;
     border: 1px solid $color-second;
     background-color: $color-primary;
@@ -16,6 +16,7 @@
     video {
         margin-top: 15px;
         border-radius: 10px;
+        width: 650px;
         border: 1px solid $color-second;
     }
 }
