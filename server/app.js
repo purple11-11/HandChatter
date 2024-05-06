@@ -18,8 +18,8 @@ const server = http.createServer(app);
 const { swaggerUi, specs } = require("./swagger/swagger");
 const socketHandler = require("./sockets");
 socketHandler(server);
-// const socketWebRTC = require("./modules/webrtc/webrtc");
-// socketWebRTC(server);
+const socketWebRTC = require("./modules/webrtc/webrtc");
+socketWebRTC(server);
 
 const corsOptions = {
     origin: true,
