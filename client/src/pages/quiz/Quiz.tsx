@@ -4,6 +4,8 @@ import { SignRes } from "../../types/interface";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import styles from "./quiz.module.scss";
 import { useInfoStore } from "../../store/store";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 const signData: SignRes[] = [
     {
@@ -142,8 +144,12 @@ export default function Quiz() {
                         onAnswer={handleAnswer}
                     />
                     <div className={`${styles.menu_btn}`}>
-                        <button onClick={handlePrev}>이전</button>
-                        <button onClick={handleNext}>다음</button>
+                        <button onClick={handlePrev}>
+                            <FontAwesomeIcon icon={faChevronLeft} size={"3x"} />
+                        </button>
+                        <button onClick={handleNext}>
+                            <FontAwesomeIcon icon={faChevronRight} size={"3x"} />
+                        </button>
                     </div>
                 </div>
             ) : (
