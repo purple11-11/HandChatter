@@ -8,6 +8,12 @@ const options = {
             version: "1.0.0",
             description: "Test API with express",
         },
+        servers: [
+            {
+                description: "test 중입니다.",
+                url: "localhost:8080",
+            },
+        ],
         host: `localhost:${process.env.PORT}`,
         basePath: "/",
     },
