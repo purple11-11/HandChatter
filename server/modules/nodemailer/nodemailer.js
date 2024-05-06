@@ -3,12 +3,15 @@ require("dotenv").config();
 
 exports.transporter = nodemailer.createTransport({
     service: "naver",
-    host: "pop.naver.com",
-    port: 995,
+    host: "smtp.naver.com",
+    // port: 465,
     secure: false,
-    requireTLS: true,
+    // requireTLS: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+        rejectUnauthorized: false,
     },
 });
