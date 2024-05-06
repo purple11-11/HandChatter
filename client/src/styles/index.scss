@@ -1134,7 +1134,7 @@ button {
     }
 }
 
-@media screen and (max-width: 1500px) {
+@media screen and (min-width: 768px) and (max-width: 1500px) {
     .container {
         max-width: 1080px;
         // min-height: 1000px;
