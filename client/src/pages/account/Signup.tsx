@@ -54,6 +54,8 @@ export default function StudentSignup({ role }: RoleProps) {
     const checkDuplicate = async (keyword: string, value: string): Promise<void> => {
         if (!value) return alert(`${keyword === "id" ? "아이디를" : "닉네임을"} 입력해주세요.`);
 
+        if (keyword === "id" && value.length < 6) return alert("아이디는 6자 이상이어야 합니다.");
+
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/check${
                 role === "student" ? "Student" : "Tutor"
@@ -74,12 +76,16 @@ export default function StudentSignup({ role }: RoleProps) {
 
     // 회원가입
     const signup = async (role: string, data: SignupData | FormData) => {
+        console.log("data", data);
+
         if (!isIdChecked || !isNicknameChecked)
             return alert("아이디와 닉네임 모두 중복 확인을 해주세요.");
 
         if (!isCertified) return alert("이메일 인증을 해주세요.");
 
         if (data instanceof FormData) {
+            // if (!data.get("authDocument")) return alert("인증서를 업로드해주세요.");
+
             const newFormData = new FormData();
             data.forEach((value, key) => {
                 const newKey = key === "authDocument" ? "auth" : key;
@@ -110,8 +116,12 @@ export default function StudentSignup({ role }: RoleProps) {
 
                 alert(`${res.data}! ${data.nickname}님 환영합니다🎉\n로그인 페이지로 이동합니다.`);
                 navigate("/login");
-            } catch (error) {
-                console.error("회원가입 오류", error);
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error)) {
+                    alert(error.response?.data || error.message);
+                } else if (error instanceof Error) {
+                    alert(error.message);
+                }
             }
         }
     };
@@ -120,13 +130,18 @@ export default function StudentSignup({ role }: RoleProps) {
     const sendEmail = async (email: string) => {
         if (!email) return alert("이메일을 입력해주세요.");
 
+        if (!email.includes("@" && (".co" || ".com")))
+            return alert("이메일 형식이 올바르지 않습니다.");
+
         try {
             const res = await axios.post(`${process.env.REACT_APP_API_SERVER}/api/email`, {
                 email,
             });
 
-            if (res.data.randomNum) setRandomNum(res.data.randomNum);
-            else alert(res.data);
+            if (res.data.randomNum) {
+                setRandomNum(res.data.randomNum);
+                alert("인증번호가 전송되었습니다.");
+            } else alert(res.data);
         } catch (error) {
             console.error("이메일 전송 오류", error);
         }

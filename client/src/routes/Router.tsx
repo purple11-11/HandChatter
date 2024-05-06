@@ -29,8 +29,8 @@ const router = createBrowserRouter([
                             const response = await axios.get(process.env.REACT_APP_API_URL, {
                                 params: {
                                     serviceKey: process.env.REACT_APP_API_KEY,
-                                    numOfRows: "100",
-                                    pageNo: "1",
+                                    // numOfRows: "100",
+                                    // pageNo: "1",
                                 },
                             });
 

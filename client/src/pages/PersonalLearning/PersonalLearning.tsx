@@ -3,6 +3,7 @@ import styles from "./personalLearning.module.scss";
 import ResultCard from "./ResultCard";
 import { SignRes } from "../../types/interface";
 import { Outlet, useLoaderData, useLocation } from "react-router-dom";
+import Pagination from "./Pagination";
 
 type KORIndexType = {
     [key: string]: string[];
@@ -19,9 +20,42 @@ export default function PersonalLearning() {
     const [error, setError] = useState<string>("");
     const fetchedDataRef = useRef<SignRes[]>([]);
 
+    const [activeKey, setActiveKey] = useState<string | null>(null);
+
+    // pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentGroup, setCurrentGroup] = useState(1);
+    const itemsPerPage = 12;
+    const pageGroup = 10;
+
+    const currentGroupStart = (currentGroup - 1) * pageGroup + 1;
+    const currentGroupEnd = currentGroup * pageGroup;
+    const totalPages = Math.ceil(searchResults.length / itemsPerPage);
+    const changeGroup = (group: number) => setCurrentGroup(group);
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = searchResults.slice(indexOfFirstItem, indexOfLastItem);
+
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+
+        const newGroup = Math.ceil(pageNumber / pageGroup);
+        if (newGroup !== currentGroup) {
+            changeGroup(newGroup);
+        }
+    };
+
+    const pageNumbers = [];
+    for (let i = currentGroupStart; i <= currentGroupEnd; i++) {
+        pageNumbers.push(i);
+    }
+
+    // loader를 통해 받은 데이터 저장
     const getSignData = async () => {
         if (fetchedDataRef.current.length > 0) return;
         setIsLoading(true);
+
         try {
             fetchedDataRef.current = results;
             setSearchResults(results);
@@ -69,6 +103,9 @@ export default function PersonalLearning() {
     const keywordSearch = (keyword: string) => {
         if (KOR[keyword]) {
             setIsSearched(true);
+            setActiveKey(keyword);
+            paginate(1);
+
             const startCharCode = KOR[keyword][0].charCodeAt(0);
             const endCharCode = KOR[keyword][1].charCodeAt(0);
 
@@ -84,6 +121,7 @@ export default function PersonalLearning() {
         setSearchResults(fetchedDataRef.current);
         setSearchTerm("");
         setIsSearched(false);
+        setActiveKey(null);
     };
 
     return (
@@ -105,11 +143,19 @@ export default function PersonalLearning() {
                         </div>
 
                         <div className={`${styles.search_category}`}>
-                            <button key={"all"} onClick={handleReset}>
+                            <button
+                                key={"all"}
+                                onClick={handleReset}
+                                className={activeKey === null ? `${styles.active}` : ""}
+                            >
                                 전체
                             </button>
                             {Object.keys(KOR).map((keyword) => (
-                                <button key={keyword} onClick={() => keywordSearch(keyword)}>
+                                <button
+                                    key={keyword}
+                                    onClick={() => keywordSearch(keyword)}
+                                    className={activeKey === keyword ? `${styles.active}` : ""}
+                                >
                                     {keyword}
                                 </button>
                             ))}
@@ -121,10 +167,19 @@ export default function PersonalLearning() {
                     </h2>
                     <ul className={`${styles.results}`}>
                         {isLoading && <p>데이터를 불러오고 있어요 😀</p>}
-                        {searchResults.map((result) => (
+                        {currentItems.map((result) => (
                             <ResultCard {...result} />
                         ))}
                     </ul>
+                    <Pagination
+                        paginate={paginate}
+                        pageGroup={pageGroup}
+                        setCurrentGroup={setCurrentGroup}
+                        currentGroup={currentGroup}
+                        currentPage={currentPage}
+                        pageNumbers={pageNumbers}
+                        totalPages={totalPages}
+                    />
                 </>
             )}
             <Outlet />

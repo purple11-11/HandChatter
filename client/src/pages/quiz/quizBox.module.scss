@@ -1,0 +1,42 @@
+@import "../../styles/util";
+
+.quiz_box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 800px;
+    height: 610px;
+    box-shadow: 2px 2px 10px 2px gray;
+    border: 1px solid $color-second;
+    background-color: $color-primary;
+    border-radius: 10px;
+    padding: 20px;
+    video {
+        margin-top: 15px;
+        border-radius: 10px;
+        border: 1px solid $color-second;
+    }
+}
+
+.answer_btn {
+    button {
+        padding: 15px;
+        margin: 15px;
+        box-shadow: 2px 2px 10px 2px gray;
+        width: 150px;
+        border-radius: 5px;
+        border-top: 5px solid #fff;
+        border-left: 5px solid #fff;
+        border-right: 5px solid gray;
+        border-bottom: 5px solid gray;
+        &:hover {
+            background-color: #fff;
+            color: $color-text-green;
+            font-weight: 700;
+            transform: translateY(5px);
+            transition: 0.3s ease-out;
+        }
+    }
+}

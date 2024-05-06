@@ -55,10 +55,14 @@
             transition: 0.2s;
         }
     }
+    .active {
+        background-color: $color-primary;
+        color: $color-second;
+    }
 }
 
 .result_title {
-    margin-left: -50vw;
+    margin-left: -770px;
     margin-top: 20px;
     color: $color-text-green;
 }
@@ -67,5 +71,5 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    width: 75vw;
+    width: 1000px;
 }

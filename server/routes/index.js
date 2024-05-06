@@ -48,7 +48,7 @@ router.get("/userInfo", controller.getInfo);
  *     tags: [Tutors]
  *     parameters:
  *       - in: query
- *         name: id
+ *         name: 검색어
  *         schema:
  *           type: string
  *         required: true
@@ -69,31 +69,69 @@ router.get("/", controller.getTutors);
 // GET /api/tutors/:tutorIdx
 // 강사 상세페이지 - 강사 상세 조회
 // 강사번호 파라미터
+
 /**
  * @swagger
- * /api/tutors/:tutorIdx:
+ * /api/tutors/{tutorIdx}:
  *   get:
- *     summary: 강사 상세 정보 조회
- *     description: 클라이언트가 제공한 강사 인덱스로 해당 강사 정보를 조회합니다.
+ *     summary: Get tutor detail by Index
+ *     description: Retrieve detailed information about a tutor by their index
  *     tags: [Tutors]
  *     parameters:
- *       - in: params
+ *       - in: path
  *         name: tutorIdx
- *         schema:
- *           type: string
  *         required: true
- *         description: 확인할 아이디
+ *         schema:
+ *           type: integer
+ *         description: ID of the tutor to get details for
  *     responses:
  *       '200':
- *         description: 중복 여부에 따른 응답
+ *         description: A tutor object with detailed information
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 available:
- *                   type: tutor
- *                   description: 클라이언트가 제공한 강사 인덱스로 해당 강사 정보 조회 및 응답
+ *                 tutorInfo:
+ *                   type: object
+ *                   properties:
+ *                     nickname:
+ *                       type: string
+ *                       description: The nickname of the tutor
+ *                     email:
+ *                       type: string
+ *                       description: The email address of the tutor
+ *                     description:
+ *                       type: string
+ *                       description: The description of the tutor
+ *                     authority:
+ *                       type: integer
+ *                       description: The authority level of the tutor
+ *                     profile_img:
+ *                       type: string
+ *                       description: The URL of the tutor's profile image
+ *                     des_video:
+ *                       type: string
+ *                       description: The URL of the tutor's description video
+ *                 review:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       content:
+ *                         type: string
+ *                         description: The content of the review
+ *                       rating:
+ *                         type: integer
+ *                         description: The rating given in the review
+ *                       created_at:
+ *                         type: string
+ *                         format: date-time
+ *                         description: The timestamp when the review was created
+ *       '404':
+ *         description: Tutor detail not found
+ *       '500':
+ *         description: Failed to get tutor detail
  */
 router.get("/tutors/:tutorIdx", controller.getTutorDetail);
 
@@ -105,8 +143,8 @@ router.get("/tutors/:tutorIdx", controller.getTutorDetail);
  *     description: 클라이언트가 제공한 아이디가 튜터와 학생 중에 중복되는지 확인합니다.
  *     tags: [Id]
  *     parameters:
- *       - in: query
- *         name: id
+ *       - name: q
+ *         in: query
  *         schema:
  *           type: string
  *         required: true
@@ -352,7 +390,7 @@ router.post("/email", controller.sendEmail);
  * /api/tutor:
  *  post:
  *    summary: "튜터 회원가입"
- *    description: "[회원가입]POST 방식으로 튜터을 등록한다."
+ *    description: "[회원가입]POST 방식으로 튜터를 등록한다."
  *    tags: [Tutors]
  *    parameters:
  *      - in: body
@@ -376,7 +414,7 @@ router.post("/email", controller.sendEmail);
  *                description: "튜터 이메일"
  *              auth:
  *                type: string
- *                description: "튜터 자격 정보 파일"
+ *                description: "튜터 자격 정보"
  *    responses:
  *      "200":
  *        description: "회원가입 성공"

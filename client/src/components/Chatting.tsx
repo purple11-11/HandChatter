@@ -13,13 +13,16 @@ const Chatting: React.FC = () => {
 
     // 상대방(강사) 정보 들어있는 배열, 상대방이 학생일 때(강사로그인)는 인덱스만 넣어주기
     const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
-    // { id(idx): 1, name: "상대방1", email: "example1@example.com", intro: "안녕하세요! 상대방1입니다." },
-    // { id(idx): 2, name: "상대방2", email: "example2@example.com", intro: "안녕하세요! 상대방2입니다." },
+    // {
+    //      id(idx): 1, name: "상대방1", email: "example1@example.com",
+    //      intro: "안녕하세요! 상대방1입니다.", profileImg: "이미지경로"
+    // }
     // 추가 채팅방 데이터...
 
     const isLogin = useInfoStore((state) => state.isLogin);
     const userInfo = useInfoStore((state) => state.userInfo);
     const tutorIdx = useInfoStore((state) => state.tutorIdx);
+    const dmToTutor = useInfoStore((state) => state.dmToTutor);
     const stu_idx = userInfo?.stu_idx;
     const tutor_idx = userInfo?.tutor_idx;
 
@@ -147,7 +150,7 @@ const Chatting: React.FC = () => {
                             ...prevChatRooms,
                             res.data.chatTutorsInfo[0],
                         ]);
-
+                        dmToTutor("");
                         console.log("chat Rooms >> ", chatRooms);
                     })
                     .catch((error) => {
@@ -172,8 +175,12 @@ const Chatting: React.FC = () => {
                 <div className="chatting-room">
                     {room ? (
                         <>
-                            <ChattingForOne room={room} setShowTutorInfo={setShowTutorInfo} showTutorInfo={showTutorInfo}/>
-                            <ChattingTutorIntroductor room={room} showTutorInfo={showTutorInfo}/>
+                            <ChattingForOne
+                                room={room}
+                                setShowTutorInfo={setShowTutorInfo}
+                                showTutorInfo={showTutorInfo}
+                            />
+                            <ChattingTutorIntroductor room={room} showTutorInfo={showTutorInfo} />
                         </>
                     ) : (
                         <>

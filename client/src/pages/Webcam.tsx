@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback} from "react";
 import * as io from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons";
@@ -7,11 +7,20 @@ import { useNavigate } from "react-router-dom";
 import { Tutor } from "../types/interface";
 import WebChatting from "./webchatting/WebChatting";
 import styles from "./webchatting/WebCam.module.scss"
+import WebSpeech from "./webchatting/WebSpeech";
+import { useInfoStore } from "../store/store";
+
 
 
 const pc_config = {
     iceServers: [{urls: "stun:stun.l.google.com:19302",},],
 };
+
+//
+const socket = io.connect("http://localhost:8080", {
+  autoConnect: false,
+});
+//
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_API_SERVER;
 
@@ -27,7 +36,52 @@ const Webcam = () => {
   const [showModal, setShowModal] = useState(false); // 모달 상태를 저장하는 상태 변수
   const [rating, setRating] = useState(0); // 별점을 저장하는 상태 변수
   const [review, setReview] = useState(""); // 후기를 저장하는 상태 변수
-  
+
+
+  //
+  const userInfo = useInfoStore((state) => state.userInfo);
+
+  const [msgInput, setMsgInput] = useState("");
+  const [chatList, setChatList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const initSocketConnect = () => {
+      if (!socket.connected) socket.connect();
+    };
+    initSocketConnect(); 
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (msgInput.trim() === "") return setMsgInput("");
+
+    // 메시지 전송
+    const sendData = {
+        nick: userInfo?.nickname,
+        msg: msgInput,
+        //상대방:''
+    };
+    socket.emit("send", sendData);
+     setMsgInput("");
+};
+
+const addChatList = useCallback(
+  (messageData: { nick: string, msg: string }) => {
+    const type = messageData.nick === userInfo?.nickname ? "me" : "other";
+    const newChatList = [
+      ...chatList,
+      { type: type, name: messageData.nick, content: messageData.msg },
+    ];
+    setChatList(newChatList);
+  },
+  [userInfo?.nickname, chatList]
+);
+
+useEffect(() => {
+  socket.on("message", addChatList);
+}, [addChatList]);
+
+  //
   const navigate = useNavigate()
   const setVideoTracks = async () => {
     try {
@@ -196,6 +250,8 @@ const sendReview = async () => {
     if (response.status === 200) {
       console.log("후기 작성 성공");
       navigate('/mypage'); 
+      //navigate('/mypage', { state: { fromwebcam: true } }); 
+
     } else {
       console.log("서버에서 응답을 받을 수 없습니다.");
     }
@@ -211,29 +267,58 @@ const sendReview = async () => {
 
   return (
     <div className={`${styles.CAM}`}>
-        <video className={`${styles.localVideo}`}
-          muted
-          ref={localVideoRef}
-          autoPlay
-        />
-        <div style={{ position: "absolute", bottom: 0, right: 0 }}>
-          <div className="mic_icon" onClick={MicMute}>
-            <FontAwesomeIcon icon={isMicMuted ? faMicrophoneSlash : faMicrophone} />
-          </div>
-      </div>
-      <video className= {`${styles.remoteVideo}`}
+    {/* videoAndButtonContainer 추가 */}
+    <div className={`${styles.videoAndButtonContainer}`}>
+    <video className= {`${styles.remoteVideo}`}
         id="remotevideo"
         ref={remoteVideoRef}
         autoPlay
-      /> <br/>
-    <div className={`${styles.btnBox}`}>
-      <button className={`${styles.micBtn}`} onClick={MicMute}>
-        {micText}
-      </button>
-      <button className={`${styles.camBtn}`} onClick={CamMute}>카메라 {isCameraOn ? '켜기' : '끄기'}</button>
-      <button className={`${styles.exitBtn}`} onClick={ChattExit}>나가기</button>
+      /> 
+      <div style={{ position: "absolute", bottom: 0, right: 0 }}>
+        <div className="mic_icon" onClick={MicMute}>
+          <FontAwesomeIcon icon={isMicMuted ? faMicrophoneSlash : faMicrophone} />
+        </div>
+      </div>
+       {/* <div> <WebChatting/> </div> */}
+    <div className={`${styles.chatBox}`}>
+          <header className={`${styles.webchatheader}`}>1:1 화상 수업방</header>
+          <div className = {`${styles.chat_box}`}>              
+            {/* <WebSpeech chat={{type:'me',content:'test content', isDm:false, name:'aaaa'}} /> */}
+              {chatList.map((chat, i) => {
+                  return <WebSpeech key={i} chat={chat} />;
+                })}
+            </div>
+          <form
+            className={`${styles.msg_form}`}
+            id="msg_form"
+            onSubmit={handleSubmit}
+            >
+            <input
+              type="text"
+              placeholder="메세지 입력"
+              value={msgInput}
+              onChange={(e) => setMsgInput(e.target.value)}
+              />
+            <button className={`${styles.button}`}>전송</button>
+          </form>
+        </div>
+      <video className={`${styles.localVideo}`}
+        muted
+        ref={localVideoRef}
+        autoPlay
+      />
+      <br/>
+      <div className={`${styles.btnBox}`}>
+        <button className={`${styles.micBtn}`} onClick={MicMute}>
+          {micText}
+        </button>
+        <button className={`${styles.camBtn}`} onClick={CamMute}>카메라 {isCameraOn ? '켜기' : '끄기'}</button>
+        <button className={`${styles.exitBtn}`} onClick={ChattExit}>나가기</button>
+      </div>
     </div>
-        <WebChatting/>
+    {/* videoAndButtonContainer 끝 */}
+  
+
       {showModal && (
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 999 }}>
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ffffdd", padding: 20, borderRadius: 10 }}>
@@ -252,7 +337,7 @@ const sendReview = async () => {
           </div>
         </div>
       )}
-    </div>
+  </div>
 
 );
 };

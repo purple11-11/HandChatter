@@ -16,6 +16,7 @@ export interface ChatRoom {
     name?: string;
     email?: string;
     intro?: string;
+    profileImg?: string;
 }
 
 export interface SignRes {
@@ -34,6 +35,11 @@ export interface Tutor {
     price: string;
     des_video?: string;
     profile_img: string;
+}
+
+export interface Message {
+    content: string;
+    sender: string;
 }
 
 export type UserInfo = {

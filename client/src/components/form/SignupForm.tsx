@@ -2,9 +2,7 @@ import { useFormContext } from "react-hook-form";
 import { RoleProps, SignupData } from "../../types/interface";
 import PasswordInput from "../input/PasswordInput";
 import styles from "./signupForm.module.scss";
-import React, { useCallback, useState } from "react";
 
-// signup, checkDuplicate 함수를 props로 받아옴
 interface SignupFormProps {
     checkDuplicate: (keyword: string, value: string) => Promise<void>;
     signup: (
@@ -29,33 +27,28 @@ export default function SignupForm({
         formState: { errors },
     } = useFormContext<SignupData>();
 
-    const [fileName, setFileName] = useState<string>("");
-    const fileInputHandler = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setFileName(file.name);
-        }
-    }, []);
-
-    const onSubmit = (data: SignupData) => {
+    const onSubmit = async (data: SignupData) => {
         const { id, password, nickname, email, authDocument } = data;
-        // TODO: tutor의 경우 authDocument가 없을 때 alert 띄우기
-        /* if (role === "tutor" && authDocument) {
-            if (!authDocument || authDocument.length === 0) {
-                return alert("증빙 자료를 첨부해주세요.");
-            } */
 
-        if (role === "tutor" && authDocument) {
-            const formData = new FormData();
-            formData.append("id", id);
-            formData.append("password", password);
-            formData.append("nickname", nickname);
-            formData.append("email", email);
-            formData.append("authDocument", authDocument[0]);
-            signup(role, formData);
-        } else {
-            const newData = { id, password, nickname, email };
-            signup(role, newData);
+        try {
+            if (role === "tutor" && authDocument) {
+                const formData = new FormData();
+                formData.append("id", id);
+                formData.append("password", password);
+                formData.append("nickname", nickname);
+                formData.append("email", email);
+                // if (authDocument) {
+                formData.append("authDocument", authDocument[0]);
+                // }
+                await signup(role, formData);
+            } else {
+                const newData = { id, password, nickname, email };
+                await signup(role, newData);
+            }
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error(error.message);
+            }
         }
     };
 
@@ -74,10 +67,13 @@ export default function SignupForm({
                             <label htmlFor="id">아이디</label>
                             <input
                                 type="text"
-                                {...register("id", { required: "아이디를 입력해주세요." })}
+                                {...register("id", {
+                                    required: "아이디를 입력해주세요.",
+                                    minLength: 6,
+                                })}
                                 id="id"
                                 autoComplete="username"
-                                placeholder="영문, 숫자 조합 6자 이상 입력"
+                                placeholder="영어 소문자, 숫자 조합 6자 이상"
                             />
                             <button
                                 className={`${styles.check_btn}`}
@@ -91,8 +87,9 @@ export default function SignupForm({
                             <label htmlFor="pw">비밀번호</label>
                             <PasswordInput
                                 type="password"
-                                {...register("password", { required: true })}
+                                {...register("password", { required: true, minLength: 8 })}
                                 id="pw"
+                                placeholder="영문, 숫자 조합 8자 이상"
                             />
                         </div>
                         <div className={`${styles.signup_nickname}`}>
@@ -143,31 +140,20 @@ export default function SignupForm({
                         </div>
                         {role !== "student" && (
                             <div className={`${styles.signup_auth_document}`}>
-                                <label htmlFor="auth_document">
-                                    증빙 자료
-                                    <div className={`${styles.file_input}`}>
-                                        <div className={`${styles.file_btn}`}>📁 파일 첨부</div>
-                                        {fileName ? (
-                                            <p>{fileName}</p>
-                                        ) : (
-                                            "강사 증명 파일을 첨부해주세요. (jpg,jpeg,png,pdf 가능)"
-                                        )}
-                                    </div>
-                                </label>
+                                <label htmlFor="auth_document">증빙 자료</label>
                                 <input
                                     type="file"
                                     id="auth_document"
                                     accept=".jpg, .jpeg, .png, .pdf"
                                     {...register("authDocument", { required: true })}
-                                    onChange={fileInputHandler}
                                 />
                             </div>
                         )}
-                    </div>
 
-                    <button className={`${styles.submit_btn}`} type="submit">
-                        회원가입
-                    </button>
+                        <button className={`${styles.submit_btn}`} type="submit">
+                            회원가입
+                        </button>
+                    </div>
                 </form>
             </div>
         </>
