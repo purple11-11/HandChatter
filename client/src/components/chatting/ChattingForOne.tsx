@@ -1,5 +1,5 @@
 // 각 채팅방 컴포넌트
-import { ChatRoom } from "../../types/interface";
+import { ChatRoom, Message } from "../../types/interface";
 import { useState, useEffect, useCallback } from "react";
 import io from "socket.io-client";
 import axios from "axios";
@@ -16,7 +16,7 @@ const ChattingForOne: React.FC<{
     showTutorInfo: boolean;
 }> = ({ room, setShowTutorInfo, showTutorInfo }) => {
     // 로그인 상황(학생, 강사)마다 다르게 셋팅
-    const [messages, setMessages] = useState<string[]>([]); // 메시지를 저장하는 상태
+    const [messages, setMessages] = useState<Message[]>([]); // 메시지를 저장하는 상태
     const [newMessage, setNewMessage] = useState<string>(""); // 사용자가 입력한 새로운 메시지
     const [other, setOther] = useState<string>(""); // 채팅 중인 상대방 소켓 저장
 
@@ -65,8 +65,18 @@ const ChattingForOne: React.FC<{
                             },
                         }
                     );
-                    const messages = response.data.messages;
-                    const contents: string[] = messages.map((msg: any) => msg.content);
+                    const reqMessages = response.data.messages;
+                    const contents: Message[] = reqMessages.map((msg: Message) => {
+                        // 상대방 css 지정
+                        if (msg.sender === "tutor") {
+                            console.log("상대(강사)가 보낸 메시지:: >> ", msg.content);
+                            msg.sender = "other";
+                        } else if (msg.sender === "student") {
+                            console.log("내(학생) 보낸 메시지:: >> ", msg.content);
+                            msg.sender = "me";
+                        }
+                        return { content: msg.content, sender: msg.sender };
+                    });
                     // 응답 데이터를 상태로 설정
                     setMessages(contents);
                 }
@@ -83,8 +93,18 @@ const ChattingForOne: React.FC<{
                             },
                         }
                     );
-                    const messages = response.data.messages;
-                    const contents: string[] = messages.map((msg: any) => msg.content);
+                    const reqMessages = response.data.messages;
+                    const contents: Message[] = reqMessages.map((msg: Message) => {
+                        // 상대방 css 지정
+                        if (msg.sender === "student") {
+                            console.log("상대(학생)이 보낸 메시지:: >> ", msg.content);
+                            msg.sender = "other";
+                        } else if (msg.sender === "tutor") {
+                            console.log("내(강사)가 보낸 메시지 ::>>", msg.content);
+                            msg.sender = "me";
+                        }
+                        return { content: msg.content, sender: msg.sender };
+                    });
                     // 응답 데이터를 상태로 설정
                     setMessages(contents);
                 }
@@ -99,7 +119,8 @@ const ChattingForOne: React.FC<{
 
     const handleSendMessage = () => {
         if (newMessage.trim() !== "") {
-            setMessages([...messages, newMessage]);
+            setMessages([...messages, { content: newMessage, sender: "me" }]);
+
             // 권한여부(로그인된 사용자가 학생인지 강사인지 판별) 조건문
             // 학생 로그인
             if (stu_idx) {
@@ -137,15 +158,19 @@ const ChattingForOne: React.FC<{
             // console.log("서버에서보낸 socketId >>", data.socketId);
             // console.log("other과 상대방 소켓이 같은가? >>", other === data.socketId);
             if (other === data.socketId) {
-                const newMessages = [...messages, data.msg];
+                const newMessages = [...messages, { content: data.msg, sender: "other" }];
                 setMessages(newMessages);
             }
         },
+
         [messages, other]
     );
     useEffect(() => {
         socket.on("message", addMessage);
     }, [addMessage]);
+    useEffect(() => {
+        console.log("messages", messages);
+    });
     console.log(showTutorInfo);
     return (
         <div className="chatting-for-one">
@@ -164,7 +189,7 @@ const ChattingForOne: React.FC<{
             <div className="chatting-content">
                 {messages.map((message, index) => (
                     <div key={index} className="one-chat">
-                        <span>{message}</span>
+                        <span>{message.content}</span>
                     </div>
                 ))}
             </div>

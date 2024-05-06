@@ -10,6 +10,7 @@ const ChattingTutorIntroductor: React.FC<{ room: ChatRoom; showTutorInfo: boolea
             <ul>
                 <li className="profile-tutor-img">
                     <div className="profile-img big">
+                        {/* profileImg: "이미지경로" -> room.profileImg */}
                         <img src="" alt="" />
                     </div>
                 </li>
