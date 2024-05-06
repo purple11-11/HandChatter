@@ -1,6 +1,6 @@
 // 각 채팅방 컴포넌트
 import { ChatRoom, Message } from "../../types/interface";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { useInfoStore } from "../../store/store";
@@ -23,6 +23,15 @@ const ChattingForOne: React.FC<{
     const userInfo = useInfoStore((state) => state.userInfo);
     const stu_idx = userInfo?.stu_idx;
     const tutor_idx = userInfo?.tutor_idx;
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     const initSocketConnect = async () => {
         if (!socket.connected) socket.connect();
@@ -165,6 +174,11 @@ const ChattingForOne: React.FC<{
 
         [messages, other]
     );
+    const handleKeyPress = (e: any) => {
+        if (e.key === "Enter") {
+            handleSendMessage();
+        }
+    };
     useEffect(() => {
         socket.on("message", addMessage);
     }, [addMessage]);
@@ -186,12 +200,13 @@ const ChattingForOne: React.FC<{
                 </li>
             </ul>
             {/* 채팅 메시지 표시 */}
-            <div className="chatting-content">
+            <div className="chatting-content" style={{ overflowY: "auto", maxHeight: "800px" }}>
                 {messages.map((message, index) => (
                     <div key={index} className="one-chat">
                         <span>{message.content}</span>
                     </div>
                 ))}
+                <div ref={messagesEndRef} />
             </div>
             {/* 메시지 입력 필드와 전송 버튼 */}
             <div className="chatting-input">
@@ -199,6 +214,7 @@ const ChattingForOne: React.FC<{
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     placeholder="메시지 입력..."
                 />
                 <button onClick={handleSendMessage}>전송</button>
