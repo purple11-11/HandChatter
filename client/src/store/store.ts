@@ -22,6 +22,8 @@ type UserStore = {
     isLogin: boolean;
     profileImgUrl: string;
     favorite: boolean;
+    favorites: { [key: string]: boolean };
+    toggleFavorite: (tutorIdx: string) => void;
     tutorIdx: string;
     isFavorite: () => void;
     getInfo: () => Promise<void>;
@@ -38,6 +40,7 @@ export const useInfoStore = create<UserStore>()(
             profileImgUrl: "",
             favorite: false,
             tutorIdx: "",
+            favorites: {},
 
             getInfo: async () => {
                 try {
@@ -74,6 +77,14 @@ export const useInfoStore = create<UserStore>()(
             },
             isFavorite: () => {
                 set((state) => ({ favorite: !state.favorite }));
+            },
+            toggleFavorite: (tutorIdx: string) => {
+                set((state) => ({
+                    favorites: {
+                        ...state.favorites,
+                        [tutorIdx]: !state.favorites[tutorIdx], // 해당 튜터의 찜 상태를 토글
+                    },
+                }));
             },
             dmToTutor: (index: string) => {
                 set((state) => ({ tutorIdx: index }));
