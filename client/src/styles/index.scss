@@ -1,5 +1,5 @@
 @import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUITE/fonts/static/woff2/SUITE.css");
-
+@import url("../pages/webchatting/WebCam.module.scss");
 body {
     margin: 0;
     padding: 0;
@@ -1143,8 +1143,6 @@ button {
         // border: 1px solid red;
     }
     section {
-        // min-height: 800px;
-        // height: 100%;
         border-bottom: 2px solid #d4d4ba;
         padding: 80px;
         // border: 1px solid red;
@@ -1493,7 +1491,7 @@ button {
             .chatting-list {
                 width: 30%;
                 // border: 1px solid red;
-                height: 700px;
+                height: 600px;
                 background-color: #3e888c;
                 border-radius: 10px 0 0 10px;
                 ul {
@@ -1574,7 +1572,7 @@ button {
                         }
                     }
                     .chatting-content {
-                        height: 520px;
+                        height: 420px;
                         padding: 20px;
                         .one-chat {
                             padding: 14px 0;
@@ -1662,7 +1660,7 @@ button {
                         }
                         .profile-introduce {
                             width: 250px;
-                            height: 290px;
+                            height: 190px;
                             p {
                                 font-size: 17px;
                                 margin: 0;
