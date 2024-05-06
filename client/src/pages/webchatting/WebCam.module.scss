@@ -1,5 +1,7 @@
 @import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUITE/fonts/static/woff2/SUITE.css");
 @import "../../styles/util";
+@import  "../../styles/index.scss";
+
 
 .CAM {
   display: flex;
@@ -22,33 +24,6 @@
     width: 900px;
   }
 
-  .chatBox {
-    width: 25%; /* remoteVideo의 남은 공간을 차지하도록 설정 */
-    height: 60vh; /* 화면의 높이를 따라가도록 설정 */
-    background-color: #9bbbd4;
-    position: absolute; /* remoteVideo 기준으로 배치하기 위해 absolute로 설정 */
-    top: 100px;
-    right: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* 아래로의 간격을 추가하기 위해 설정 */
-    padding: 10px; /* 적절한 간격을 위해 padding 추가 */
-  
-    .webchatheader {
-      width: 100%;
-      box-shadow: 0px 2px 2px #7a7a7a20;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-basis: 7%;
-      background-color: #ffffff; 
-    }
-
-    // .webchatheader, .chat_box, .msg_form {
-    //   padding: 10px;
-    // }
-  }
-
   .localVideo {
     width: 250px; 
     height: 175px; 
@@ -59,100 +34,105 @@
     // z-index: 1; 
   }
 
-  .btnBox {
-    position: absolute;
-    bottom: 100px;
-    left: 420px; 
-    display: flex;
-    // flex-direction: column; /* 버튼들 세로배열 */
-    gap: 10px; /* 버튼 사이 간격 */
-  }
-}
+//   .chatting_for_one {
+//     // width: 56%;
 
-
-// .CAM {
-//   display: flex;
-//   flex-wrap: wrap;
-//   justify-content: center;
-//   align-items: center;
-//   margin-top: 3%;
-
-//   .localVideo {
-//     position: relative; /* absolute or relative로 변경 */
-//     bottom: 10px;
-//     right: 10px;
-//     width: 250px;
-//     height: 220px;
-//     background-color: $color-fourth;
-//     margin: 5px;
-
-//     position: relative; /* absolute or relative로 변경 */
-//     z-index: 1; 
-//   }
-
-//   .videoAndButtonContainer {
-//     display: flex; 
-//     flex-direction: column; // 세로로 배열
-//     align-items: center; // 가로축 중앙 정렬
-//     //justify-content: center; // 세로축에서도 중앙 정렬
-    
-//     gap: 10px; // 원하는 간격으로 조절
-
-//   }
-  
-//   .remoteVideo {
-//     flex: 1 1 700px; 
-//     max-width: 700px;
-//     height: 600px;
-//     background-color: $color-primary;
-//     margin: 35px;
-
-//     margin-bottom: 0; 
-
-//     position: relative;
-//     z-index: 2; /* localVideo보다 높은 z-index 값으로 설정 */
-//   }
-
-//   .btnBox {
-//     display: flex; 
-//     gap: 10px; // 버튼 사이의 간격
-//     margin-top: 20px; // remoteVideo와의 간격
-  
-//     // 버튼 스타일링
-//     .micBtn, .camBtn, .exitBtn {
-//       padding: 10px 20px; // 버튼 패딩
-//     
-//     }
-//   }
-  
-//   .chatBox {
-//     flex: 1;
-//     max-width: 470px;
-//     height: 632px;
-//     background-color: #9bbbd4;
-//     margin-left: 5px;
+//     width: 25%; /* remoteVideo의 남은 공간을 차지하도록 설정 */
+//     height: 60vh; /* 화면의 높이를 따라가도록 설정 */
+//     // background-color: #9bbbd4;
+//     background-color: $color-primary-light;
+//     position: absolute; /* remoteVideo 기준으로 배치하기 위해 absolute로 설정 */
+//     top: 100px;
+//     right: 100px;
 //     display: flex;
 //     flex-direction: column;
-    
-//     .webchatheader, .chat_box, .msg_form {
-//       padding: 10px;
+//     justify-content: space-between; /* 아래로의 간격을 추가하기 위해 설정 */
+//     padding: 10px; /* 적절한 간격을 위해 padding 추가 */
+
+//     .chatting_content {
+//         height: 520px;
+//         padding: 20px;
+//         .one-chat {
+//             padding: 14px 0;
+//             span {
+//                 background-color: #fffffd;
+//                 box-shadow: 1px 1px 3px gray;
+//                 padding: 7px 12px;
+//                 font-size: 14px;
+//                 border-radius: 7px;
+//             }
+//         }
 //     }
+//     .chatting_input {
+//         width: 100%;
+//         height: 66px;
+//         position: relative;
+//         display: flex;
+//         align-items: center;
+//         input {
+//             width: 350px;
+//             height: 30px;
+//             margin: 0 auto;
+//             padding-left: 15px;
+//         }
+//         button {
+//             position: absolute;
+//             top: 23px;
+//             right: 30px;
+//             box-shadow: none;
+//             background-color: #ffffdd;
+//             border: 1px solid #c9c9aa;
+//             &:hover {
+//                 background-color: #016a70;
+//             }
+//         }
+//     }
+// }
+
+// .chatting-con {
+//   width: 100%;
+//   margin-top: 30px;
+//   .chatting-container {
+//       // display: flex;
+//       border: 1px solid #c9c9aa;
+//       border-radius: 10px;
+//       box-shadow: 3px 3px 3px gray;
+      
 //   }
 // }
 
-// // 반응형 디자인
-// @media (max-width: 1200px) {
-//   .CAM {
-//     flex-direction: column;
+/* chatting 스타일 */
+  // .chatBox {
+  //   width: 25%; /* remoteVideo의 남은 공간을 차지하도록 설정 */
+  //   height: 60vh; /* 화면의 높이를 따라가도록 설정 */
+  //   // background-color: #9bbbd4;
+  //   background-color: $color-primary-light;
+  //   position: absolute; /* remoteVideo 기준으로 배치하기 위해 absolute로 설정 */
+  //   top: 100px;
+  //   right: 100px;
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: space-between; /* 아래로의 간격을 추가하기 위해 설정 */
+  //   padding: 10px; /* 적절한 간격을 위해 padding 추가 */
+  
+  //   .webchatheader {
+  //     width: 100%;
+  //     box-shadow: 0px 2px 2px #7a7a7a20;
+  //     display: flex;
+  //     align-items: center;
+  //     justify-content: center;
+  //     flex-basis: 7%;
+  //     background-color:  $color-second; 
+  //   }
+
     
-//     .remoteVideo, .chatBox {
-//       max-width: 90%;
-//     }
-    
-//     .localVideo {
-//       position: static; // 모바일과 태블릿에서는 기본 위치로
-//       margin: auto; // 가운데 정렬
-//       margin-top: 10px;
-//     }
-//   }
-// }
+  // }
+  // .btnBox {
+  //   position: absolute;
+  //   bottom: 100px;
+  //   left: 420px; 
+  //   display: flex;
+  //   // flex-direction: column; /* 버튼들 세로배열 */
+  //   gap: 10px; /* 버튼 사이 간격 */
+  // }
+}

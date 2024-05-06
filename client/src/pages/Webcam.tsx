@@ -1,31 +1,30 @@
 import { useEffect, useRef, useState, useCallback} from "react";
-import * as io from "socket.io-client";
+// import * as io from "socket.io-client";
+import io from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMicrophone, faMicrophoneSlash } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Tutor } from "../types/interface";
-import WebChatting from "./webchatting/WebChatting";
 import styles from "./webchatting/WebCam.module.scss"
-import WebSpeech from "./webchatting/WebSpeech";
 import { useInfoStore } from "../store/store";
-
-
+import WebSpeech from "./webchatting/WebSpeech";
 
 const pc_config = {
     iceServers: [{urls: "stun:stun.l.google.com:19302",},],
 };
 
-//
-const socket = io.connect("http://localhost:8080", {
+
+const socket = io(process.env.REACT_APP_API_SERVER, {
   autoConnect: false,
 });
-//
+
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_API_SERVER;
 
 const Webcam = () => {
   const [tutorIndex, setTutorIndex] = useState<number>(1); 
+  const [stuIndex, setStuIndex] = useState<number>(1); 
+
   const socketRef = useRef<SocketIOClient.Socket>();
   const pcRef = useRef<RTCPeerConnection>();
   const pcRef2 = useRef<RTCPeerConnection>();
@@ -38,9 +37,8 @@ const Webcam = () => {
   const [review, setReview] = useState(""); // 후기를 저장하는 상태 변수
 
 
-  //
+  // 1:1 채팅
   const userInfo = useInfoStore((state) => state.userInfo);
-
   const [msgInput, setMsgInput] = useState("");
   const [chatList, setChatList] = useState<any[]>([]);
 
@@ -59,7 +57,6 @@ const Webcam = () => {
     const sendData = {
         nick: userInfo?.nickname,
         msg: msgInput,
-        //상대방:''
     };
     socket.emit("send", sendData);
      setMsgInput("");
@@ -80,8 +77,10 @@ const addChatList = useCallback(
 useEffect(() => {
   socket.on("message", addChatList);
 }, [addChatList]);
+// 1:1 채팅 end
 
-  //
+
+// 1:1 화상
   const navigate = useNavigate()
   const setVideoTracks = async () => {
     try {
@@ -244,13 +243,13 @@ const sendReview = async () => {
     const response = await axios.post(url, {
       content: review,
       rating: rating,
-      tutor_idx: tutorIndex, 
+      tutor_idx: tutorIndex,
+      stu_idx: stuIndex,
     });
 
     if (response.status === 200) {
       console.log("후기 작성 성공");
-      navigate('/mypage'); 
-      //navigate('/mypage', { state: { fromwebcam: true } }); 
+      navigate(`/mypage/${stuIndex}`, { state: { fromwebcam: true } }); // 수정
 
     } else {
       console.log("서버에서 응답을 받을 수 없습니다.");
@@ -267,27 +266,29 @@ const sendReview = async () => {
 
   return (
     <div className={`${styles.CAM}`}>
-    {/* videoAndButtonContainer 추가 */}
     <div className={`${styles.videoAndButtonContainer}`}>
     <video className= {`${styles.remoteVideo}`}
         id="remotevideo"
         ref={remoteVideoRef}
         autoPlay
       /> 
-      <div style={{ position: "absolute", bottom: 0, right: 0 }}>
+      {/* <div style={{ position: "absolute", bottom: 0, right: 0 }}>
         <div className="mic_icon" onClick={MicMute}>
           <FontAwesomeIcon icon={isMicMuted ? faMicrophoneSlash : faMicrophone} />
         </div>
-      </div>
+      </div> */}
        {/* <div> <WebChatting/> </div> */}
-    <div className={`${styles.chatBox}`}>
-          <header className={`${styles.webchatheader}`}>1:1 화상 수업방</header>
+    {/* <div className={`${styles.chatting-content}`}> */}
+    <div className={`${styles.chatting_for_one}`}>
+    <div className={`${styles.chatting_content}`}>
+          {/* <header className={`${styles.webchatheader}`}>1:1 화상 수업방</header> */}
           <div className = {`${styles.chat_box}`}>              
-            {/* <WebSpeech chat={{type:'me',content:'test content', isDm:false, name:'aaaa'}} /> */}
               {chatList.map((chat, i) => {
                   return <WebSpeech key={i} chat={chat} />;
                 })}
-            </div>
+          </div>
+            <div className="chatting-input">
+
           <form
             className={`${styles.msg_form}`}
             id="msg_form"
@@ -301,7 +302,9 @@ const sendReview = async () => {
               />
             <button className={`${styles.button}`}>전송</button>
           </form>
-        </div>
+          </div>
+    </div>
+    </div>
       <video className={`${styles.localVideo}`}
         muted
         ref={localVideoRef}
@@ -318,27 +321,28 @@ const sendReview = async () => {
     </div>
     {/* videoAndButtonContainer 끝 */}
   
-
       {showModal && (
+      <div className="modalContainer">
+      <div className="modalContent">
         <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 999 }}>
-          <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ffffdd", padding: 20, borderRadius: 10 }}>
-            <h2>강의 후기 작성하기</h2>
-            <h4>강사님의 강의가 도움이 되셨나요? 후기를 작성해주세요</h4>
-            <div>
-              <span> 별점: </span>
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", backgroundColor: "#ffffdd", padding: 20, borderRadius: 10, textAlign: "center" }}>
+            <h2 style={{textAlign:"center" , marginBottom: "20px" }}>강의 후기 작성하기</h2>
+            <h4 style={{textAlign:"center" , marginBottom: "10px" }}>강사님의 강의가 도움이 되셨나요? 별점과 후기를 모두 작성해주세요</h4>
+            <div style={{textAlign:"center" , marginBottom: "10px" }}>
+              <span style={{ fontSize: "20px" }}> 별점: </span>
               {[1, 2, 3, 4, 5].map((star) => (
-                <span key={star} onClick={() => setRating(star)} style={{ cursor: "pointer", color: star <= rating ? "orange" : "gray" }}>★</span>
+                <span key={star} onClick={() => setRating(star)} style={{ cursor: "pointer", color: star <= rating ? "orange" : "gray", fontSize: "24px" }}>★</span>
               ))}
             </div>
-            <textarea value={review} onChange={(e) => setReview(e.target.value)}  />
-            <button onClick={closeModal}>뒤로가기</button>
-            <button onClick={sendReview}>보내기</button>
-
+            <textarea value={review} onChange={(e) => setReview(e.target.value)} style={{ marginBottom: "10px",width: "70%", height:"50px",padding: "5px" }}  /> <br/>
+            <button onClick={closeModal} style={{marginRight:"30px"}}>뒤로가기</button>
+            <button onClick={sendReview} style={{marginLeft:"30px"}} >보내기</button>
           </div>
         </div>
+      </div>
+      </div>
       )}
-  </div>
-
+      </div>
 );
 };
 export default Webcam;
