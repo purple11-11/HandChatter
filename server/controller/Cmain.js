@@ -107,7 +107,7 @@ exports.getTutorDetail = async (req, res) => {
             include: [
                 {
                     model: Student,
-                    attributes: ["id"],
+                    attributes: ["profile_img", "nickname"],
                 },
             ],
             attributes: ["content", "rating", "created_at"],
