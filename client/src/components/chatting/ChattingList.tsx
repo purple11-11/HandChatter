@@ -1,5 +1,5 @@
 import { ChatRoom } from "../../types/interface";
-
+import { useRef, useEffect } from "react";
 const ChattingList: React.FC<{
     rooms: ChatRoom[];
     onRoomClick: (roomId: number) => void;
@@ -16,18 +16,31 @@ const ChattingList: React.FC<{
         deleteRoom(roomId);
     };
 
+    const listRef = useRef<HTMLUListElement>(null);
+
+    useEffect(() => {
+        if (listRef.current) {
+            listRef.current.scrollLeft = listRef.current.scrollWidth;
+        }
+    }, [rooms]);
+
     return (
-        <div>
-            <h2>채팅방 목록</h2>
-            <ul>
+        <>
+            <ul ref={listRef}>
                 {rooms.map((room) => (
                     <li key={room.id} onClick={() => handleClick(room.id)}>
-                        {room.name}
+                        <div className="profile-img middle">
+                            <img src="" alt="" />
+                        </div>
+                        <div className="room-info">
+                            <p>{room.name}</p>
+                            <p>{room.email}</p>
+                        </div>
                         <button onClick={() => handleLeaveRoom(room.id)}>나가기</button>{" "}
                     </li>
                 ))}
             </ul>
-        </div>
+        </>
     );
 };
 

@@ -158,26 +158,30 @@ const Chatting: React.FC = () => {
     }, [isLogin, stu_idx, tutorIdx]);
 
     const room = selectedRoom !== null ? chatRooms.find((room) => room.id === selectedRoom) : null;
-
+    const [showTutorInfo, setShowTutorInfo] = useState(false);
     return (
-        <div>
-            <h1>카카오톡처럼 채팅</h1>
-            <div style={{ display: "flex" }}>
-                <div style={{ flex: 1 }}>
+        <div className="chatting">
+            <div className="chatting-container">
+                <div className="chatting-list">
                     <ChattingList
                         rooms={chatRooms}
                         onRoomClick={handleRoomClick}
                         deleteRoom={deleteRoom}
                     />
                 </div>
-                <div style={{ flex: 2 }}>
+                <div className="chatting-room">
                     {room ? (
                         <>
-                            <ChattingForOne room={room} />
-                            <ChattingTutorIntroductor room={room} />
+                            <ChattingForOne room={room} setShowTutorInfo={setShowTutorInfo} showTutorInfo={showTutorInfo}/>
+                            <ChattingTutorIntroductor room={room} showTutorInfo={showTutorInfo}/>
                         </>
                     ) : (
-                        <p>채팅방을 선택하세요.</p>
+                        <>
+                            <div className="chatting-for-one no-chatting">채팅방이 없습니다.</div>
+                            <div className="chatting-tutor-intro no-chatting">
+                                강사와의 채팅이 없습니다.
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
