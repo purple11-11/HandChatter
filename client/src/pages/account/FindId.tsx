@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { set } from "react-hook-form";
 import MypageWithdrawMembership from "../../components/Mypage/MypageWithdrawMembership";
+import styles from "./findId.module.scss";
 
 export default function FindId() {
     const [email, setEmail] = useState<string>("");
@@ -19,21 +20,23 @@ export default function FindId() {
 
     return (
         <section>
-            <div className="find_id_container">
+            <div className={`${styles.find_id_container}`}>
                 <h2>아이디 찾기</h2>
-                <div className="find_id">
-                    <div className="find_id_email">
-                        <label htmlFor="email">이메일</label>
+                <div className={`${styles.find_id}`}>
+                    <div className={`${styles.find_email}`}>
+                        {/* <label htmlFor="email">이메일</label> */}
                         <input
+                            className={`${styles.find_id_input}`}
                             type="email"
                             id="email"
+                            placeholder="E-mail"
                             value={email || ""}
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
                     </div>
 
-                    <button type="button" onClick={findId}>
+                    <button className={`${styles.find_id_btn}`} type="button" onClick={findId}>
                         아이디 찾기
                     </button>
 
