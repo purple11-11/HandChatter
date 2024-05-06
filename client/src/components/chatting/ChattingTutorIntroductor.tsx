@@ -5,22 +5,26 @@ const ChattingTutorIntroductor: React.FC<{ room: ChatRoom; showTutorInfo: boolea
     showTutorInfo,
 }) => {
     console.log(showTutorInfo);
+    console.log(room);
     return (
         <div className={`chatting-tutor-intro  ${showTutorInfo ? "show" : "hide"}`}>
             <ul>
                 <li className="profile-tutor-img">
                     <div className="profile-img big">
                         {/* profileImg: "이미지경로" -> room.profileImg */}
-                        <img src="" alt="" />
+                        <img
+                            src={`${process.env.REACT_APP_API_SERVER}/${room.profileImg}`}
+                            alt=""
+                        />
                     </div>
                 </li>
                 <li className="profile-name">{room.name}</li>
                 <li className="profile-email">{room.email}</li>
                 <li className="profile-score">
-                    평점: ⭐<span>4.8</span>
+                    평점: ⭐<span>{room.avgRating}</span>
                 </li>
                 <li className="profile-price">
-                    1회 가격: <span>1000 원</span>
+                    1회 가격: <span>{room.price}</span>
                 </li>
                 <li className="mobile-tutor-introduce">
                     <div>

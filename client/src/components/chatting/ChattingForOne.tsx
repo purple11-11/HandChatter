@@ -203,7 +203,11 @@ const ChattingForOne: React.FC<{
             <div className="chatting-content" style={{ overflowY: "auto", maxHeight: "800px" }}>
                 {messages.map((message, index) => (
                     <div key={index} className="one-chat">
-                        <span>{message.content}</span>
+                        {message.sender === "me" ? (
+                            <span className={message.sender}>{message.content}</span>
+                        ) : (
+                            <span  className="you">{message.content}</span>
+                        )}
                     </div>
                 ))}
                 <div ref={messagesEndRef} />
