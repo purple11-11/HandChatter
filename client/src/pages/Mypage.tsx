@@ -4,11 +4,18 @@ import MypageWithdrawMembership from "../components/Mypage/MypageWithdrawMembers
 import StudentMypageLesson from "../components/Mypage/StudentMypageLesson";
 import Chatting from "../components/Chatting";
 import { Link } from "react-router-dom";
+import { useInfoStore } from "../store/store";
 
 const MyPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<string>("chatting"); // 활성화된 탭을 관리하는 state
-
+    const userInfo = useInfoStore((state) => state.userInfo);
     const handleTabChange = (tab: string) => {
+        if (tab === "withdraw") {
+            if (userInfo?.provider === "kakao") {
+                alert("카카오 이용자는 회원탈퇴가 불가능합니다.");
+                return;
+            }
+        }
         setActiveTab(tab);
     };
 

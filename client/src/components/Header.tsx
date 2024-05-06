@@ -1,5 +1,5 @@
 import Logo from "../assets/header-logo.png";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
@@ -10,7 +10,6 @@ import cancleIcon from "../assets/cancle-icon.png";
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
-
     // Using Zustand store
     const isLogin = useInfoStore((state) => state.isLogin);
     const userInfo = useInfoStore((state) => state.userInfo);
@@ -35,6 +34,7 @@ const Header = () => {
             await axios.post(url);
             setIsMenuOpen(false);
             logout();
+            navigate("/");
         } catch (error) {
             console.error("로그아웃 오류:", error);
         }
@@ -43,9 +43,37 @@ const Header = () => {
         getInfo();
     }, []);
     console.log(isLogin, userInfo, profileImgUrl);
+
+    const handleOutsideClick = () => {
+        setIsMenuOpen(false); // 사이드바 닫기
+    };
+
+    const sidebarRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        if (isMenuOpen) {
+            document.addEventListener("click", handleOutsideClick);
+        } else {
+            document.removeEventListener("click", handleOutsideClick);
+        }
+
+        return () => {
+            document.removeEventListener("click", handleOutsideClick);
+        };
+    }, [isMenuOpen]);
+    
     return (
         <>
-            <header className={`header ${isMenuOpen ? "mobile-sidebar-open" : ""}`}>
+            <header
+                className={`header ${isMenuOpen ? "mobile-sidebar-open" : ""}`}
+                ref={sidebarRef}
+            >
                 <div className="mobile-logo">
                     <Link to="/">
                         <img src={Logo} alt="" />
@@ -117,6 +145,7 @@ const Header = () => {
                             onLogout={handleLogout}
                             mypageIndex={mypageIndex}
                             handleLeftClick={handleLeftClick}
+                            onClickOutside={handleOutsideClick}
                         />
                     )}
                 </div>

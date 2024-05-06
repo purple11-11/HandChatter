@@ -15,6 +15,7 @@ type UserInfo = {
     description?: string;
     des_video?: string;
     authority?: number;
+    provider?: string;
 };
 
 type UserStore = {

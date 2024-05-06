@@ -2,12 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useInfoStore } from "../store/store";
-
+import { useRef, useEffect } from "react";
 interface SidebarProps {
     isMenuOpen: boolean;
     onLogout: () => void;
     mypageIndex?: number;
     handleLeftClick: () => void;
+    onClickOutside: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -15,6 +16,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     onLogout,
     mypageIndex,
     handleLeftClick,
+    onClickOutside,
 }) => {
     const userInfo = useInfoStore((state) => state.userInfo);
     const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
@@ -23,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     return (
         <>
             {isMenuOpen && (
-                <div className="sidebar">
+                <div className="sidebar" >
                     <div className="profile-img big">
                         <img src={profileImgUrl} alt="" />
                     </div>
