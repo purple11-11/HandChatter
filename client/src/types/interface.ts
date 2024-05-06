@@ -17,6 +17,8 @@ export interface ChatRoom {
     email?: string;
     intro?: string;
     profileImg?: string;
+    price: number;
+    avgRating?: number;
 }
 
 export interface SignRes {

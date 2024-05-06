@@ -16,6 +16,7 @@ const Chatting: React.FC = () => {
     // {
     //      id(idx): 1, name: "상대방1", email: "example1@example.com",
     //      intro: "안녕하세요! 상대방1입니다.", profileImg: "이미지경로"
+    //      price: 가격, avgRating: 평점
     // }
     // 추가 채팅방 데이터...
 
