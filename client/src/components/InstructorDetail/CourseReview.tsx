@@ -5,9 +5,10 @@ type Review = {
     content: string;
     rating: number;
     created_at: string;
-    Student:{
-        id:string
-    }
+    Student: {
+        nickname: string;
+        profile_img: string;
+    };
 };
 
 type TutorInfo = {
@@ -74,10 +75,15 @@ const CourseReview: React.FC<CourseReviewProps> = ({ tutorIdx }) => {
                     <div className="course-review" key={index}>
                         <div className="course-review-container">
                             <div className="profile-img middle">
-                                <img src="" alt="" />
+                                <img
+                                    src={`${process.env.REACT_APP_API_SERVER}/${review.Student.profile_img}`}
+                                    alt=""
+                                />
                             </div>
                             <div className="reviewer-profile">
-                                <div className="reviewer-nickname">{review.Student.id} 님</div>
+                                <div className="reviewer-nickname">
+                                    {review.Student.nickname} 님
+                                </div>
                                 <div className="reviewer-date-score">
                                     <p>
                                         평점: ⭐<span>{review.rating}</span>
