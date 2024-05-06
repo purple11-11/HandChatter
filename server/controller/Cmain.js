@@ -965,7 +965,8 @@ exports.getChatInfo = async (req, res) => {
         if (tutorsIdx) {
             const chatTutorsInfo = await Promise.all(
                 tutorsIdx.map(async (tutorIdx) => {
-                    return await Tutor.findOne({
+                    // 해당 강사의 정보 조회
+                    const tutorInfo = await Tutor.findOne({
                         where: {
                             tutor_idx: tutorIdx,
                         },
@@ -975,8 +976,35 @@ exports.getChatInfo = async (req, res) => {
                             "email",
                             ["description", "intro"],
                             ["profile_img", "profileImg"],
+                            "price",
                         ],
                     });
+
+                    // 해당 강사의 리뷰 평점 평균 조회
+                    const reviewAvg = await Review.findOne({
+                        attributes: [
+                            [
+                                sequelize.fn(
+                                    "ROUND",
+                                    sequelize.fn(
+                                        "COALESCE",
+                                        sequelize.fn("AVG", sequelize.col("rating")),
+                                        0
+                                    ),
+                                    1
+                                ),
+                                "avgRating",
+                            ],
+                        ],
+                        where: {
+                            tutor_idx: tutorIdx,
+                        },
+                    });
+
+                    // 리뷰 평균이 있는 경우 평균 값을 chatTutorsInfo 객체에 추가
+                    tutorInfo.dataValues.avgRating = reviewAvg.dataValues.avgRating;
+
+                    return tutorInfo;
                 })
             );
             if (chatTutorsInfo && chatTutorsInfo.length > 0) {
