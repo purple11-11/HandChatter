@@ -907,6 +907,7 @@ exports.getMessage = async (req, res) => {
                     stu_idx: stuIdx,
                     tutor_idx: tutorIdx,
                 },
+                attributes: ["content", "sender"],
             });
             if (messages && messages.length > 0) {
                 res.send({ messages: messages });
@@ -973,6 +974,7 @@ exports.getChatInfo = async (req, res) => {
                             ["nickname", "name"],
                             "email",
                             ["description", "intro"],
+                            ["profile_img", "profileImg"],
                         ],
                     });
                 })

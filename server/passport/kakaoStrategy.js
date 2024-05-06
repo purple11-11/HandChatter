@@ -21,6 +21,7 @@ module.exports = (passport) => {
                     if (exUser) {
                         done(null, exUser);
                     } else {
+                        console.log(profile._json?.kakao_account_email);
                         const newUser = await Student.create({
                             //새 유저 생성
                             // email: profile._json?.kakao_account_email, //nullish라 판단하면 에러가 아닌 undefined 출력

@@ -28,6 +28,13 @@ TutorModel.hasMany(LevelModel, {
         allowNull: false,
     },
 });
+LevelModel.belongsTo(TutorModel, {
+    nDelete: "CASCADE",
+    foreignKey: {
+        name: "tutor_idx",
+        allowNull: false,
+    },
+});
 // 강사 : 찜
 TutorModel.hasMany(FavoritesModel, {
     onDelete: "CASCADE",
@@ -51,8 +58,22 @@ TutorModel.hasMany(ReviewModel, {
         allowNull: false,
     },
 });
+ReviewModel.belongsTo(TutorModel, {
+    onDelete: "CASCADE",
+    foreignKey: {
+        name: "tutor_idx",
+        allowNull: false,
+    },
+});
 // 강사 : 메시지
 TutorModel.hasMany(MessageModel, {
+    onDelete: "CASCADE",
+    foreignKey: {
+        name: "tutor_idx",
+        allowNull: false,
+    },
+});
+MessageModel.belongsTo(TutorModel, {
     onDelete: "CASCADE",
     foreignKey: {
         name: "tutor_idx",
@@ -76,6 +97,13 @@ FavoritesModel.belongsTo(StudentModel, {
 });
 // 학생 : 메시지
 StudentModel.hasMany(MessageModel, {
+    onDelete: "CASCADE",
+    foreignKey: {
+        name: "stu_idx",
+        allowNull: false,
+    },
+});
+MessageModel.belongsTo(StudentModel, {
     onDelete: "CASCADE",
     foreignKey: {
         name: "stu_idx",
