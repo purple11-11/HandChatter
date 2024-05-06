@@ -20,11 +20,11 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
     const [shortenedContent, setShortenedContent] = useState<string>("");
     const userInfo = useInfoStore((state) => state.userInfo);
     const isLogin = useInfoStore((state) => state.isLogin);
-    const favorite = useInfoStore((state) => state.favorite);
+    const favorites = useInfoStore((state) => state.favorites);
+    const togglefavorite = useInfoStore((state) => state.toggleFavorite);
     const dmToTutor = useInfoStore((state) => state.dmToTutor);
     const isFavorite = useInfoStore((state) => state.isFavorite);
     const navigate = useNavigate();
-
     const handleAddFavorite = async () => {
         try {
             if (!isLogin) {
@@ -32,17 +32,17 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
                 navigate("/login");
                 return;
             }
-
+            if (!tutorIndex) return;
             const url = `${process.env.REACT_APP_API_SERVER}/api/favorites`;
             const res = await axios.post(url, {
                 stu_idx: userInfo?.stu_idx,
                 tutor_idx: tutorIndex,
             });
             if (res.status === 200) {
-                isFavorite();
+                togglefavorite(tutorIndex);
                 alert("찜 목록에 추가되었습니다.");
             } else {
-                isFavorite();
+                togglefavorite(tutorIndex);
             }
         } catch (error) {
             console.error("찜하기 오류:", error);
@@ -57,7 +57,7 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
                 navigate("/login");
                 return;
             }
-
+            if (!tutorIndex) return;
             const url = `${process.env.REACT_APP_API_SERVER}/api/favorites`;
             const res = await axios.delete(url, {
                 data: {
@@ -65,7 +65,7 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
                 },
             });
             if (res.status === 200) {
-                isFavorite();
+                togglefavorite(tutorIndex);
                 alert("찜이 취소되었습니다.");
             }
         } catch (error) {
@@ -82,10 +82,10 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
         }
     }, [tutor?.description]);
 
-    if (!tutor) {
+    if (!tutor || !tutorIndex) {
         return <div>Loading...</div>;
     }
-
+    console.log(favorites[tutorIndex]);
     const handleDM = () => {
         if (!isLogin) {
             alert("로그인이 필요합니다. 로그인 후 이용해주세요.");
@@ -117,7 +117,8 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
                     >
                         DM 보내기
                     </button>
-                    {favorite ? (
+
+                    {!favorites[tutorIndex] ? (
                         <button className="favorite" onClick={handleRemoveFavorite}>
                             <img src={fullHeart} />
                         </button>
