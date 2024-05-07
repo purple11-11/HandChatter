@@ -113,6 +113,7 @@ export default function SignupForm({
                                 type="email"
                                 {...register("email", { required: true })}
                                 id="email"
+                                placeholder="example@example.com"
                             />
                             <button
                                 className={`${styles.check_btn}`}
@@ -140,13 +141,24 @@ export default function SignupForm({
                         </div>
                         {role !== "student" && (
                             <div className={`${styles.signup_auth_document}`}>
-                                <label htmlFor="auth_document">증빙 자료</label>
-                                <input
-                                    type="file"
-                                    id="auth_document"
-                                    accept=".jpg, .jpeg, .png, .pdf"
-                                    {...register("authDocument", { required: true })}
-                                />
+                                <div className={`${styles.doc_area}`}>
+                                    <div className={`${styles.file_input}`}>
+                                        <label htmlFor="auth_document">증빙 자료</label>
+                                        <input
+                                            type="file"
+                                            id="auth_document"
+                                            accept=".jpg, .jpeg, .png, .pdf"
+                                            {...register("authDocument", { required: true })}
+                                        />
+                                    </div>
+                                    <div className={`${styles.auth_document_desc}`}>
+                                        <p>튜터로 등록하시려면 증빙 자료를 첨부해주세요.</p>
+                                        <p>
+                                            사진 파일(jpg, jpeg, png) 또는 pdf 파일을 첨부할 수
+                                            있습니다.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         )}
 

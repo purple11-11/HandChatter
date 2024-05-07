@@ -41,3 +41,27 @@
         }
     }
 }
+
+@media screen and (max-width: 865px) {
+    .quiz_box {
+        width: 300px;
+        height: 480px;
+        video {
+            width: 300px;
+            margin-top: 50px;
+            margin-left: 5px;
+        }
+
+        .answer_btn {
+            display: flex;
+            flex-wrap: wrap;
+            button {
+                width: 120px;
+                height: 70px;
+            }
+            button:nth-child(2n) {
+                margin-top: 14px;
+            }
+        }
+    }
+}

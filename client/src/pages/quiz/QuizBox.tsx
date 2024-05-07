@@ -15,10 +15,7 @@ export default function QuizBox({ question, options, onAnswer }: QuizBoxProps) {
             <div className={`${styles.answer_btn}`}>
                 {options?.map((option, index) => {
                     let displayTitle = option.title;
-                    if (index === randomIndex) {
-                        if (displayTitle.length > 5)
-                            displayTitle = option.title.slice(0, 5) + "...";
-                    }
+                    if (displayTitle.length > 5) displayTitle = option.title.slice(0, 5) + "...";
                     return (
                         <button
                             key={index}

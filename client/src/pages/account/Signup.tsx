@@ -162,11 +162,11 @@ export default function StudentSignup({ role }: RoleProps) {
     return (
         <section className="some-section">
             <div className={`${styles.signup_container}`}>
-                <h2>{role === "student" ? "학생 " : "강사 "} 회원가입</h2>
+                <h2>{role === "student" ? "학생 " : "튜터 "} 회원가입</h2>
                 <div className={`${styles.go_to_other_sign_up}`}>
                     {role === "student" ? (
                         <button type="button" onClick={() => navigateAndReset("/signup/tutor")}>
-                            강사로 가입하기
+                            튜터로 가입하기
                         </button>
                     ) : (
                         <button type="button" onClick={() => navigateAndReset("/signup/student")}>
