@@ -47,12 +47,12 @@ export default function Signip() {
     };
 
     return (
-        <section  className="some-section">
+        <section className="some-section">
             <div className={`${styles.login_container}`}>
                 <h2>{role.role === "student" ? "학생 " : "튜터 "} 로그인</h2>
                 <div className={`${styles.go_to_sign_up}`}>
                     <p>아직 회원이 아니신가요?</p>
-                    <div>
+                    <div className={`${styles.signup_link}`}>
                         <Link to="/signup/student">학생 회원가입</Link>
                         <Link to="/signup/tutor">튜터 회원가입</Link>
                     </div>
