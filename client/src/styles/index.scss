@@ -535,6 +535,11 @@ button {
     }
 }
 
+@media screen and (min-height: 1000px) {
+    section {
+        min-height: 1000px;
+    }
+}
 // 핸드폰 화면 크기에 맞는 스타일
 @media screen and (max-width: 767px) {
     .container {
