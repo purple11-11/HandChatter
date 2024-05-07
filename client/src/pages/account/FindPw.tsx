@@ -3,6 +3,8 @@ import React, { useState, ChangeEvent } from "react";
 import ModifyPassword from "../../components/Mypage/ModifyPassword";
 import { useInfoStore } from "../../store/store";
 import { setCommentRange } from "typescript";
+import { useNavigate } from "react-router-dom";
+import styles from "./findPw.module.scss";
 
 interface Passwords {
     newPassword: string;
@@ -10,6 +12,7 @@ interface Passwords {
 }
 
 interface ModifyPasswordProps {
+    handleUserDataChange: (name: string, value: string) => void;
     onHide: () => void;
 }
 
@@ -20,6 +23,7 @@ export default function FindPw() {
     const [randomNum, setRandomNum] = useState<number>(0);
     const [isCertified, setIsCertified] = useState(false);
     const userInfo = useInfoStore((state) => state.userInfo);
+    const navigate = useNavigate();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [passwords, setPasswords] = useState<Passwords>({
         newPassword: "",
@@ -60,6 +64,9 @@ export default function FindPw() {
     const handleShowPasswordModal = () => {
         setShowPasswordModal(true); // 모달 표시 상태를 true로 설정
     };
+    const hideModal = () => {
+        setShowPasswordModal(false);
+    };
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -83,6 +90,23 @@ export default function FindPw() {
     const handleSaveChanges = async () => {
         // 변경사항 저장 버튼 클릭 시 처리할 로직
         // 비밀번호 바꾸는 api 백에서 작성 후 patch axios 요청문 쓰면 될 듯.
+        try {
+            const url = `${process.env.REACT_APP_API_SERVER}/api/newPassword`;
+            const res = await axios.patch(url, {
+                id,
+                password: passwords.newPassword,
+            });
+            const { result, msg } = res.data;
+            if (result) {
+                alert(msg);
+            } else {
+                alert(msg);
+            }
+            navigate("/");
+        } catch (error) {
+            console.error("Error updating password:", error);
+            alert("비밀번호 업데이트 중 오류가 발생했습니다.");
+        }
     };
     const onHideModifyPassword = () => {
         setShowPasswordModal(false);
@@ -90,10 +114,10 @@ export default function FindPw() {
 
     return (
         <section>
-            <div>
+            <div className={`${styles.find_pw_container}`}>
                 <h2>비밀번호 변경</h2>
-                <div>
-                    <div>
+                <div className={`${styles.find_pw}`}>
+                    <div className={`${styles.find_pw_id}`}>
                         <label htmlFor="id">아이디</label>
                         <input
                             type="text"
@@ -103,7 +127,7 @@ export default function FindPw() {
                             required
                         />
                     </div>
-                    <div>
+                    <div className={`${styles.find_pw_email}`}>
                         <label htmlFor="email">이메일</label>
                         <input
                             type="email"
@@ -112,11 +136,15 @@ export default function FindPw() {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                         />
+                        <button
+                            type="button"
+                            onClick={sendEmail}
+                            className={`${styles.find_pw_btn}`}
+                        >
+                            인증번호 발송
+                        </button>
                     </div>
-                    <button type="button" onClick={sendEmail}>
-                        인증번호 발송
-                    </button>
-                    <div>
+                    <div className={`${styles.find_pw_certification}`}>
                         <label htmlFor="certification">인증번호</label>
                         <input
                             type="number"
@@ -125,10 +153,14 @@ export default function FindPw() {
                             onChange={(e) => setCertification(parseInt(e.target.value))}
                             required
                         />
+                        <button
+                            type="button"
+                            onClick={() => checkCertification(Number(certification))}
+                            className={`${styles.find_pw_btn}`}
+                        >
+                            인증 확인
+                        </button>
                     </div>
-                    <button type="button" onClick={() => checkCertification(Number(certification))}>
-                        인증 확인
-                    </button>
                     <div className="change_password">
                         {showPasswordModal && ( // 모달 표시 여부에 따라 모달 컴포넌트를 렌더링
                             <div className="modal">
@@ -156,6 +188,14 @@ export default function FindPw() {
                                     </div>
                                     <div className="check">{wrongPw1}</div>
                                     <button onClick={handleSaveChanges}>변경사항 저장</button>
+                                    <button
+                                        className="hide"
+                                        onClick={() => {
+                                            hideModal();
+                                        }}
+                                    >
+                                        X
+                                    </button>
                                 </div>
                             </div>
                         )}
