@@ -58,10 +58,10 @@ function socketHandler(server) {
                 console.error("메시지 저장 중 오류 발생:", error);
             }
 
-            // console.log("total", tutorSockets);
-            // console.log("tutorIdx", tutorIdx);
-            // console.log(tutorSockets[tutorIdx]); // undef
-            // console.log("-------");
+            console.log("total", tutorSockets);
+            console.log("tutorIdx", tutorIdx);
+            console.log(tutorSockets[tutorIdx]); // undef
+            console.log("-------");
             // 특정 튜터나 학생에게 메시지 전송
             if (sender === "tutor" && studentSockets[stuIdx]) {
                 io.to(studentSockets[stuIdx]).emit("message", { msg: msg, socketId: socket.id });
@@ -134,19 +134,11 @@ function socketHandler(server) {
         });
 
         ///WebRTC (4)
-<<<<<<< Updated upstream
         socket.on("sendRTC", (msgData) => {
-            msgData = { nick: msgData.nick, msg: msgData.msg };    
-            const {msg, nick} = msgData; 
-              io.emit("messageRTC", {
-                nick: nick, 
-=======
-        socket.on("send", (msgData) => {
             msgData = { nick: msgData.nick, msg: msgData.msg };
             const { msg, nick } = msgData;
-            io.emit("message", {
+            io.emit("messageRTC", {
                 nick: nick,
->>>>>>> Stashed changes
                 msg: msg,
             });
         });
