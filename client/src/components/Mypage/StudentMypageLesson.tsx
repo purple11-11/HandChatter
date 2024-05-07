@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import InstructorCard from "../InstructorCard";
 import { Tutor } from "../../types/interface";
-
+import Slider from "../Slide";
 interface LikeTutor {
     like_idx: number;
     tutor_idx: number;
@@ -70,10 +70,41 @@ export default function StudentMypageLesson() {
             window.removeEventListener("resize", adjustContainerHeight);
         };
     }, [searchResults]);
+
+    const [touchStart, setTouchStart] = useState<number>(0);
+    const [touchEnd, setTouchEnd] = useState<number>(0);
+    const [currentSlide, setCurrentSlide] = useState<number>(0);
+    const slideRef = useRef<HTMLDivElement>(null);
+    const slideContainerRef = useRef<HTMLDivElement>(null);
+    const children = slideContainerRef.current?.querySelectorAll(".slide");
+    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+        if (children === undefined) return;
+
+        if (touchStart - touchEnd > 150) {
+            if (currentSlide < children.length - 1) {
+                setCurrentSlide(currentSlide + 1);
+            }
+        }
+
+        if (touchStart - touchEnd < -150) {
+            if (currentSlide > 0) {
+                setCurrentSlide(currentSlide - 1);
+            }
+        }
+    };
+
     return (
         <div className="like-container" ref={sectionRef}>
             <div ref={cardContainerRef} className="card-container">
-                {searchResults ? (
+                {searchResults && searchResults.length !== 0 ? (
                     searchResults.map((tutor, index) => (
                         <div className="card" key={index}>
                             <Link to={`/tutors/${tutor.tutor_idx}`}>
@@ -82,7 +113,39 @@ export default function StudentMypageLesson() {
                         </div>
                     ))
                 ) : (
-                    <div className="none-like">현재 찜 목록이 비어있습니다.</div>
+                    <p className="no-answer">검색 결과가 없습니다.</p>
+                )}
+            </div>
+            <p className="favorite-title">내 찜 목록</p>
+            <div
+                className="slide-container"
+                ref={slideContainerRef}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+            >
+                {children !== undefined ? (
+                    <div
+                        className="slide-wrapper"
+                        style={{
+                            transform: `translateX(-${currentSlide * 100}%)`,
+                        }}
+                        ref={slideRef}
+                    >
+                        {searchResults && searchResults.length !== 0 ? (
+                            searchResults.map((tutor, index) => (
+                                <div className="slide">
+                                    <Link to={`/tutors/${tutor.tutor_idx}`}>
+                                        <Slider tutor={tutor.Tutor}></Slider>
+                                    </Link>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="no-answer">검색 결과가 없습니다.</p>
+                        )}
+                    </div>
+                ) : (
+                    <p>현재 강사가 없습니다.</p>
                 )}
             </div>
         </div>

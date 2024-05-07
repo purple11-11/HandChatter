@@ -30,7 +30,7 @@ export default function InstructorDetailPage() {
     }, [tutorIndex]);
 
     return (
-        <section>
+        <section className="instructor-detail-section">
             <div className="container">
                 <InstructorProfile
                     tutor={tutor}
