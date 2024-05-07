@@ -31,6 +31,7 @@ export interface SignRes {
     subDescription: string; // 영상 자료
 }
 export interface Tutor {
+    tutor_idx: number;
     nickname: string;
     email: string;
     description: string;

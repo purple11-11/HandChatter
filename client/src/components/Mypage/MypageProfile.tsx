@@ -24,6 +24,10 @@ export default function MypageProfile() {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleTabChange = (tab: string) => {
+        if (userInfo?.provider === "kakao") {
+            alert("카카오 이용자는 비밀번호를 수정하실 수 없습니다.");
+            return;
+        }
         setShowPassword(true);
     };
 
@@ -164,6 +168,10 @@ export default function MypageProfile() {
     };
 
     const handleModal = (isModal: boolean) => {
+        if (userInfo?.provider === "kakao") {
+            alert("카카오 이용자는 이미지만 수정 가능합니다.");
+            return;
+        }
         setShowModal(isModal);
     };
 
@@ -194,21 +202,37 @@ export default function MypageProfile() {
                         </div>
                         <div>
                             <label htmlFor="">닉네임</label>
-                            <input
-                                type="text"
-                                value={userData.nickname}
-                                onChange={(e) => handleUserDataChange("nickname", e.target.value)}
-                            />
+                            {userInfo?.provider === "kakao" ? (
+                                <input
+                                    type="text"
+                                    value={userData.nickname}
+                                    onChange={(e) =>
+                                        handleUserDataChange("nickname", e.target.value)
+                                    }
+                                    readOnly
+                                />
+                            ) : (
+                                <input
+                                    type="text"
+                                    value={userData.nickname}
+                                    onChange={(e) =>
+                                        handleUserDataChange("nickname", e.target.value)
+                                    }
+                                />
+                            )}
                         </div>
-                        <div>
-                            <label htmlFor="">이메일</label>
-                            <input
-                                type="text"
-                                value={userData.email}
-                                // onChange={(e) => handleUserDataChange("email", e.target.value)}
-                                readOnly
-                            />
-                        </div>
+                        {userInfo?.provider !== "kakao" && (
+                            <div>
+                                <label htmlFor="">이메일</label>
+                                <input
+                                    type="text"
+                                    value={userData.email}
+                                    // onChange={(e) => handleUserDataChange("email", e.target.value)}
+                                    readOnly
+                                />
+                            </div>
+                        )}
+                        <div></div>
                         {userInfo?.tutor_idx && (
                             <>
                                 <div className="level-check">

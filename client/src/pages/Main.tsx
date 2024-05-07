@@ -32,11 +32,14 @@ export default function Main() {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api`;
             const res = await axios.get(url);
+            console.log(searchTerm);
             const filteredTutors = filterTutorsByNickname(res.data.tutorsInfo, searchTerm);
             setSearchResults(filteredTutors);
             setError("");
+            console.log(searchResults);
         } catch (error) {
             setError("검색 중 오류가 발생");
+            console.log(searchResults + "하하");
         }
     };
 
@@ -88,7 +91,6 @@ export default function Main() {
             window.removeEventListener("resize", adjustContainerHeight);
         };
     }, [searchResults]);
-
     return (
         <div>
             <section className="main-banner">
@@ -100,22 +102,25 @@ export default function Main() {
                     <div className="search">
                         <input
                             type="text"
-                            placeholder="    튜터 검색"
+                            placeholder="튜터 검색"
                             value={searchTerm}
                             onChange={handleChange}
                         />
                         <button onClick={handleSearchTutor}>검색</button>
                     </div>
-                    {error && <p>{error}</p>}
+                    {error && <p className="no-answer">검색 결과가 없습니다.</p>}
                     <div ref={cardContainerRef} className="card-container">
-                        {searchResults &&
+                        {searchResults.length !== 0 ? (
                             searchResults.map((tutor, index) => (
                                 <div className="card" key={index}>
-                                    <Link to={`/tutors/${index + 1}`}>
+                                    <Link to={`/tutors/${tutor.tutor_idx}`}>
                                         <InstructorCard tutor={tutor}></InstructorCard>
                                     </Link>
                                 </div>
-                            ))}
+                            ))
+                        ) : (
+                            <p className="no-answer">검색 결과가 없습니다.</p>
+                        )}
                     </div>
                 </div>
             </section>
