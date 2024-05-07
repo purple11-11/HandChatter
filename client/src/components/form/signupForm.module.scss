@@ -67,9 +67,16 @@ form {
     button {
         position: absolute;
         right: 80px;
+        font-size: 13px;
         box-shadow: none;
         border-radius: 10px;
         background-color: #fdfdf3;
+        color: $color-text-green;
+        &:hover {
+            background-color: $color-primary;
+            color: $color-second;
+            transition: 0.1s;
+        }
     }
 }
 
@@ -144,4 +151,42 @@ input::-webkit-inner-spin-button {
 
 .check_btn {
     padding: 5px 10px;
+}
+
+@media screen and (max-width: 510px) {
+    .signup_stu_wrapper,
+    .signup_tu_wrapper {
+        border: none;
+        box-shadow: none;
+        background-color: $color-bg;
+        margin-top: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        form {
+            margin: 0;
+            margin-top: -50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .signup_input {
+                display: flex;
+                margin-left: 27px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            input {
+                width: 230px;
+            }
+            button {
+                right: 35px;
+            }
+
+            .submit_btn {
+                margin-bottom: -30px;
+                width: 370px;
+            }
+        }
+    }
 }
