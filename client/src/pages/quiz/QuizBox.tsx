@@ -8,15 +8,24 @@ interface QuizBoxProps {
 }
 
 export default function QuizBox({ question, options, onAnswer }: QuizBoxProps) {
+    const randomIndex = Math.floor(Math.random() * 10);
     return (
         <div className={`${styles.quiz_box}`}>
             <video controls src={question?.subDescription}></video>
             <div className={`${styles.answer_btn}`}>
-                {options?.map((option, index) => (
-                    <button key={index} onClick={() => onAnswer(option.key === question.key)}>{`${
-                        index + 1
-                    }. ${option.title.slice(0, 6)}`}</button>
-                ))}
+                {options?.map((option, index) => {
+                    let displayTitle = option.title;
+                    if (index === randomIndex) {
+                        if (displayTitle.length > 5)
+                            displayTitle = option.title.slice(0, 5) + "...";
+                    }
+                    return (
+                        <button
+                            key={index}
+                            onClick={() => onAnswer(option.key === question.key)}
+                        >{`${index + 1}. ${displayTitle}`}</button>
+                    );
+                })}
             </div>
         </div>
     );

@@ -1,8 +1,5 @@
 import axios from "axios";
-import React, { useState, ChangeEvent } from "react";
-import ModifyPassword from "../../components/Mypage/ModifyPassword";
-import { useInfoStore } from "../../store/store";
-import { setCommentRange } from "typescript";
+import { useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./findPw.module.scss";
 
@@ -11,18 +8,11 @@ interface Passwords {
     confirmPassword: string;
 }
 
-interface ModifyPasswordProps {
-    handleUserDataChange: (name: string, value: string) => void;
-    onHide: () => void;
-}
-
 export default function FindPw() {
     const [id, setId] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [certification, setCertification] = useState<number>(0);
     const [randomNum, setRandomNum] = useState<number>(0);
-    const [isCertified, setIsCertified] = useState(false);
-    const userInfo = useInfoStore((state) => state.userInfo);
     const navigate = useNavigate();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [passwords, setPasswords] = useState<Passwords>({
@@ -30,7 +20,11 @@ export default function FindPw() {
         confirmPassword: "",
     });
     const [wrongPw1, setWrongPw1] = useState<string>("");
-
+    const isValidPassword = (password: string): boolean => {
+        // 영문, 숫자 포함 8자 이상
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(password);
+    };
     const sendEmail = async () => {
         if (!id) return alert("아이디를 입력해주세요.");
         if (!email) return alert("이메일을 입력해주세요.");
@@ -55,7 +49,6 @@ export default function FindPw() {
         if (!certification) return alert("인증번호를 입력해주세요.");
         if (certification === Number(randomNum)) {
             alert("인증되었습니다.");
-            setIsCertified(true);
             handleShowPasswordModal();
         } else {
             alert("인증번호가 일치하지 않습니다.");
@@ -90,6 +83,11 @@ export default function FindPw() {
     const handleSaveChanges = async () => {
         // 변경사항 저장 버튼 클릭 시 처리할 로직
         // 비밀번호 바꾸는 api 백에서 작성 후 patch axios 요청문 쓰면 될 듯.
+        if (passwords.newPassword !== passwords.confirmPassword) return;
+        if (!isValidPassword(passwords.newPassword)) {
+            alert("비밀번호는 영문, 숫자를 포함하여 8자 이상이어야 합니다.");
+            return;
+        }
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/newPassword`;
             const res = await axios.patch(url, {
@@ -163,17 +161,23 @@ export default function FindPw() {
                     </div>
                     <div className="change_password">
                         {showPasswordModal && ( // 모달 표시 여부에 따라 모달 컴포넌트를 렌더링
-                            <div className="modal">
-                                <div className="modal" onClick={onHideModifyPassword}></div>
-                                <div className="modal-content">
+                            <div className={`${styles.modal}`}>
+                                <div
+                                    className={`${styles.modal}`}
+                                    onClick={onHideModifyPassword}
+                                ></div>
+                                <div className={`${styles.modal_content}`}>
                                     <div>
                                         <label htmlFor="newPassword">새 비밀번호</label>
                                         <input
                                             type="password"
                                             id="newPassword"
                                             name="newPassword"
+                                            className={`${styles.modal_newPassword}`}
                                             value={passwords.newPassword}
                                             onChange={handleInputChange}
+                                            required
+                                            minLength={8}
                                         />
                                     </div>
                                     <div>
@@ -186,10 +190,15 @@ export default function FindPw() {
                                             onChange={handleCheckPassword}
                                         />
                                     </div>
-                                    <div className="check">{wrongPw1}</div>
-                                    <button onClick={handleSaveChanges}>변경사항 저장</button>
+                                    <div className={`${styles.modal_check}`}>{wrongPw1}</div>
                                     <button
-                                        className="hide"
+                                        onClick={handleSaveChanges}
+                                        className={`${styles.modal_btn}`}
+                                    >
+                                        변경사항 저장
+                                    </button>
+                                    <button
+                                        className={`${styles.hide}`}
                                         onClick={() => {
                                             hideModal();
                                         }}
