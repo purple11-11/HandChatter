@@ -73,16 +73,17 @@ export default function StudentMypageLesson() {
     return (
         <div className="like-container" ref={sectionRef}>
             <div ref={cardContainerRef} className="card-container">
-                {searchResults ?(
+                {searchResults ? (
                     searchResults.map((tutor, index) => (
                         <div className="card" key={index}>
-                            <Link to={`/tutors/${index + 1}`}>
+                            <Link to={`/tutors/${tutor.tutor_idx}`}>
                                 <InstructorCard tutor={tutor.Tutor}></InstructorCard>
                             </Link>
                         </div>
-                    ))): (
-                        <div className="none-like">현재 찜 목록이 비어있습니다.</div>
-                    )}
+                    ))
+                ) : (
+                    <div className="none-like">현재 찜 목록이 비어있습니다.</div>
+                )}
             </div>
         </div>
     );
