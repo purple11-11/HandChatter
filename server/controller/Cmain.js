@@ -193,6 +193,8 @@ exports.searchPassword = async (req, res) => {
     const { id, email } = req.body;
     const randomNum = (Math.floor(Math.random() * 1000000) + 100000).toString().substring(0, 6);
 
+    console.log("randomNum ::", Number(randomNum));
+
     if (!email || !id) return res.status(400).send("빈칸을 입력해주세요.");
     [searchIdTutor, searchIdStudent] = await Promise.all([
         Tutor.findOne({ where: { id, email } }),
