@@ -118,7 +118,7 @@ const InstructorProfile: React.FC<InstructorProfileProps> = ({
                         DM 보내기
                     </button>
 
-                    {!favorites[tutorIndex] ? (
+                    {favorites[tutorIndex] && favorites[tutorIndex] === true ? (
                         <button className="favorite" onClick={handleRemoveFavorite}>
                             <img src={fullHeart} />
                         </button>
