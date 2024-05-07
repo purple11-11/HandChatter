@@ -4,6 +4,7 @@ const { transporter } = require("../modules/nodemailer/nodemailer");
 const fs = require("fs");
 
 const bcrypt = require("bcrypt");
+const { emit } = require("process");
 
 const saltRound = 10;
 
@@ -189,27 +190,21 @@ exports.searchId = async (req, res) => {
 
 // POST /api/searchPassword
 exports.searchPassword = async (req, res) => {
-    let searchIdStudent, searchIdTutor;
     const { id, email } = req.body;
     const randomNum = (Math.floor(Math.random() * 1000000) + 100000).toString().substring(0, 6);
 
     console.log("randomNum ::", Number(randomNum));
 
     if (!email || !id) return res.status(400).send("빈칸을 입력해주세요.");
-    [searchIdTutor, searchIdStudent] = await Promise.all([
-        Tutor.findOne({ where: { id, email } }),
-        Student.findOne({ where: { id, email } }),
-    ]);
-    if (!searchIdTutor && !searchIdStudent) {
-        res.status(400).send("유효하지 않은 값입니다. 다시 입력해주세요.");
-    }
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: "[Hand Chatter 👐🏻] 이메일 인증",
-        html: `<h2>인증번호를 입력해주세요</h2>  <h3>${randomNum} 입니다.</h3>`,
-    };
+    const si = await Student.findOne({ where: { id } });
+    const ti = await Tutor.findOne({ where: { id } });
     try {
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "[Hand Chatter 👐🏻] 이메일 인증",
+            html: `<h2>인증번호를 입력해주세요</h2>  <h3>${randomNum} 입니다.</h3>`,
+        };
         const info = await new Promise((resolve, reject) => {
             transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
@@ -219,10 +214,22 @@ exports.searchPassword = async (req, res) => {
                 }
             });
         });
-        console.log("이메일 전송 성공", info.response);
-        return res.status(200).send({ randomNum });
+        switch (true) {
+            case ti && ti.email === email:
+                console.log("이메일 전송 성공", info.response);
+                return res.status(200).send({ randomNum });
+
+                break;
+            case si && si.email === email:
+                console.log("이메일 전송 성공", info.response);
+                return res.status(200).send({ randomNum });
+
+                break;
+            default:
+                return res.status(400).send("유효하지 않은 값입니다. 다시 입력해주세요.");
+        }
     } catch (err) {
-        console.log("이메일 전송 실패", error);
+        console.log("이메일 전송 실패", err);
         return res.status(500).send("이메일 전송 실패");
     }
 };
@@ -810,6 +817,51 @@ exports.uploadVideo = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).send("SERVER ERROR!!!");
+    }
+};
+
+//PATCH /api/newPassword
+exports.setNewPassword = async (req, res) => {
+    const { id, password } = req.body;
+    if (!id) return res.status(400).send("올바른 요청이 아닙니다.");
+    let isTutor, isStudent;
+    try {
+        if (!password) return res.status(400).send("빈칸을 입력해주세요.");
+        [isTutor, isStudent] = await Promise.all([
+            Tutor.findOne({ where: { id } }),
+            Student.findOne({ where: { id } }),
+        ]);
+        if (!isTutor && !isStudent) {
+            res.status(400).send("올바른 요청이 아닙니다.");
+        } else if (isTutor) {
+            await Tutor.update(
+                {
+                    password: hashPW(password),
+                },
+                {
+                    where: { id },
+                }
+            );
+            res.status(200).send({
+                result: true,
+                msg: `${id}님의 비밀번호가 성공적으로 변경되었습니다.`,
+            });
+        } else {
+            await Student.update(
+                {
+                    password: hashPW(password),
+                },
+                {
+                    where: { id },
+                }
+            );
+            res.status(200).send({
+                result: true,
+                msg: `${id}님의 비밀번호가 성공적으로 변경되었습니다.`,
+            });
+        }
+    } catch (error) {
+        res.status(500).send(error);
     }
 };
 

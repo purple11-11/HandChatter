@@ -750,6 +750,7 @@ router.patch("/editStudentPassword", controller.editStudentPassword);
 router.patch("/editPhoto", multer.single("image"), controller.editPhoto);
 router.patch("/backDefault", controller.editDefaultPhoto);
 router.patch("/uploadVideo", multer.single("video"), controller.uploadVideo);
+router.patch("/newPassword", controller.setNewPassword);
 
 // TODO: swagger 수정
 /**
