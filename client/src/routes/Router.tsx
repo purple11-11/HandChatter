@@ -28,7 +28,7 @@ const router = createBrowserRouter([
             { path: "signup/tutor", element: <Signup role={"tutor"} /> },
             { path: "mypage/:id", element: <Mypage /> },
             { path: "tutors/:tutorIndex", element: <InstructorDetailPage /> },
-            { path: "class", element: <Webcam /> },
+            { path: "class/:id", element: <Webcam /> },
             { path: "admin", element: <Admin /> },
             { path: "adminLogin", element: <AdminLogin /> },
         ],
