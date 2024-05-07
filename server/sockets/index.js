@@ -58,10 +58,10 @@ function socketHandler(server) {
                 console.error("메시지 저장 중 오류 발생:", error);
             }
 
-            console.log("total", tutorSockets);
-            console.log("tutorIdx", tutorIdx);
-            console.log(tutorSockets[tutorIdx]); // undef
-            console.log("-------");
+            // console.log("total", tutorSockets);
+            // console.log("tutorIdx", tutorIdx);
+            // console.log(tutorSockets[tutorIdx]); // undef
+            // console.log("-------");
             // 특정 튜터나 학생에게 메시지 전송
             if (sender === "tutor" && studentSockets[stuIdx]) {
                 io.to(studentSockets[stuIdx]).emit("message", { msg: msg, socketId: socket.id });
@@ -73,35 +73,33 @@ function socketHandler(server) {
         // WebRTC (2)
         socket.on("join_room", (data) => {
             if (users[data.room]) {
-              const length = users[data.room].length;
-              if (length === maximum) {
-                socket.to(socket.id).emit("room_full");
-                return; 
-              }
-              users[data.room].push({ id: socket.id });
-            } else { 
-              users[data.room] = [{ id: socket.id }];
+                const length = users[data.room].length;
+                if (length === maximum) {
+                    socket.to(socket.id).emit("room_full");
+                    return;
+                }
+                users[data.room].push({ id: socket.id });
+            } else {
+                users[data.room] = [{ id: socket.id }];
             }
             socketToRoom[socket.id] = data.room;
             socket.join(data.room);
-      
-            const usersInThisRoom = users[data.room].filter(
-              (user) => user.id !== socket.id
-            );
+
+            const usersInThisRoom = users[data.room].filter((user) => user.id !== socket.id);
             io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
-          });
-      
-          socket.on("offer", (sdp) => {
+        });
+
+        socket.on("offer", (sdp) => {
             socket.broadcast.emit("getOffer", sdp);
-          });
-      
-          socket.on("answer", (sdp) => {
+        });
+
+        socket.on("answer", (sdp) => {
             socket.broadcast.emit("getAnswer", sdp);
-          });
-      
-          socket.on("candidate", (candidate) => {
+        });
+
+        socket.on("candidate", (candidate) => {
             socket.broadcast.emit("getCandidate", candidate);
-          });
+        });
         //WebRTC (2)end
 
         socket.on("disconnect", () => {
@@ -120,31 +118,38 @@ function socketHandler(server) {
                 delete studentSockets[studentIndex];
             }
 
-
             //WebRTC (3)
             const roomID = socketToRoom[socket.id];
             let room = users[roomID];
             if (room) {
-              room = room.filter((user) => user.id !== socket.id);
-              users[roomID] = room;
-              if (room.length === 0) {
-                delete users[roomID];
-                return;
-              }
+                room = room.filter((user) => user.id !== socket.id);
+                users[roomID] = room;
+                if (room.length === 0) {
+                    delete users[roomID];
+                    return;
+                }
             }
             socket.broadcast.to(room).emit("user_exit", { id: socket.id });
             //WebRTC (3)end
         });
-        
+
         ///WebRTC (4)
+<<<<<<< Updated upstream
         socket.on("sendRTC", (msgData) => {
             msgData = { nick: msgData.nick, msg: msgData.msg };    
             const {msg, nick} = msgData; 
               io.emit("messageRTC", {
                 nick: nick, 
+=======
+        socket.on("send", (msgData) => {
+            msgData = { nick: msgData.nick, msg: msgData.msg };
+            const { msg, nick } = msgData;
+            io.emit("message", {
+                nick: nick,
+>>>>>>> Stashed changes
                 msg: msg,
-              });
-          });
+            });
+        });
         //WebRTC (4)end
     });
 }
