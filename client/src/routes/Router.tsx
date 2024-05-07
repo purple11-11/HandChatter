@@ -12,6 +12,7 @@ import App from "../App";
 import Admin from "../pages/admin/Admin";
 import AdminLogin from "../pages/admin/AdminLogin";
 import FindPw from "../pages/account/FindPw";
+import Spinner from "../components/spinner/Spinner";
 
 const router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             { index: true, element: <Main /> },
+            {
+                path: "spinner",
+                element: <Spinner />,
+            },
             { path: "learning", element: <PersonalLearning /> },
             { path: "quiz", element: <Quiz /> },
             { path: "login", element: <Signin /> },

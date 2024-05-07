@@ -120,66 +120,64 @@ export default function PersonalLearning() {
     };
 
     return (
-        <section>
-            <>
-                {loading ? (
-                    <Spinner />
-                ) : (
-                    <>
-                        <div className={`${styles.title}`}>
-                            <h1>무엇을 검색하시겠어요?</h1>
+        <>
+            {loading ? (
+                <Spinner />
+            ) : (
+                <section>
+                    <div className={`${styles.title}`}>
+                        <h1>무엇을 검색하시겠어요?</h1>
 
-                            <div className={`${styles.search_bar}`}>
-                                <input
-                                    type="text"
-                                    placeholder="수어 검색"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <button onClick={handleSearch}>검색</button>
-                                {error && <p>{error}</p>}
-                            </div>
-
-                            <div className={`${styles.search_category}`}>
-                                <button
-                                    key={"all"}
-                                    onClick={handleReset}
-                                    className={activeKey === null ? `${styles.active}` : ""}
-                                >
-                                    전체
-                                </button>
-                                {Object.keys(KOR).map((keyword) => (
-                                    <button
-                                        key={keyword}
-                                        onClick={() => keywordSearch(keyword)}
-                                        className={activeKey === keyword ? `${styles.active}` : ""}
-                                    >
-                                        {keyword}
-                                    </button>
-                                ))}
-                            </div>
+                        <div className={`${styles.search_bar}`}>
+                            <input
+                                type="text"
+                                placeholder="수어 검색"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <button onClick={handleSearch}>검색</button>
+                            {error && <p>{error}</p>}
                         </div>
 
-                        <h2 className={`${styles.result_title}`}>
-                            {isSearched ? "검색 결과" : "전체"} ({searchResults.length})
-                        </h2>
-                        <ul className={`${styles.results}`}>
-                            {currentItems.map((result) => (
-                                <ResultCard {...result} />
+                        <div className={`${styles.search_category}`}>
+                            <button
+                                key={"all"}
+                                onClick={handleReset}
+                                className={activeKey === null ? `${styles.active}` : ""}
+                            >
+                                전체
+                            </button>
+                            {Object.keys(KOR).map((keyword) => (
+                                <button
+                                    key={keyword}
+                                    onClick={() => keywordSearch(keyword)}
+                                    className={activeKey === keyword ? `${styles.active}` : ""}
+                                >
+                                    {keyword}
+                                </button>
                             ))}
-                        </ul>
-                        <Pagination
-                            paginate={paginate}
-                            pageGroup={pageGroup}
-                            setCurrentGroup={setCurrentGroup}
-                            currentGroup={currentGroup}
-                            currentPage={currentPage}
-                            pageNumbers={pageNumbers}
-                            totalPages={totalPages}
-                        />
-                    </>
-                )}
-            </>
-        </section>
+                        </div>
+                    </div>
+
+                    <h2 className={`${styles.result_title}`}>
+                        {isSearched ? "검색 결과" : "전체"} ({searchResults.length})
+                    </h2>
+                    <ul className={`${styles.results}`}>
+                        {currentItems.map((result) => (
+                            <ResultCard {...result} />
+                        ))}
+                    </ul>
+                    <Pagination
+                        paginate={paginate}
+                        pageGroup={pageGroup}
+                        setCurrentGroup={setCurrentGroup}
+                        currentGroup={currentGroup}
+                        currentPage={currentPage}
+                        pageNumbers={pageNumbers}
+                        totalPages={totalPages}
+                    />
+                </section>
+            )}
+        </>
     );
 }
