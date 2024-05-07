@@ -14,6 +14,12 @@ function socketHandler(server) {
     const tutorSockets = {};
     const studentSockets = {};
 
+    // WebRTC (1)
+    const users = {};
+    const socketToRoom = {};
+    const maximum = 2;
+    // WebRTC (1)end
+
     io.on("connection", (socket) => {
         // 소켓 연결이 이루어졌을 때
         console.log("새로운 소켓이 연결되었습니다:", socket.id);
@@ -63,6 +69,41 @@ function socketHandler(server) {
                 io.to(tutorSockets[tutorIdx]).emit("message", { msg: msg, socketId: socket.id });
             }
         });
+
+        // WebRTC (2)
+        socket.on("join_room", (data) => {
+            if (users[data.room]) {
+              const length = users[data.room].length;
+              if (length === maximum) {
+                socket.to(socket.id).emit("room_full");
+                return; 
+              }
+              users[data.room].push({ id: socket.id });
+            } else { 
+              users[data.room] = [{ id: socket.id }];
+            }
+            socketToRoom[socket.id] = data.room;
+            socket.join(data.room);
+      
+            const usersInThisRoom = users[data.room].filter(
+              (user) => user.id !== socket.id
+            );
+            io.sockets.to(socket.id).emit("all_users", usersInThisRoom);
+          });
+      
+          socket.on("offer", (sdp) => {
+            socket.broadcast.emit("getOffer", sdp);
+          });
+      
+          socket.on("answer", (sdp) => {
+            socket.broadcast.emit("getAnswer", sdp);
+          });
+      
+          socket.on("candidate", (candidate) => {
+            socket.broadcast.emit("getCandidate", candidate);
+          });
+        //WebRTC (2)end
+
         socket.on("disconnect", () => {
             // 클라이언트 연결 해제 시 소켓 ID를 관리하는 배열에서 제거
             console.log("소켓이 연결 해제되었습니다:", socket.id);
@@ -78,7 +119,33 @@ function socketHandler(server) {
             if (studentIndex !== -1) {
                 delete studentSockets[studentIndex];
             }
+
+
+            //WebRTC (3)
+            const roomID = socketToRoom[socket.id];
+            let room = users[roomID];
+            if (room) {
+              room = room.filter((user) => user.id !== socket.id);
+              users[roomID] = room;
+              if (room.length === 0) {
+                delete users[roomID];
+                return;
+              }
+            }
+            socket.broadcast.to(room).emit("user_exit", { id: socket.id });
+            //WebRTC (3)end
         });
+        
+        ///WebRTC (4)
+        socket.on("send", (msgData) => {
+            msgData = { nick: msgData.nick, msg: msgData.msg };    
+            const {msg, nick} = msgData; 
+              io.emit("message", {
+                nick: nick, 
+                msg: msg,
+              });
+          });
+        //WebRTC (4)end
     });
 }
 

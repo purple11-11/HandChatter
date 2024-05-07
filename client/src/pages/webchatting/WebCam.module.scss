@@ -48,6 +48,15 @@
                 .chatting_content {
                     height: 188px;
                     padding: 20px;
+                    overflow-y: auto; /* 수직 스크롤바 자동 표시 */
+                    .me {
+                      text-align: right;
+                      margin-right: 3px;
+                    }
+                    
+                    .other {
+                        text-align: left;
+                    }
                     .speech {
                         padding: 14px 0;
                         span {
@@ -56,8 +65,18 @@
                             padding: 7px 12px;
                             font-size: 14px;
                             border-radius: 7px;
-                        }
+                            margin-left: 5px; // 닉네임 말풍선과의 간격 설정
+                          } // span   
+                                             
+                        
+                      .nickname {
+                          background-color: #f4f6d5;
+                          box-shadow: 1px 1px 3px gray;
+                          padding: 7px 5px; /* 닉네임 말풍선 크기 */
+                          border-radius: 7px; /* 닉네임 말풍선 모서리 둥글게 */
+                      }
                     }
+                    
                 }
                 .chatting_input {
                     width: 100%;
@@ -112,105 +131,4 @@
             }
         }
     }
-
-    //   .chatting_for_one {
-    //     // width: 56%;
-
-    //     width: 25%; /* remoteVideo의 남은 공간을 차지하도록 설정 */
-    //     height: 60vh; /* 화면의 높이를 따라가도록 설정 */
-    //     // background-color: #9bbbd4;
-    //     background-color: $color-primary-light;
-    //     position: absolute; /* remoteVideo 기준으로 배치하기 위해 absolute로 설정 */
-    //     top: 100px;
-    //     right: 100px;
-    //     display: flex;
-    //     flex-direction: column;
-    //     justify-content: space-between; /* 아래로의 간격을 추가하기 위해 설정 */
-    //     padding: 10px; /* 적절한 간격을 위해 padding 추가 */
-
-    //     .chatting_content {
-    //         height: 520px;
-    //         padding: 20px;
-    //         .one-chat {
-    //             padding: 14px 0;
-    //             span {
-    //                 background-color: #fffffd;
-    //                 box-shadow: 1px 1px 3px gray;
-    //                 padding: 7px 12px;
-    //                 font-size: 14px;
-    //                 border-radius: 7px;
-    //             }
-    //         }
-    //     }
-    //     .chatting_input {
-    //         width: 100%;
-    //         height: 66px;
-    //         position: relative;
-    //         display: flex;
-    //         align-items: center;
-    //         input {
-    //             width: 350px;
-    //             height: 30px;
-    //             margin: 0 auto;
-    //             padding-left: 15px;
-    //         }
-    //         button {
-    //             position: absolute;
-    //             top: 23px;
-    //             right: 30px;
-    //             box-shadow: none;
-    //             background-color: #ffffdd;
-    //             border: 1px solid #c9c9aa;
-    //             &:hover {
-    //                 background-color: #016a70;
-    //             }
-    //         }
-    //     }
-    // }
-
-    // .chatting-con {
-    //   width: 100%;
-    //   margin-top: 30px;
-    //   .chatting-container {
-    //       // display: flex;
-    //       border: 1px solid #c9c9aa;
-    //       border-radius: 10px;
-    //       box-shadow: 3px 3px 3px gray;
-
-    //   }
-    // }
-
-    /* chatting 스타일 */
-    // .chatBox {
-    //   width: 25%; /* remoteVideo의 남은 공간을 차지하도록 설정 */
-    //   height: 60vh; /* 화면의 높이를 따라가도록 설정 */
-    //   // background-color: #9bbbd4;
-    //   background-color: $color-primary-light;
-    //   position: absolute; /* remoteVideo 기준으로 배치하기 위해 absolute로 설정 */
-    //   top: 100px;
-    //   right: 100px;
-    //   display: flex;
-    //   flex-direction: column;
-    //   justify-content: space-between; /* 아래로의 간격을 추가하기 위해 설정 */
-    //   padding: 10px; /* 적절한 간격을 위해 padding 추가 */
-
-    //   .webchatheader {
-    //     width: 100%;
-    //     box-shadow: 0px 2px 2px #7a7a7a20;
-    //     display: flex;
-    //     align-items: center;
-    //     justify-content: center;
-    //     flex-basis: 7%;
-    //     background-color:  $color-second;
-    //   }
-
-    // }
-    // .btnBox {
-    //   position: absolute;
-    //   bottom: 100px;
-    //   left: 420px;
-    //   display: flex;
-    //   // flex-direction: column; /* 버튼들 세로배열 */
-    //   gap: 10px; /* 버튼 사이 간격 */
-    // }
-}
+} // .CAM
