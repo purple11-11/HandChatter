@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import QuizBox from "./QuizBox";
 import { SignRes } from "../../types/interface";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./quiz.module.scss";
 import { useInfoStore } from "../../store/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { useSignStore } from "../../store/signStore";
+import Spinner from "../../components/spinner/Spinner";
 
-const signData: SignRes[] = [
+const defaultData: SignRes[] = [
     {
         key: 1,
         title: "감상",
@@ -54,15 +56,19 @@ function shuffle(array: SignRes[]) {
 }
 
 export default function Quiz() {
-    const signData1 = useLoaderData() as SignRes[];
-    const navigation = useNavigate();
     const userInfo = useInfoStore((state) => state.userInfo);
+    const fetchData = useSignStore((state) => state.fetchData);
+    const data = useSignStore((state) => state.data);
+    const loading = useSignStore((state) => state.loading);
+
+    const navigation = useNavigate();
 
     const [currentQuiz, setCurrentQuiz] = useState<number>(0);
     const [score, setScore] = useState<number>(0);
     const [questions, setQuestions] = useState<SignRes[]>([]);
     const [options, setOptions] = useState<SignRes[][]>([]);
     const [quizFinished, setQuizFinished] = useState<boolean>(false);
+    const [answered, setAnswered] = useState<boolean[]>(new Array(10).fill(false));
 
     useEffect(() => {
         if (!userInfo) {
@@ -70,26 +76,25 @@ export default function Quiz() {
             return navigation("/login");
         }
 
-        let shuffledQuestions = shuffle([...(signData || [])]).slice(0, 10);
-        /*  let shuffledQuestions = shuffle([...signData]).slice(0, signData.length); */
+        if (!data) fetchData();
+
+        let shuffledQuestions = shuffle(data || []).slice(0, 10);
         setQuestions(shuffledQuestions);
         let optionsForQuestions = shuffledQuestions.map((question) => {
             let titles = shuffle(
-                signData
-                    .filter((item) => item.title !== question.title)
-                    .slice(0, 3)
-                    .concat([question])
+                data
+                    ? data
+                          .filter((item) => item.title !== question.title)
+                          .slice(0, 3)
+                          .concat([question])
+                    : defaultData
+                          .filter((item) => item.title !== question.title)
+                          .slice(0, 3)
+                          .concat([question])
             );
             return titles;
         });
         setOptions(optionsForQuestions);
-    }, []);
-
-    /* const [answered, setAnswered] = useState<boolean[]>(new Array(10).fill(false)); */
-    const [answered, setAnswered] = useState<boolean[]>(new Array(signData?.length).fill(false));
-
-    useEffect(() => {
-        setAnswered(new Array(signData?.length).fill(false));
     }, []);
 
     const handleAnswer = (isCorrect: boolean) => {
@@ -97,13 +102,16 @@ export default function Quiz() {
             if (isCorrect) {
                 setScore(score + 1);
             }
+            // else {
+            //     setScore(score - 1);
+            // }
             setAnswered((prevAnswered) =>
                 prevAnswered.map((item, index) => (index === currentQuiz ? true : item))
             );
         }
 
-        /*  if (currentQuiz < 9) { */
-        if (currentQuiz < signData.length - 1) {
+        if (currentQuiz < 9) {
+            // if (currentQuiz < fetchData.length - 1) {
             setCurrentQuiz(currentQuiz + 1);
         } else {
             alert("퀴즈가 끝났습니다.");
@@ -119,8 +127,8 @@ export default function Quiz() {
     };
 
     const handleNext = () => {
-        if (currentQuiz === signData.length - 1) return alert("마지막 문제입니다.");
-        if (currentQuiz < signData.length - 1) {
+        if (currentQuiz === 9) return alert("마지막 문제입니다.");
+        if (currentQuiz < 9) {
             setCurrentQuiz(currentQuiz + 1);
         }
     };
@@ -133,40 +141,53 @@ export default function Quiz() {
 
     return (
         <section>
-            <h1 className={`${styles.title}`}>Quiz</h1>
+            <>
+                {loading ? (
+                    <Spinner />
+                ) : (
+                    <>
+                        <h1 className={`${styles.title}`}>Quiz</h1>
 
-            {!quizFinished ? (
-                <div className={`${styles.quiz}`}>
-                    <p>{userInfo?.nickname}님의 수어 실력을 퀴즈로 확인해보세요 🙌🏻</p>
-                    <QuizBox
-                        question={questions[currentQuiz]}
-                        options={options[currentQuiz]}
-                        onAnswer={handleAnswer}
-                    />
-                    <div className={`${styles.menu_btn}`}>
-                        <button onClick={handlePrev}>
-                            <FontAwesomeIcon icon={faChevronLeft} size={"3x"} />
-                        </button>
-                        <button onClick={handleNext}>
-                            <FontAwesomeIcon icon={faChevronRight} size={"3x"} />
-                        </button>
-                    </div>
-                </div>
-            ) : (
-                <div
-                    className={score !== signData.length ? `${styles.answer}` : `${styles.allPass}`}
-                >
-                    <h2>🎊 맞춘 문제 🎉</h2>
-                    <p>{score}개</p>
-                    {score === signData.length && (
-                        <div className={`${styles.ending}`}>
-                            <p>축하합니다!!</p>
-                            <p>만점을 맞은 당신은 수어 고수!</p>
-                        </div>
-                    )}
-                    <button onClick={handleReset}> 다시 하기 </button>
-                </div>
-            )}
+                        {!quizFinished ? (
+                            <div className={`${styles.quiz}`}>
+                                <p>{userInfo?.nickname}님의 수어 실력을 퀴즈로 확인해보세요 🙌🏻</p>
+                                <p>{`${currentQuiz + 1}` + "/10"}</p>
+                                <QuizBox
+                                    question={questions[currentQuiz]}
+                                    options={options[currentQuiz]}
+                                    onAnswer={handleAnswer}
+                                />
+                                <div className={`${styles.menu_btn}`}>
+                                    <button onClick={handlePrev}>
+                                        <FontAwesomeIcon icon={faChevronLeft} size={"3x"} />
+                                    </button>
+                                    <button onClick={handleNext}>
+                                        <FontAwesomeIcon icon={faChevronRight} size={"3x"} />
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                className={
+                                    score !== data?.length
+                                        ? `${styles.answer}`
+                                        : `${styles.allPass}`
+                                }
+                            >
+                                <h2>🎊 맞춘 문제 🎉</h2>
+                                <p>{score}개</p>
+                                {score === data?.length && (
+                                    <div className={`${styles.ending}`}>
+                                        <p>축하합니다!!</p>
+                                        <p>만점을 맞은 당신은 수어 고수!</p>
+                                    </div>
+                                )}
+                                <button onClick={handleReset}> 다시 하기 </button>
+                            </div>
+                        )}
+                    </>
+                )}
+            </>
         </section>
     );
 }
