@@ -11,8 +11,8 @@ interface SpeechProps {
 
 const WebSpeech: React.FC<SpeechProps> = ({ chat }) => {
     return (
-        <div className={`${styles.speech} ${chat.type}`}>
-            {chat.type === "other" && <span className="nickname">{chat.name}</span>}
+        <div className={`${styles.speech} ${chat.type === "me" ? styles.me : styles.other}`}>
+            {chat.type === "other" && <span className={`${styles.nickname}`}>{chat.name}</span>}
             <span className="msg-box">{chat.content}</span>
         </div>
     );

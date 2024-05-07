@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./webchatting/WebCam.module.scss";
 import { useInfoStore } from "../store/store";
 import WebSpeech from "./webchatting/WebSpeech";
+
 const pc_config = {
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
 };
@@ -21,7 +22,6 @@ const SOCKET_SERVER_URL = process.env.REACT_APP_API_SERVER;
 const Webcam = () => {
     const [tutorIndex, setTutorIndex] = useState<number>(1);
     const [stuIndex, setStuIndex] = useState<number>(1);
-
     const socketRef = useRef<SocketIOClient.Socket>();
     const pcRef = useRef<RTCPeerConnection>();
     const pcRef2 = useRef<RTCPeerConnection>();
@@ -37,6 +37,19 @@ const Webcam = () => {
     const userInfo = useInfoStore((state) => state.userInfo);
     const [msgInput, setMsgInput] = useState("");
     const [chatList, setChatList] = useState<any[]>([]);
+
+    // 스크롤
+    const chatBoxRef = useRef<HTMLDivElement>(null);
+    const scrollToBottom = () => {
+      if (chatBoxRef.current) {
+        chatBoxRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatList]);
+    // 스크롤 end
 
     useEffect(() => {
         const initSocketConnect = () => {
@@ -282,7 +295,7 @@ const Webcam = () => {
                         <p className={`${styles.title}`}>화상채팅</p>
                         <div className={`${styles.chatting_content}`}>
                             {/* <header className={`${styles.webchatheader}`}>1:1 화상 수업방</header> */}
-                            <div className={`${styles.chat_box}`}>
+                            <div ref={chatBoxRef} className={`${styles.chat_box}`}>
                                 {chatList.map((chat, i) => {
                                     return <WebSpeech key={i} chat={chat} />;
                                 })}
