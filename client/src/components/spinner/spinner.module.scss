@@ -1,0 +1,17 @@
+@import "../styles/util";
+
+.spinner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    img {
+        width: 180px;
+    }
+    p {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: $color-primary;
+    }
+}

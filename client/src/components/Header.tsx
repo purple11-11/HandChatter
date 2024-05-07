@@ -72,7 +72,7 @@ const Header = () => {
                                 <Link to="/learning">개인학습</Link>
                             </li>
                             <li>
-                                <Link to="/learning/quiz">퀴즈</Link>
+                                <Link to="/quiz">퀴즈</Link>
                             </li>
                             {!isLogin ? (
                                 <>
