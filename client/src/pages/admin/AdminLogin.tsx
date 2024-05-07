@@ -51,7 +51,7 @@ export default function AdminLogin() {
         }
     };
     return (
-        <section>
+        <section className="some-section">
             <div className={`${styles.login_admin_wrapper}`}>
                 <h2>관리자 로그인</h2>
                 <div className={`${styles.login_box}`}>

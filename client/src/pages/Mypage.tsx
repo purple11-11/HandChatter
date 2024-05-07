@@ -20,7 +20,7 @@ const MyPage: React.FC = () => {
     };
 
     return (
-        <section>
+        <section className="mypage-section">
             <div className="container">
                 <div className="mypage-button-container">
                     <button

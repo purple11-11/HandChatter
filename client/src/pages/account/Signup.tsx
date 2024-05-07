@@ -160,7 +160,7 @@ export default function StudentSignup({ role }: RoleProps) {
     };
 
     return (
-        <section>
+        <section className="some-section">
             <div className={`${styles.signup_container}`}>
                 <h2>{role === "student" ? "학생 " : "강사 "} 회원가입</h2>
                 <div className={`${styles.go_to_other_sign_up}`}>

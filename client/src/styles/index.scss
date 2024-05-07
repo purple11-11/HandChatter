@@ -48,6 +48,10 @@ button {
     // border: 15px solid black;
     border-bottom: 5px solid rgba(black, 0.2);
 }
+.some-section {
+    min-height: 1000px;
+}
+
 // Instructor card
 .card-container {
     // display: block;
@@ -156,50 +160,6 @@ button {
 }
 
 // Instructor Detail Page
-.instructor-profile {
-    width: 100%;
-    margin: 50px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #004d51;
-    .big {
-        width: 130px;
-        height: 130px;
-        border-radius: 65px;
-        margin-right: 50px;
-        img {
-            width: 130px;
-        }
-    }
-    .profile-content {
-        width: 250px;
-        display: flex;
-        flex-direction: column;
-        h2 {
-            padding: 0;
-            margin: 0;
-        }
-        div {
-            .dm {
-                width: 205px;
-                height: 30px;
-            }
-            .favorite {
-                margin-left: 13px;
-                width: 30px;
-                height: 30px;
-                overflow: hidden;
-                img {
-                    width: 15px;
-                }
-                &:hover {
-                    background-color: #ffffff;
-                }
-            }
-        }
-    }
-}
 
 .tutor-introduce-content {
     min-height: 580px;
@@ -312,6 +272,9 @@ button {
 }
 
 // Mypage
+.mypage-section {
+    min-height: 1000px;
+}
 .mypage-button-container {
     width: 700px;
     margin: 20px auto;
@@ -572,6 +535,11 @@ button {
     }
 }
 
+@media screen and (min-height: 1000px) {
+    section {
+        min-height: 1000px;
+    }
+}
 // 핸드폰 화면 크기에 맞는 스타일
 @media screen and (max-width: 767px) {
     .container {
@@ -582,7 +550,7 @@ button {
     section {
         // min-height: 100vh;
         border-bottom: 2px solid #d4d4ba;
-        padding: 80px;
+        padding: 0;
     }
     /* header */
     .header {
@@ -679,37 +647,103 @@ button {
 
     // InstructorCard
     .card-container {
+        display: none;
+    }
+    .like-container {
+        .favorite-title {
+            width: 240px;
+            // border: 1px solid red;
+            margin: 0 auto;
+            font-size: 25px;
+            font-weight: bold;
+        }
+    }
+    .slide-container {
+        overflow: hidden;
+        width: 290px;
+        height: 500px;
+        margin: 0 auto;
         // border: 1px solid red;
-        min-width: 500px;
-        justify-content: space-evenly;
-        .card {
-            width: 200px;
-            height: 300px;
-            &:hover {
-                transition: transform 0.3s ease;
-                transform: scale(1.1);
-            }
-            .profile-info {
-                width: 150px;
-                height: 120px;
-                bottom: 30px;
-                left: 25px;
-                ul {
-                    li:first-child {
-                        font-size: 20px;
+        .slide-wrapper {
+            // border: 1px solid blue;
+            display: flex;
+            transition: transform 0.3s ease;
+            margin-top: 20px;
+            .slide {
+                flex: 0 0 auto;
+                width: 250px;
+                height: 400px;
+                transition: transform 0.5s ease;
+                border: 1px solid #c9c9aa;
+                border-radius: 10px;
+                box-shadow: 3px 3px 3px gray;
+                color: #ffffeb;
+                margin: 0 20px;
+                overflow: hidden;
+                position: relative;
+                &:hover {
+                    transition: transform 0.3s ease;
+                    transform: scale(1.05);
+                }
+                a {
+                    .gradi {
+                        position: absolute;
+                        height: 100%;
+                        vertical-align: center;
+                        z-index: 1;
+                        max-height: 100%;
+                        background: linear-gradient(
+                            to bottom,
+                            rgba(#fffff3, 0.2),
+                            rgba(#000000, 0.3)
+                        );
+                        &:hover {
+                            background: linear-gradient(
+                                to bottom,
+                                rgba(#ffffff, 0.01),
+                                rgba(#000000, 0.5)
+                            );
+                        }
                     }
-                    li:nth-child(2) {
-                        font-size: 10px;
-                        margin-bottom: 10px;
+                    .profile {
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        overflow: hidden;
+                        img {
+                            height: 100%;
+                            vertical-align: middle;
+                            opacity: 0.8;
+                        }
                     }
-                    li:nth-child(3) {
-                        font-size: 12px;
-                        padding-bottom: 10px;
-                        margin-bottom: 10px;
-                        border-bottom: 1px solid #d4d4ba;
-                    }
-                    li:last-child {
-                        font-size: 15px;
+                    .profile-info {
+                        width: 150px;
+                        height: 120px;
+                        bottom: 30px;
+                        left: 25px;
+                        position: absolute;
+                        z-index: 1;
+                        left: 0;
+                        color: #fcfcec;
+                        ul {
+                            li:first-child {
+                                font-size: 20px;
+                            }
+                            li:nth-child(2) {
+                                font-size: 10px;
+                                margin-bottom: 10px;
+                            }
+                            li:nth-child(3) {
+                                font-size: 12px;
+                                padding-bottom: 10px;
+                                margin-bottom: 10px;
+                                border-bottom: 1px solid #d4d4ba;
+                            }
+                            li:last-child {
+                                font-size: 15px;
+                            }
+                        }
                     }
                 }
             }
@@ -719,29 +753,91 @@ button {
     // main
     .main-banner {
         div {
-            left: 130px;
-            bottom: 50%;
-            font-size: 30px;
+            width: 70%;
+            bottom: 42%;
+            font-size: 20px;
         }
     }
 
     .ourtutor {
-        div {
+        // border: 1px solid red;
+        position: relative;
+        .container {
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            // border: 1px solid red;
+            position: absolute;
+            top: 50px;
             p {
+                text-align: center;
                 font-size: 50px;
+                padding-right: 20px;
             }
             .search {
-                width: 462px;
+                width: 100%;
                 input {
-                    width: 460px;
+                    width: 95%;
                 }
             }
         }
     }
 
     // Instructor detail page
-    .tutor-introduce-content {
+    .instructor-detail-section {
+        padding: 0;
+        margin: 50px 0;
+    }
+    .instructor-profile {
         width: 100%;
+        // border: 1px solid red;
+        margin: 50px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #004d51;
+        .big {
+            width: 100px;
+            height: 100px;
+            border-radius: 65px;
+            margin-right: 50px;
+            img {
+                height: 100px;
+            }
+        }
+        .profile-content {
+            width: 150px;
+            display: flex;
+            flex-direction: column;
+            h2 {
+                padding: 0;
+                margin: 0;
+            }
+            div {
+                .dm {
+                    width: 100px;
+                    height: 30px;
+                }
+                .favorite {
+                    margin-left: 10px;
+                    width: 30px;
+                    height: 30px;
+                    overflow: hidden;
+                    img {
+                        width: 15px;
+                    }
+                    &:hover {
+                        background-color: #ffffff;
+                    }
+                }
+            }
+        }
+    }
+    .tutor-introduce-content {
+        width: 95%;
+        margin: 0 auto;
         .tutor-video-introduce {
             width: 89%;
             height: 500px;
@@ -760,15 +856,21 @@ button {
     }
 
     // Mypage
+    .mypage-section {
+        padding: 0;
+        margin: 70px 0 50px;
+        border: none;
+        min-height: 800px;
+    }
     .mypage-button-container {
-        width: 500px;
+        width: 95%;
         margin: 20px auto;
         display: flex;
         justify-content: space-between;
         button {
-            padding: 8px 37px;
+            padding: 8px 5%;
             color: #004d51;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: bold;
             border: none;
             box-shadow: none;
@@ -787,14 +889,14 @@ button {
     }
 
     .mypage-components-container {
-        min-width: 450px;
+        min-width: 350px;
         .title {
             // border: 1px solid red;
-            width: 450px;
+            width: 350px;
             margin: 40px auto 20px;
         }
         .mypage-profile-container {
-            width: 450px;
+            width: 350px;
             .mypage-input-container {
                 margin: 40px auto;
                 .withdraw-btn {
@@ -858,7 +960,7 @@ button {
         justify-content: center;
 
         .modal-content {
-            width: 500px;
+            width: 350px;
             background-color: #fcfcec;
             padding: 30px 50px;
             border-radius: 8px;
@@ -915,7 +1017,7 @@ button {
 
     // chatting
     .chatting {
-        width: 100%;
+        width: 350px;
         margin-top: 30px;
         .chatting-container {
             // display: flex;
@@ -947,7 +1049,8 @@ button {
                             border-radius: 20px;
                             overflow: hidden;
                             img {
-                                width: 50px;
+                                width: 40px;
+                                vertical-align: center;
                             }
                         }
                         .room-info {
@@ -1040,7 +1143,8 @@ button {
                         }
                     }
                     .chatting-input {
-                        width: 100%;
+                        margin: 0 auto;
+                        width: 90%;
                         height: 66px;
                         position: relative;
                         display: flex;
@@ -1053,8 +1157,8 @@ button {
                         }
                         button {
                             position: absolute;
-                            top: 23px;
-                            right: 30px;
+                            top: 22px;
+                            right: 8px;
                             box-shadow: none;
                             background-color: #ffffdd;
                             border: 1px solid #c9c9aa;
@@ -1073,7 +1177,7 @@ button {
                 .chatting-tutor-intro {
                     display: none;
                     width: 100%;
-                    height: 280px;
+                    height: 220px;
                     background-color: #3e888c;
                     border-radius: 0 0 10px 10px;
                     color: #ffffdd;
@@ -1086,13 +1190,13 @@ button {
                         li {
                             color: #ffffdd;
                             .big {
-                                width: 100px;
-                                height: 100px;
+                                width: 90px;
+                                height: 90px;
                                 border-radius: 50px;
                                 overflow: hidden;
                                 margin-bottom: 15px;
                                 img {
-                                    height: 130px;
+                                    height: 90px;
                                     vertical-align: middle;
                                 }
                             }
@@ -1124,31 +1228,31 @@ button {
                                 margin: 0;
                             }
                             .mobile-profile-name {
-                                font-size: 20px;
+                                font-size: 15px;
                             }
                             .mobile-profile-email {
-                                font-size: 13px;
-                                margin-bottom: 15px;
+                                font-size: 10px;
+                                margin-bottom: 10px;
                             }
                             .mobile-profile-score {
-                                font-size: 15px;
+                                font-size: 10px;
                                 margin-bottom: 5px;
                             }
                             .mobile-profile-price {
-                                font-size: 15px;
+                                font-size: 10px;
                             }
                         }
                         .profile-introduce {
-                            width: 250px;
-                            height: 220px;
+                            width: 180px;
+                            height: 170px;
                             p {
-                                font-size: 13px;
+                                font-size: 10px;
                                 margin: 0;
                                 margin-bottom: 5px;
                             }
                             div {
                                 height: 80%;
-                                font-size: 13px;
+                                font-size: 10px;
                                 border-radius: 10px;
                                 padding: 15px;
                                 background-color: #559ea2;
@@ -1309,6 +1413,9 @@ button {
         }
     }
 
+    .slide-container {
+        display: none;
+    }
     // Instructor card
     .card-container {
         width: 900px;
@@ -1356,6 +1463,10 @@ button {
         }
     }
     .ourtutor {
+        display: flex;
+        flex-direction: center;
+        justify-content: center;
+        align-items: center;
         div {
             p {
                 font-size: 70px;
@@ -1910,6 +2021,9 @@ button {
         }
     }
 
+    .slide-container {
+        display: none;
+    }
     // Main
     .main-banner {
         background-image: url("../assets/mainImg.jpg");
@@ -1921,6 +2035,10 @@ button {
         }
     }
     .ourtutor {
+        display: flex;
+        flex-direction: center;
+        justify-content: center;
+        align-items: center;
         div {
             p {
                 font-size: 70px;
