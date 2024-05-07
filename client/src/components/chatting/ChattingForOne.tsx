@@ -25,13 +25,14 @@ const ChattingForOne: React.FC<{
     const tutor_idx = userInfo?.tutor_idx;
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+    };
 
     const initSocketConnect = async () => {
         if (!socket.connected) socket.connect();
@@ -206,7 +207,7 @@ const ChattingForOne: React.FC<{
                         {message.sender === "me" ? (
                             <span className={message.sender}>{message.content}</span>
                         ) : (
-                            <span  className="you">{message.content}</span>
+                            <span className="you">{message.content}</span>
                         )}
                     </div>
                 ))}
