@@ -2,7 +2,6 @@
 
 .login_wrapper {
     width: 380px;
-    height: 30vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,7 +18,7 @@ form {
     input {
         width: 180px;
         height: 40px;
-        border-radius: 20px;
+        border-radius: 10px;
         padding: 0 40px 0 20px;
     }
 }
