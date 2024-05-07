@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { useInfoStore } from "../../store/store";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const socket = io(process.env.REACT_APP_API_SERVER, {
     autoConnect: false,
@@ -24,6 +24,8 @@ const ChattingForOne: React.FC<{
     const stu_idx = userInfo?.stu_idx;
     const tutor_idx = userInfo?.tutor_idx;
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         scrollToBottom();
@@ -187,6 +189,20 @@ const ChattingForOne: React.FC<{
         console.log("messages", messages);
     });
     console.log(showTutorInfo);
+
+    const handleEnterClass = () => {
+        try{
+            if (!userInfo?.tutor_idx) {
+                navigate(`/class/${stu_idx}`);
+              } else {
+                // 화상 및 채팅이 불가능한 경우에는 어떤 알림을 표시할 수 있습니다.
+                navigate(`/class/${tutor_idx}`);
+            }
+        }catch(error){
+            alert('튜터와 학생 간의 화상 및 채팅 통신이 불가능합니다.');
+            }
+        }
+
     return (
         <div className="chatting-for-one">
             <ul>
@@ -195,8 +211,8 @@ const ChattingForOne: React.FC<{
                 </li>
                 <li>{room.name}</li>
                 <li>
-                    <button>
-                        <Link to="/class">수업하기</Link>
+                    <button onClick = {() => handleEnterClass()} >
+                    <Link to={`/class/${userInfo?.tutor_idx || userInfo?.stu_idx}`}>수업하기</Link>
                     </button>
                 </li>
             </ul>
