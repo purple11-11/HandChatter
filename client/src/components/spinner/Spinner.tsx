@@ -1,4 +1,4 @@
-import spinner from "../assets/hourglass.gif";
+import spinner from "../../assets/hourglass.gif";
 import styles from "./spinner.module.scss";
 
 export default function Spinner() {
