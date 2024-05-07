@@ -67,7 +67,7 @@ const Webcam = () => {
             nick: userInfo?.nickname,
             msg: msgInput,
         };
-        socket.emit("send", sendData);
+        socket.emit("sendRTC", sendData);
         setMsgInput("");
     };
 
@@ -84,7 +84,7 @@ const Webcam = () => {
     );
 
     useEffect(() => {
-        socket.on("message", addChatList);
+        socket.on("messageRTC", addChatList);
     }, [addChatList]);
     // 1:1 채팅 end
 

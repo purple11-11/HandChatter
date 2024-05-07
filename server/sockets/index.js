@@ -137,10 +137,10 @@ function socketHandler(server) {
         });
         
         ///WebRTC (4)
-        socket.on("send", (msgData) => {
+        socket.on("sendRTC", (msgData) => {
             msgData = { nick: msgData.nick, msg: msgData.msg };    
             const {msg, nick} = msgData; 
-              io.emit("message", {
+              io.emit("messageRTC", {
                 nick: nick, 
                 msg: msg,
               });
