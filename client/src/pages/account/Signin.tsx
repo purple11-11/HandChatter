@@ -47,7 +47,7 @@ export default function Signip() {
     };
 
     return (
-        <section>
+        <section  className="some-section">
             <div className={`${styles.login_container}`}>
                 <h2>{role.role === "student" ? "학생 " : "강사 "} 로그인</h2>
                 <div className={`${styles.go_to_sign_up}`}>

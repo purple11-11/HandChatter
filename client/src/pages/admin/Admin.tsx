@@ -54,7 +54,7 @@ export default function Admin() {
 
     return (
         <>
-            <section>
+            <section className="some-section">
                 <h1>Our Tutors</h1>
                 <table>
                     <tr className="first_tr">

@@ -124,7 +124,7 @@ export default function PersonalLearning() {
             {loading ? (
                 <Spinner />
             ) : (
-                <section>
+                <section className="some-section">
                     <div className={`${styles.title}`}>
                         <h1>무엇을 검색하시겠어요?</h1>
 

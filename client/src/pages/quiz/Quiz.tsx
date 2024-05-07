@@ -140,7 +140,7 @@ export default function Quiz() {
     };
 
     return (
-        <section>
+        <section className="some-section">
             <>
                 {loading ? (
                     <Spinner />
