@@ -181,7 +181,7 @@ const Chatting: React.FC = () => {
                                 setShowTutorInfo={setShowTutorInfo}
                                 showTutorInfo={showTutorInfo}
                             />
-                            {userInfo?.tutor_idx ? (
+                            {!userInfo?.tutor_idx ? (
                                 <ChattingTutorIntroductor
                                     room={room}
                                     showTutorInfo={showTutorInfo}

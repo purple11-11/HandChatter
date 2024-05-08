@@ -2,11 +2,10 @@ import { useEffect, useRef, useState, useCallback } from "react";
 // import * as io from "socket.io-client";
 import io from "socket.io-client";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "./webchatting/WebCam.module.scss";
 import { useInfoStore } from "../store/store";
 import WebSpeech from "./webchatting/WebSpeech";
-
 const pc_config = {
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
 };
@@ -18,8 +17,6 @@ const socket = io(process.env.REACT_APP_API_SERVER, {
 const SOCKET_SERVER_URL = process.env.REACT_APP_API_SERVER;
 
 const Webcam = () => {
-    const [tutorIndex, setTutorIndex] = useState<number>(1);
-    const [stuIndex, setStuIndex] = useState<number>(1);
     const socketRef = useRef<SocketIOClient.Socket>();
     const pcRef = useRef<RTCPeerConnection>();
     const pcRef2 = useRef<RTCPeerConnection>();
@@ -30,7 +27,7 @@ const Webcam = () => {
     const [showModal, setShowModal] = useState(false); // 모달 상태를 저장하는 상태 변수
     const [rating, setRating] = useState(0); // 별점을 저장하는 상태 변수
     const [review, setReview] = useState(""); // 후기를 저장하는 상태 변수
-
+    const { id } = useParams();
     // 1:1 채팅
     const userInfo = useInfoStore((state) => state.userInfo);
     const [msgInput, setMsgInput] = useState("");
@@ -248,13 +245,15 @@ const Webcam = () => {
             const response = await axios.post(url, {
                 content: review,
                 rating: rating,
-                tutor_idx: tutorIndex,
-                stu_idx: stuIndex,
+                tutor_idx: id,
+                stu_idx: userInfo?.stu_idx,
             });
-
+            console.log(userInfo?.stu_idx + "++++" + id);
             if (response.status === 200) {
                 console.log("후기 작성 성공");
-                navigate(`/mypage/${stuIndex}`, { state: { fromwebcam: true } }); // 수정
+                navigate(`/mypage/${userInfo?.stu_idx ? userInfo.stu_idx : id}`, {
+                    state: { fromwebcam: true },
+                }); // 수정
             } else {
                 console.log("서버에서 응답을 받을 수 없습니다.");
             }
@@ -262,7 +261,7 @@ const Webcam = () => {
             console.error("후기 전송 중 오류 발생:", error);
         }
     };
-
+    console.log(id);
     const ChattExit = () => {
         if (userInfo && userInfo.tutor_idx) {
             // 튜터인 경우 바로 마이페이지로 이동
