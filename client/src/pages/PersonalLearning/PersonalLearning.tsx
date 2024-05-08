@@ -39,7 +39,7 @@ export default function PersonalLearning() {
     const currentItems = searchResults.slice(indexOfFirstItem, indexOfLastItem);
 
     useEffect(() => {
-        if (!data) fetchData();
+        if (data?.length === 0) fetchData();
 
         if (fetchedDataRef.current.length > 0) return;
 
@@ -52,7 +52,7 @@ export default function PersonalLearning() {
             setSearchResults([]);
             setError("검색 중 오류가 발생했습니다.");
         }
-    }, []);
+    }, [data]);
 
     const paginate = (pageNumber: number) => {
         setCurrentPage(pageNumber);

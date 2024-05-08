@@ -39,16 +39,15 @@ const Webcam = () => {
     // 스크롤
     const chatBoxRef = useRef<HTMLDivElement>(null);
     const scrollToBottom = () => {
-      if (chatBoxRef.current) {
-        chatBoxRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-      }
+        if (chatBoxRef.current) {
+            chatBoxRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
     };
 
     useEffect(() => {
         scrollToBottom();
     }, [chatList]);
     // 스크롤 end
-
 
     useEffect(() => {
         const initSocketConnect = () => {
@@ -93,7 +92,7 @@ const Webcam = () => {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: true,
-                audio: !isMicMuted,
+                audio: isMicMuted,
             });
 
             if (localVideoRef.current) localVideoRef.current.srcObject = stream;
@@ -265,14 +264,14 @@ const Webcam = () => {
     };
 
     const ChattExit = () => {
-      if (userInfo && userInfo.tutor_idx) {
-          // 튜터인 경우 바로 마이페이지로 이동
-          const userId = userInfo.tutor_idx;
-          navigate(`/mypage/${userId}`);
-      } else {
-          // 학생인 경우 모달 열기
-          setShowModal(true);
-      }
+        if (userInfo && userInfo.tutor_idx) {
+            // 튜터인 경우 바로 마이페이지로 이동
+            const userId = userInfo.tutor_idx;
+            navigate(`/mypage/${userId}`);
+        } else {
+            // 학생인 경우 모달 열기
+            setShowModal(true);
+        }
     };
     return (
         <div className={`${styles.CAM}`}>
