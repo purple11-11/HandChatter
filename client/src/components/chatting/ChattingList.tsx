@@ -23,14 +23,17 @@ const ChattingList: React.FC<{
             listRef.current.scrollLeft = listRef.current.scrollWidth;
         }
     }, [rooms]);
-
+    console.log(rooms);
     return (
         <>
             <ul ref={listRef}>
                 {rooms.map((room) => (
                     <li key={room.id} onClick={() => handleClick(room.id)}>
                         <div className="profile-img middle">
-                            <img src={`${process.env.REACT_APP_API_SERVER}/${room.profileImg}`} alt="" />
+                            <img
+                                src={`${process.env.REACT_APP_API_SERVER}/${room.profileImg}`}
+                                alt=""
+                            />
                         </div>
                         <div className="room-info">
                             <p>{room.name}</p>
