@@ -2,9 +2,11 @@ const { Tutor, Student, Favorites, Review, Message, sequelize } = require("../mo
 const { Op } = require("sequelize");
 const { transporter } = require("../modules/nodemailer/nodemailer");
 const fs = require("fs");
+const axios = require("axios");
 
 const bcrypt = require("bcrypt");
 const { emit } = require("process");
+const { log } = require("console");
 
 const saltRound = 10;
 
@@ -14,6 +16,32 @@ function hashPW(pw) {
 function comparePW(inputpw, hashedpw) {
     return bcrypt.compareSync(inputpw, hashedpw);
 }
+
+// GET /api/signs
+exports.getSignData = async (req, res) => {
+    try {
+        const result = await axios.get(process.env.OPEN_API_URL, {
+            params: {
+                serviceKey: process.env.OPEN_API_KEY,
+            },
+        });
+
+        const items = result.data.response.body.items.item;
+        const results = items.map((item, index) => ({
+            key: index,
+            title: item.title,
+            url: item.url,
+            description: item.description,
+            referenceIdentifier: item.referenceIdentifier,
+            subDescription: item.subDescription,
+        }));
+
+        return res.send(results);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("SERVER ERROR!!!");
+    }
+};
 
 // GET /api/userInfo
 exports.getInfo = async (req, res) => {

@@ -16,6 +16,9 @@ const multer = require("../modules/multer/multer");
  *   description: 학생 추가 수정 삭제 조회
  */
 
+// /api/signs
+router.get("/signs", controller.getSignData);
+
 // /api/userInfo
 router.get("/userInfo", controller.getInfo);
 // GET /api

@@ -16,29 +16,16 @@ export const useSignStore = create<SignStore>()(
             loading: false,
             fetchData: async () => {
                 set({ loading: true });
+                console.log("ddd");
                 try {
+                    console.log("API_URL ::", process.env.REACT_APP_API_URL);
+
                     if (process.env.REACT_APP_API_URL && process.env.REACT_APP_API_KEY) {
-                        const response = await axios.get(process.env.REACT_APP_API_URL, {
-                            params: {
-                                serviceKey: process.env.REACT_APP_API_KEY,
-                            },
-                        });
-
-                        let results: SignRes[] = [];
-                        if (response.data.response.body.items) {
-                            const items = response.data.response.body.items.item;
-
-                            results = items.map((item: SignRes, index: number) => ({
-                                key: index,
-                                title: item.title,
-                                url: item.url,
-                                description: item.description,
-                                referenceIdentifier: item.referenceIdentifier,
-                                subDescription: item.subDescription,
-                            }));
-                        }
-
-                        set({ data: results, loading: true });
+                        const response = await axios.get(
+                            process.env.REACT_APP_API_SERVER + "/api/signs"
+                        );
+                        console.log("API Response ::", response.data);
+                        set({ data: response.data, loading: true });
                     }
                 } catch (error) {
                     console.error("API 오청 중 오류 발생 ::", error);
