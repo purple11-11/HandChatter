@@ -1260,6 +1260,8 @@ button {
             align-items: center;
             width: 100%;
             .logo {
+                padding-left: 20px;
+                // padding-right: 10px;
                 margin: auto 0;
                 font-size: 20px;
                 img {
@@ -1268,7 +1270,11 @@ button {
             }
             .mobile-git-btn {
                 a {
+                    font-size: 10px;
                     color: #f3f3b2;
+                    img {
+                        width: 15px;
+                    }
                 }
             }
             .git-btn {
@@ -1282,7 +1288,7 @@ button {
                 flex-direction: column;
                 flex-wrap: wrap;
                 div {
-                    width: 65px;
+                    width: 64px;
                     margin-left: 20px;
                     margin-bottom: 10px;
                     p {
@@ -1300,9 +1306,21 @@ button {
                                 font-size: 13px;
                                 display: block;
                                 color: #f3f3b2;
-                                &:hover {
-                                }
                             }
+                        }
+                    }
+                    &:nth-child(3) {
+                        margin-left: -30px;
+                    }
+                    &:last-child {
+                        width: 72px;
+                        margin-left: -30px;
+                        position: relative;
+                        padding-left: 17px;
+                        img {
+                            position: absolute;
+                            top: 4px;
+                            left: -1px;
                         }
                     }
                 }
@@ -1902,9 +1920,19 @@ button {
             .git-btn {
                 a {
                     color: #f3f3b2;
+                    position: relative;
+                    img {
+                        position: absolute;
+                        width: 30px;
+                        top: -5px;
+                        left: -7px;
+                    }
                 }
             }
             .footer-content {
+                .mobile-git-btn {
+                    display: none;
+                }
                 display: flex;
                 div {
                     display: flex;
@@ -1923,8 +1951,6 @@ button {
                             a {
                                 display: block;
                                 color: #f3f3b2;
-                                &:hover {
-                                }
                             }
                         }
                     }
@@ -2527,9 +2553,19 @@ button {
             .git-btn {
                 a {
                     color: #f3f3b2;
+                    position: relative;
+                    img {
+                        position: absolute;
+                        width: 30px;
+                        top: -5px;
+                        left: -7px;
+                    }
                 }
             }
             .footer-content {
+                .mobile-git-btn {
+                    display: none;
+                }
                 display: flex;
                 div {
                     display: flex;
@@ -2548,8 +2584,6 @@ button {
                             a {
                                 display: block;
                                 color: #f3f3b2;
-                                &:hover {
-                                }
                             }
                         }
                     }

@@ -1,4 +1,5 @@
 import Logo from "../assets/header-logo.png";
+import Github from "../assets/github@2x.png";
 
 export default function Footer() {
     return (
@@ -44,14 +45,14 @@ export default function Footer() {
                     </div>
                     <div className="mobile-git-btn">
                         <a href="https://github.com/purple11-11/HandChatter" target="_blank">
-                            <img src="" alt="" />
+                            <img src={Github} alt="" />
                             HandChatter
                         </a>
                     </div>
                 </div>
                 <div className="git-btn">
                     <a href="https://github.com/purple11-11/HandChatter" target="_blank">
-                        <img src="" alt="" />
+                        <img src={Github} alt="" />
                         Git HandChatter
                     </a>
                 </div>
