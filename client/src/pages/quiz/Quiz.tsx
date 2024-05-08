@@ -140,7 +140,7 @@ export default function Quiz() {
     };
 
     return (
-        <section>
+        <section className="some-section">
             <>
                 {loading ? (
                     <Spinner />
@@ -151,7 +151,9 @@ export default function Quiz() {
                         {!quizFinished ? (
                             <div className={`${styles.quiz}`}>
                                 <p>{userInfo?.nickname}님의 수어 실력을 퀴즈로 확인해보세요 🙌🏻</p>
-                                <p>{`${currentQuiz + 1}` + "/10"}</p>
+                                <p className={`${styles.q_number}`}>
+                                    {`${currentQuiz + 1}` + "/10"}
+                                </p>
                                 <QuizBox
                                     question={questions[currentQuiz]}
                                     options={options[currentQuiz]}

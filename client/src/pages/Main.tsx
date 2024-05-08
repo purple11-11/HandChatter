@@ -4,10 +4,8 @@ import axios from "axios";
 import InstructorCard from "../components/InstructorCard";
 import { Tutor } from "../types/interface";
 import mainImg from "../assets/mainImg.jpg";
-
+import Slider from "../components/Slide";
 export default function Main() {
-    const url = "http://api.kcisa.kr/openapi/service/rest/meta13/getCTE01701";
-    const apiKey = "5e912661-427a-40bb-814d-facab428d26f";
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [searchResults, setSearchResults] = useState<Tutor[]>([]);
     const [error, setError] = useState<string>("");
@@ -91,6 +89,43 @@ export default function Main() {
             window.removeEventListener("resize", adjustContainerHeight);
         };
     }, [searchResults]);
+
+    const [touchStart, setTouchStart] = useState<number>(0);
+    const [touchEnd, setTouchEnd] = useState<number>(0);
+    const [currentSlide, setCurrentSlide] = useState<number>(0);
+    const slideRef = useRef<HTMLDivElement>(null);
+    const slideContainerRef = useRef<HTMLDivElement>(null);
+    const children = slideContainerRef.current?.querySelectorAll(".slide");
+    const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+
+    const handleTouchEnd = () => {
+        if (children === undefined) return;
+
+        if (touchStart - touchEnd > 150) {
+            if (currentSlide < children.length - 1) {
+                setCurrentSlide(currentSlide + 1);
+            }
+        }
+
+        if (touchStart - touchEnd < -150) {
+            if (currentSlide > 0) {
+                setCurrentSlide(currentSlide - 1);
+            }
+        }
+    };
+
+    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            handleSearchTutor();
+        }
+    };
+    
     return (
         <div>
             <section className="main-banner">
@@ -105,6 +140,7 @@ export default function Main() {
                             placeholder="튜터 검색"
                             value={searchTerm}
                             onChange={handleChange}
+                            onKeyPress={handleKeyPress}
                         />
                         <button onClick={handleSearchTutor}>검색</button>
                     </div>
@@ -120,6 +156,37 @@ export default function Main() {
                             ))
                         ) : (
                             <p className="no-answer">검색 결과가 없습니다.</p>
+                        )}
+                    </div>
+                    <div
+                        className="slide-container"
+                        ref={slideContainerRef}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                    >
+                        {children !== undefined ? (
+                            <div
+                                className="slide-wrapper"
+                                style={{
+                                    transform: `translateX(-${currentSlide * 100}%)`,
+                                }}
+                                ref={slideRef}
+                            >
+                                {searchResults.length !== 0 ? (
+                                    searchResults.map((tutor, index) => (
+                                        <div className="slide">
+                                            <Link to={`/tutors/${tutor.tutor_idx}`}>
+                                                <Slider tutor={tutor}></Slider>
+                                            </Link>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="no-answer">검색 결과가 없습니다.</p>
+                                )}
+                            </div>
+                        ) : (
+                            <p>현재 강사가 없습니다.</p>
                         )}
                     </div>
                 </div>

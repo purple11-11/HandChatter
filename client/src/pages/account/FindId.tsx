@@ -1,7 +1,5 @@
 import axios from "axios";
 import { useState } from "react";
-import { set } from "react-hook-form";
-import MypageWithdrawMembership from "../../components/Mypage/MypageWithdrawMembership";
 import styles from "./findId.module.scss";
 
 export default function FindId() {
@@ -19,17 +17,17 @@ export default function FindId() {
     };
 
     return (
-        <section>
+        <section className="some-section">
             <div className={`${styles.find_id_container}`}>
                 <h2>아이디 찾기</h2>
                 <div className={`${styles.find_id}`}>
                     <div className={`${styles.find_email}`}>
-                        {/* <label htmlFor="email">이메일</label> */}
+                        <label htmlFor="email">이메일</label>
                         <input
                             className={`${styles.find_id_input}`}
                             type="email"
                             id="email"
-                            placeholder="E-mail"
+                            placeholder="example@example.com"
                             value={email || ""}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -40,7 +38,7 @@ export default function FindId() {
                         아이디 찾기
                     </button>
 
-                    <div className="find_id_result">
+                    <div className={`${styles.find_id_result}`}>
                         <p>{findIdResult}</p>
                     </div>
                 </div>

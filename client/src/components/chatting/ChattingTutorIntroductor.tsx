@@ -29,7 +29,10 @@ const ChattingTutorIntroductor: React.FC<{ room: ChatRoom; showTutorInfo: boolea
                 <li className="mobile-tutor-introduce">
                     <div>
                         <div className="profile-img big">
-                            <img src="" alt="" />
+                            <img
+                                src={`${process.env.REACT_APP_API_SERVER}/${room.profileImg}`}
+                                alt=""
+                            />
                         </div>
                     </div>
                     <p className="mobile-profile-name">{room.name}</p>

@@ -111,7 +111,7 @@ export default function FindPw() {
     };
 
     return (
-        <section>
+        <section className="some-section">
             <div className={`${styles.find_pw_container}`}>
                 <h2>비밀번호 변경</h2>
                 <div className={`${styles.find_pw}`}>
@@ -191,12 +191,9 @@ export default function FindPw() {
                                         />
                                     </div>
                                     <div className={`${styles.modal_check}`}>{wrongPw1}</div>
-                                    <button
-                                        onClick={handleSaveChanges}
-                                        className={`${styles.modal_btn}`}
-                                    >
-                                        변경사항 저장
-                                    </button>
+                                    <div className={`${styles.modal_btn}`}>
+                                        <button onClick={handleSaveChanges}>변경사항 저장</button>
+                                    </div>
                                     <button
                                         className={`${styles.hide}`}
                                         onClick={() => {
