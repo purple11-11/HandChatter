@@ -522,18 +522,6 @@ button {
 }
 
 // Footer
-.footer {
-    width: 100%;
-    height: 150px;
-    background-color: #004d51;
-    color: #ffffdd;
-    padding: 1rem 0;
-    text-align: center;
-    p {
-        margin: 0;
-        font-size: 0.9rem;
-    }
-}
 
 @media screen and (min-height: 1000px) {
     section {
@@ -1259,6 +1247,90 @@ button {
             }
         }
     }
+
+    .footer {
+        width: 100%;
+        height: 180px;
+        background-color: #004d51;
+        color: #ffffdd;
+        padding: 1rem 0;
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            .logo {
+                padding-left: 20px;
+                // padding-right: 10px;
+                margin: auto 0;
+                font-size: 20px;
+                img {
+                    width: 20px;
+                }
+            }
+            .mobile-git-btn {
+                a {
+                    font-size: 10px;
+                    color: #f3f3b2;
+                    img {
+                        width: 15px;
+                    }
+                }
+            }
+            .git-btn {
+                display: none;
+            }
+            .footer-content {
+                // border: 1px solid red;
+                width: 250px;
+                height: 178px;
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                div {
+                    width: 64px;
+                    margin-left: 20px;
+                    margin-bottom: 10px;
+                    p {
+                        font-size: 10px;
+                        color: #f3f3b2;
+                        margin-right: 10px;
+                        border-bottom: 1px solid #466364;
+                        padding-right: 10px;
+                    }
+                    ul {
+                        margin-right: 10px;
+                        li {
+                            font-size: 8px;
+                            a {
+                                font-size: 13px;
+                                display: block;
+                                color: #f3f3b2;
+                            }
+                        }
+                    }
+                    &:nth-child(3) {
+                        margin-left: -30px;
+                    }
+                    &:last-child {
+                        width: 72px;
+                        margin-left: -30px;
+                        position: relative;
+                        padding-left: 17px;
+                        img {
+                            position: absolute;
+                            top: 4px;
+                            left: -1px;
+                        }
+                    }
+                }
+            }
+        }
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1500px) {
@@ -1824,6 +1896,70 @@ button {
                     }
                 }
             }
+        }
+    }
+    .footer {
+        width: 100%;
+        height: 150px;
+        background-color: #004d51;
+        color: #ffffdd;
+        padding: 1rem 0;
+        .container {
+            min-width: 1000px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            .logo {
+                margin: auto 0;
+                font-size: 30px;
+                img {
+                    width: 30px;
+                }
+            }
+            .git-btn {
+                a {
+                    color: #f3f3b2;
+                    position: relative;
+                    img {
+                        position: absolute;
+                        width: 30px;
+                        top: -5px;
+                        left: -7px;
+                    }
+                }
+            }
+            .footer-content {
+                .mobile-git-btn {
+                    display: none;
+                }
+                display: flex;
+                div {
+                    display: flex;
+                    margin-left: 30px;
+                    p {
+                        font-size: 15px;
+                        color: #f3f3b2;
+                        margin-right: 10px;
+                        border-right: 1px solid #466364;
+                        padding-right: 10px;
+                    }
+                    ul {
+                        margin-right: 30px;
+                        li {
+                            font-size: 13px;
+                            a {
+                                display: block;
+                                color: #f3f3b2;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        p {
+            margin: 0;
+            font-size: 0.9rem;
         }
     }
 }
@@ -2394,6 +2530,69 @@ button {
                     }
                 }
             }
+        }
+    }
+    .footer {
+        width: 100%;
+        height: 150px;
+        background-color: #004d51;
+        color: #ffffdd;
+        padding: 1rem 0;
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            .logo {
+                margin: auto 0;
+                font-size: 30px;
+                img {
+                    width: 30px;
+                }
+            }
+            .git-btn {
+                a {
+                    color: #f3f3b2;
+                    position: relative;
+                    img {
+                        position: absolute;
+                        width: 30px;
+                        top: -5px;
+                        left: -7px;
+                    }
+                }
+            }
+            .footer-content {
+                .mobile-git-btn {
+                    display: none;
+                }
+                display: flex;
+                div {
+                    display: flex;
+                    margin-left: 30px;
+                    p {
+                        font-size: 15px;
+                        color: #f3f3b2;
+                        margin-right: 10px;
+                        border-right: 1px solid #466364;
+                        padding-right: 10px;
+                    }
+                    ul {
+                        margin-right: 30px;
+                        li {
+                            font-size: 13px;
+                            a {
+                                display: block;
+                                color: #f3f3b2;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        p {
+            margin: 0;
+            font-size: 0.9rem;
         }
     }
 }
