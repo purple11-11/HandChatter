@@ -33,3 +33,18 @@
         font-size: 19px;
     }
 }
+
+@media screen and (max-width: 960px) {
+    .search_result_box {
+        width: 150px;
+        height: 200px;
+        img {
+            height: 120px;
+        }
+    }
+    .result_desc {
+        .title {
+            font-size: 15px;
+        }
+    }
+}
