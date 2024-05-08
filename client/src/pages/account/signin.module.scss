@@ -3,6 +3,7 @@
 .login_container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     h2 {
         color: $color-primary;
         padding: 5px;
@@ -16,19 +17,26 @@
     a {
         color: $color-primary;
         font-weight: bold;
+        margin: 0 15px;
     }
 }
 
-.login_area {
+.stu_login_area,
+.tutor_login_area {
     border-radius: 10px;
     background-color: #ffffff59;
     border: 1px solid rgba(145, 145, 145, 0.377);
-    backdrop-filter: blur(30px);
     box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
     padding: 30px 30px 0 30px;
     margin-top: 10px;
-    height: 410px;
     width: 380px;
+}
+
+.stu_login_area {
+    height: 410px;
+}
+.tutor_login_area {
+    height: 340px;
 }
 
 .role_toggle_btn {
@@ -39,11 +47,18 @@
         width: 150px;
         height: 40px;
         border-radius: 25px;
-        color: $color-text-dark;
+        color: $color-light-gray;
         &:hover {
-            background-color: $color-second;
-            color: $color-text-dark;
-            transition: 0.3s;
+            background-color: #fff;
+            color: $color-light-gray;
+        }
+    }
+    .active {
+        background-color: $color-primary;
+        color: $color-second;
+        &:hover {
+            background-color: $color-primary;
+            color: $color-second;
         }
     }
 }
@@ -51,9 +66,26 @@
 .find_id_pw {
     display: flex;
     justify-content: space-evenly;
-    margin-top: 25px;
+    margin-top: 15px;
     a {
         color: $color-primary-light;
         font-weight: bold;
+    }
+}
+
+@media screen and (max-width: 459px) {
+    .go_to_sign_up {
+        display: flex;
+        flex-direction: column;
+        a {
+            margin: 0 50px;
+        }
+    }
+
+    .stu_login_area,
+    .tutor_login_area {
+        box-shadow: none;
+        border: none;
+        background-color: $color-bg;
     }
 }

@@ -73,3 +73,24 @@
     align-items: center;
     width: 1000px;
 }
+
+@media screen and (max-width: 960px) {
+    .title {
+        .search_bar {
+            input {
+                width: 282px;
+            }
+        }
+        .search_category {
+            width: 290px;
+        }
+    }
+    .result_title {
+        margin: 0 auto;
+        min-width: 290px;
+    }
+    .results {
+        justify-content: space-between;
+        width: 340px;
+    }
+}

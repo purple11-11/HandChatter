@@ -77,7 +77,11 @@ export default function PersonalLearning() {
         setSearchResults(filteredResults);
         setError("");
     };
-
+    const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            handleSearch();
+        }
+    };
     const KOR: KORIndexType = {
         ㄱ: ["가", "나"],
         ㄴ: ["나", "다"],
@@ -133,6 +137,7 @@ export default function PersonalLearning() {
                                 type="text"
                                 placeholder="수어 검색"
                                 value={searchTerm}
+                                onKeyDown={activeEnter}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                             <button onClick={handleSearch}>검색</button>
