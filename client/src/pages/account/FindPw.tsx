@@ -21,7 +21,6 @@ export default function FindPw() {
     });
     const [wrongPw1, setWrongPw1] = useState<string>("");
     const isValidPassword = (password: string): boolean => {
-        // 영문, 숫자 포함 8자 이상
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
         return passwordRegex.test(password);
     };
@@ -81,8 +80,6 @@ export default function FindPw() {
         });
     };
     const handleSaveChanges = async () => {
-        // 변경사항 저장 버튼 클릭 시 처리할 로직
-        // 비밀번호 바꾸는 api 백에서 작성 후 patch axios 요청문 쓰면 될 듯.
         if (passwords.newPassword !== passwords.confirmPassword) return;
         if (!isValidPassword(passwords.newPassword)) {
             alert("비밀번호는 영문, 숫자를 포함하여 8자 이상이어야 합니다.");
@@ -160,7 +157,7 @@ export default function FindPw() {
                         </button>
                     </div>
                     <div className="change_password">
-                        {showPasswordModal && ( // 모달 표시 여부에 따라 모달 컴포넌트를 렌더링
+                        {showPasswordModal && (
                             <div className={`${styles.modal}`}>
                                 <div
                                     className={`${styles.modal}`}

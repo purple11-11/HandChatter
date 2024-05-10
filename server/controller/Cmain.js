@@ -221,8 +221,6 @@ exports.searchPassword = async (req, res) => {
     const { id, email } = req.body;
     const randomNum = (Math.floor(Math.random() * 1000000) + 100000).toString().substring(0, 6);
 
-    console.log("randomNum ::", Number(randomNum));
-
     if (!email || !id) return res.status(400).send("빈칸을 입력해주세요.");
     const si = await Student.findOne({ where: { id } });
     const ti = await Tutor.findOne({ where: { id } });
@@ -244,12 +242,10 @@ exports.searchPassword = async (req, res) => {
         });
         switch (true) {
             case ti && ti.email === email:
-                console.log("이메일 전송 성공", info.response);
                 return res.status(200).send({ randomNum });
 
                 break;
             case si && si.email === email:
-                console.log("이메일 전송 성공", info.response);
                 return res.status(200).send({ randomNum });
 
                 break;
@@ -267,7 +263,6 @@ exports.sendEmail = async (req, res) => {
     const { email } = req.body;
     const randomNum = (Math.floor(Math.random() * 1000000) + 100000).toString().substring(0, 6);
 
-    console.log("randomNum ::", Number(randomNum));
 
     const se = await Student.findOne({ where: { email } });
     const te = await Tutor.findOne({ where: { email } });
@@ -291,7 +286,6 @@ exports.sendEmail = async (req, res) => {
                 }
             });
         });
-        console.log("이메일 전송 성공", info.response);
         return res.status(200).send({ randomNum });
     } catch (error) {
         console.log("이메일 전송 실패", error);
@@ -362,12 +356,6 @@ exports.loginTutor = async (req, res) => {
                 req.session.tutor_idx = tutor_idx;
                 req.session.role = "tutor";
 
-                console.log(
-                    "req.session 저장 ::",
-                    req.session.userId,
-                    req.session.tutor_idx,
-                    req.session.role
-                );
                 const tutorId = req.session.userId;
                 res.status(200).send({
                     isLogin: true,
@@ -410,12 +398,7 @@ exports.loginStudent = async (req, res) => {
             req.session.stu_idx = resultStudent.stu_idx;
             req.session.role = "student";
 
-            console.log(
-                "req.session 저장 ::",
-                req.session.userId,
-                req.session.stu_idx,
-                req.session.role
-            );
+
             const studentId = req.session.userId;
             return res.status(200).send({
                 isLogin: true,
@@ -454,7 +437,6 @@ exports.addFavorites = async (req, res) => {
                 tutor_idx,
             },
         });
-        console.log(existingFavorite);
         if (!existingFavorite) {
             await Favorites.create({ stu_idx, tutor_idx });
             res.status(200).send("찜 목록에 추가되었습니다.");
@@ -533,7 +515,6 @@ exports.editTutorProfile = async (req, res) => {
         if (!id) return res.status(400).send("로그인을 해주세요.");
 
         const { nickname, password, level, price, description } = req.body;
-        console.log(req.body);
         if (!nickname || !price || !password) return res.status(400).send("빈칸을 입력해주세요.");
 
         const realPrice = Number(price);
@@ -674,7 +655,6 @@ exports.editStudentPassword = async (req, res) => {
 
 //PATCH /api/editPhoto
 exports.editPhoto = async (req, res) => {
-    console.log(req);
     try {
         const { userId, role } = req.session;
         if (!userId) return res.status(400).send("로그인을 해주세요.");
@@ -687,13 +667,11 @@ exports.editPhoto = async (req, res) => {
             });
             const defaultImg = "public/default.jpg";
             if (pastImg.profile_img === defaultImg) {
-                console.log("사진이 성공적으로 변경되었습니다.");
             } else {
                 fs.unlink(pastImg.profile_img, (err) => {
                     if (err) {
                         console.log(err);
                     }
-                    console.log("파일이 성공적으로 삭제되었습니다.");
                 });
             }
             await Tutor.update(
@@ -715,14 +693,11 @@ exports.editPhoto = async (req, res) => {
             });
             const defaultImg = "public/default.jpg";
             if (pastImg.profile_img === defaultImg) {
-                console.log("사진이 성공적으로 변경되었습니다.");
             } else {
                 fs.unlink(pastImg.profile_img, (err) => {
                     if (err) {
                         console.log(err);
                     }
-
-                    console.log("파일이 성공적으로 삭제되었습니다.");
                 });
             }
             await Student.update(
@@ -757,13 +732,11 @@ exports.editDefaultPhoto = async (req, res) => {
                 },
             });
             if (pastImg.profile_img === defaultImg) {
-                console.log("사진이 성공적으로 변경되었습니다.");
             } else {
                 fs.unlink(pastImg.profile_img, (err) => {
                     if (err) {
                         console.log(err);
                     }
-                    console.log("파일이 성공적으로 삭제되었습니다.");
                 });
             }
             await Tutor.update(
@@ -784,13 +757,11 @@ exports.editDefaultPhoto = async (req, res) => {
                 },
             });
             if (pastImg.profile_img === defaultImg) {
-                console.log("사진이 성공적으로 변경되었습니다.");
             } else {
                 fs.unlink(pastImg.profile_img, (err) => {
                     if (err) {
                         console.log(err);
                     }
-                    console.log("파일이 성공적으로 삭제되었습니다.");
                 });
             }
             await Student.update(
@@ -828,7 +799,6 @@ exports.uploadVideo = async (req, res) => {
                 if (err) {
                     console.log(err);
                 }
-                console.log("파일이 성공적으로 삭제되었습니다.");
             });
             await Tutor.update(
                 {
@@ -899,7 +869,6 @@ exports.deleteUser = async (req, res) => {
     const { userId, role } = req.session;
     let isTutor, isStudent;
     try {
-        console.log(userId, role);
         if (!req.session.userId) return res.send("탈퇴 권한이 없습니다. 로그인 후 이용해주세요.");
 
         if (id !== req.session.userId) return res.send("아이디를 정확하게 입력해주세요.");
@@ -1137,7 +1106,6 @@ exports.deleteMessage = async (req, res) => {
             },
         })
             .then(() => {
-                console.log("메시지 및 채팅방 삭제 완료");
             })
             .catch((err) => {
                 res.status(500).send("메시지 및 채팅방 삭제 실패!!!");

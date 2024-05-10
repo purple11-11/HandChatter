@@ -107,9 +107,7 @@ const Webcam = () => {
                 }
             };
 
-            pcRef.current.oniceconnectionstatechange = (e) => {
-                console.log(e);
-            };
+            pcRef.current.oniceconnectionstatechange = (e) => {};
 
             pcRef.current.ontrack = (ev) => {
                 if (remoteVideoRef.current) {
@@ -238,7 +236,6 @@ const Webcam = () => {
     const sendReview = async () => {
         try {
             if (!review || !rating) {
-                console.log("후기와 별점을 모두 입력하세요.");
                 return;
             }
             const url = `${process.env.REACT_APP_API_SERVER}/api/reviews`;
@@ -248,20 +245,15 @@ const Webcam = () => {
                 tutor_idx: id,
                 stu_idx: userInfo?.stu_idx,
             });
-            console.log(userInfo?.stu_idx + "++++" + id);
             if (response.status === 200) {
-                console.log("후기 작성 성공");
                 navigate(`/mypage/${userInfo?.stu_idx ? userInfo.stu_idx : id}`, {
                     state: { fromwebcam: true },
                 }); // 수정
-            } else {
-                console.log("서버에서 응답을 받을 수 없습니다.");
             }
         } catch (error) {
             console.error("후기 전송 중 오류 발생:", error);
         }
     };
-    console.log(id);
     const ChattExit = () => {
         if (userInfo && userInfo.tutor_idx) {
             // 튜터인 경우 바로 마이페이지로 이동

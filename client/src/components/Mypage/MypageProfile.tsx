@@ -8,7 +8,7 @@ export default function MypageProfile() {
     const userInfo = useInfoStore((state) => state.userInfo);
     const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
     const getInfo = useInfoStore((state) => state.getInfo);
-    const [activeTab, setActiveTab] = useState<string>("chatting"); // 활성화된 탭을 관리하는 state
+    const [activeTab, setActiveTab] = useState<string>("chatting"); 
     const [userData, setUserData] = useState<any>({
         id: userInfo?.id,
         nickname: userInfo?.nickname,
@@ -44,7 +44,6 @@ export default function MypageProfile() {
                     password: userData.password,
                 });
             } else {
-                console.log(userData);
                 const url = `${process.env.REACT_APP_API_SERVER}/api/tutorProfile`;
                 res = await axios.patch(url, {
                     nickname: userData.nickname,
@@ -65,21 +64,18 @@ export default function MypageProfile() {
         try {
             const formData = new FormData();
             formData.append("image", file);
-            console.log(file);
             const url = `${process.env.REACT_APP_API_SERVER}/api/editPhoto`;
             const res = await axios.patch(url, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            console.log(profileImgUrl);
             getInfo();
             return;
         } catch (error) {
             console.error("이미지 수정 오류:", error);
         }
     };
-    // getInfo();
     const handleImageUpload = () => {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
@@ -101,7 +97,6 @@ export default function MypageProfile() {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api/backDefault`;
             const res = await axios.patch(url);
-            console.log(res.data);
             getInfo();
             return;
         } catch (error) {
@@ -122,7 +117,6 @@ export default function MypageProfile() {
             } else {
                 checkbox.checked = false;
             }
-            console.log(checkbox.checked);
         });
     };
     const handleIntroVideoUpload = async (file: File) => {
@@ -141,8 +135,6 @@ export default function MypageProfile() {
                     "Content-Type": "multipart/form-data",
                 },
             });
-
-            console.log("영상 업로드 완료:", res.data);
         } catch (error) {
             console.error("영상 업로드 오류:", error);
         }
@@ -155,8 +147,6 @@ export default function MypageProfile() {
                 console.error("파일이 선택되지 않았습니다.");
                 return;
             }
-
-            // 파일이 선택되면 영상 업로드 함수 호출
             handleIntroVideoUpload(file);
         } catch (error) {
             console.error("파일 선택 오류:", error);
@@ -164,7 +154,6 @@ export default function MypageProfile() {
     };
     const handleIntroTextChange = (text: string) => {
         setUserData({ ...userData, description: text });
-        console.log(userData);
     };
 
     const handleModal = (isModal: boolean) => {
@@ -227,7 +216,6 @@ export default function MypageProfile() {
                                 <input
                                     type="text"
                                     value={userData.email}
-                                    // onChange={(e) => handleUserDataChange("email", e.target.value)}
                                     readOnly
                                 />
                             </div>
@@ -311,7 +299,6 @@ export default function MypageProfile() {
                                     <label htmlFor="">비밀번호</label>
                                     <input
                                         type="password"
-                                        // value={userData.password}
                                         onChange={(e) =>
                                             handleUserDataChange("password", e.target.value)
                                         }

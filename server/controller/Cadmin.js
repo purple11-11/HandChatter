@@ -31,7 +31,6 @@ exports.login = (req, res) => {
             if (password === admin.password) {
                 req.session.adminId = id;
                 req.session.role = "admin";
-                console.log("session 저장 ::", req.session.adminId, req.session.role);
                 res.status(200).send({
                     isAdminLogin: true,
                     msg: "관리자로 로그인되었습니다.",
@@ -48,10 +47,8 @@ exports.login = (req, res) => {
 exports.approveTutor = async (req, res) => {
     try {
         const adminId = req.session.adminId;
-        console.log("req.body", req.body);
         const { id, authority } = req.body;
         if (adminId) {
-            console.log(id);
             if (!id) {
                 res.status(400).send("튜터로 변경할 회원을 선택해주세요.");
             } else {
@@ -89,26 +86,3 @@ exports.logout = (req, res) => {
         res.status(500).send("SERVER ERROR");
     }
 };
-
-// exports.patchAllName = async (req, res) => {
-//     try {
-//         const { patchData } = req.body;
-//         console.log("req.body", req.body);
-//         for (let visitor of patchData) {
-//             const [updated] = await models.Visitor.update(
-//                 {
-//                     authority: visitor.authority,
-//                 },
-//                 {
-//                     where: {
-//                         id: visitor.id,
-//                     },
-//                 }
-//             );
-//         }
-
-//         res.status(200).send("수정 성공");
-//     } catch (err) {
-//         // errorlog(err, '이름전체 수정중 에러 발생');
-//     }
-// };

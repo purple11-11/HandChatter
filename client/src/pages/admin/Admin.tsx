@@ -22,7 +22,6 @@ export default function Admin() {
             const res = await axios.get(url);
             const tutorList: Tutor[] = res.data.users;
 
-            console.log(tutorList);
             setTutorResults([...tutorResults, ...tutorList]);
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
@@ -49,8 +48,6 @@ export default function Admin() {
     useEffect(() => {
         handleTutor();
     }, []);
-
-    // useEffect(() => {}, [tutorResults]);
 
     return (
         <>

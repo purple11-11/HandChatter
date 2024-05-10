@@ -4,26 +4,24 @@
 .CAM {
     margin-top: 8%;
     margin-bottom: 3%;
-    height: 100vh; /* 화면의 높이를 따라가도록 설정 */
+    height: 100vh;
     .videoAndButtonContainer {
         display: flex;
         justify-content: center;
         margin-top: 90px;
         .right {
-            // border: 1px solid red;
             margin-right: 5px;
             .videoBackground {
                 overflow: hidden;
                 border-radius: 10px 0 0 0;
                 .remoteVideo {
-                    background-color: $color-primary; /* chatBox의 절대 위치를 설정하기 위해 relative로 변경 */
+                    background-color: $color-primary; 
                     height: 600px;
                     width: 700px;
                 }
             }
         }
         .left {
-            // border: 1px solid red;
             .videoBackground {
                 overflow: hidden;
                 border-radius: 0 10px 0 0;
@@ -39,7 +37,6 @@
                 background-color: #3e888c;
                 p {
                     margin: 0;
-                    // border: 1px solid red;
                     text-align: center;
                     color: #ffffdd;
                     padding: 10px 0;
@@ -48,7 +45,7 @@
                 .chatting_content {
                     height: 188px;
                     padding: 20px;
-                    overflow-y: auto; /* 수직 스크롤바 자동 표시 */
+                    overflow-y: auto; 
                     .me {
                       text-align: right;
                       margin-right: 3px;
@@ -65,22 +62,21 @@
                             padding: 7px 12px;
                             font-size: 14px;
                             border-radius: 7px;
-                            margin-left: 5px; // 닉네임 말풍선과의 간격 설정
-                          } // span   
+                            margin-left: 5px; 
+                          }  
                                              
                         
                       .nickname {
                           background-color: #f4f6d5;
                           box-shadow: 1px 1px 3px gray;
-                          padding: 7px 5px; /* 닉네임 말풍선 크기 */
-                          border-radius: 7px; /* 닉네임 말풍선 모서리 둥글게 */
+                          padding: 7px 5px; 
+                          border-radius: 7px; 
                       }
                     }
                     
                 }
                 .chatting_input {
                     width: 100%;
-                    // border: 1px solid red;
                     height: 66px;
                     display: flex;
                     align-items: center;
@@ -116,7 +112,6 @@
         display: flex;
         justify-content: center;
         div {
-            // border: 1px solid red;
             width: 1055px;
             height: 50px;
             background-color: #3e888c;
@@ -131,4 +126,4 @@
             }
         }
     }
-} // .CAM
+}

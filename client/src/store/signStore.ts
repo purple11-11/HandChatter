@@ -16,15 +16,11 @@ export const useSignStore = create<SignStore>()(
             loading: false,
             fetchData: async () => {
                 set({ loading: true });
-                console.log("ddd");
                 try {
-                    console.log("API_URL ::", process.env.REACT_APP_API_URL);
-
                     if (process.env.REACT_APP_API_URL && process.env.REACT_APP_API_KEY) {
                         const response = await axios.get(
                             process.env.REACT_APP_API_SERVER + "/api/signs"
                         );
-                        console.log("API Response ::", response.data);
                         set({ data: response.data, loading: true });
                     }
                 } catch (error) {

@@ -9,13 +9,11 @@ module.exports = (passport) => {
             stu_idx: user.stu_idx,
             role: "student", // 일반적으로 학생으로 가정합니다. 필요에 따라 조정 가능합니다.
         };
-        console.log("Serialized User:", sessionUser); // 세션에 저장된 데이터를 콘솔에 출력
         done(null, sessionUser);
     });
 
     passport.deserializeUser((sessionUser, done) => {
         // 세션에서 사용자 정보를 불러올 때 필요한 정보를 함께 불러옵니다.
-        console.log("Deserialized User:", sessionUser); // 세션에서 불러온 데이터를 콘솔에 출력
         Student.findByPk(sessionUser.userId)
             .then((user) => {
                 if (!user) {

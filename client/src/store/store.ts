@@ -47,7 +47,6 @@ export const useInfoStore = create<UserStore>()(
                 try {
                     const url = `${process.env.REACT_APP_API_SERVER}/api/userInfo`;
                     const res = await axios.get(url);
-                    console.log(res.data);
                     if (!res.data.tutorInfo) {
                         const newProfileImgUrl =
                             process.env.REACT_APP_API_SERVER +
