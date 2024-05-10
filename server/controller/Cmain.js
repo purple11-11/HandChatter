@@ -971,7 +971,8 @@ exports.getMessage = async (req, res) => {
                 },
                 attributes: ["content", "sender"],
             });
-            if (messages && messages.length > 0) {
+            console.log(messages);
+            if (messages) {
                 res.send({ messages: messages });
             } else {
                 res.status(404).send("메시지 검색 결과가 없습니다.");
@@ -985,7 +986,7 @@ exports.getMessage = async (req, res) => {
                 },
                 attributes: [[sequelize.literal("DISTINCT tutor_idx"), "tutor_idx"]],
             });
-            if (tutors && tutors.length > 0) {
+            if (tutors) {
                 const tutorsIdx = tutors.map((tutor) => {
                     return tutor.tutor_idx;
                 });
@@ -1002,7 +1003,7 @@ exports.getMessage = async (req, res) => {
                 },
                 attributes: [[sequelize.literal("DISTINCT stu_idx"), "stu_idx"]],
             });
-            if (students && students.length > 0) {
+            if (students) {
                 const studentsIdx = students.map((student) => {
                     return student.stu_idx;
                 });
@@ -1069,7 +1070,7 @@ exports.getChatInfo = async (req, res) => {
                     return tutorInfo;
                 })
             );
-            if (chatTutorsInfo && chatTutorsInfo.length > 0) {
+            if (chatTutorsInfo) {
                 res.send({ chatTutorsInfo });
             } else {
                 res.status(404).send("채팅 중인 강사가 없습니다.");
@@ -1087,7 +1088,7 @@ exports.getChatInfo = async (req, res) => {
                     });
                 })
             );
-            if (chatStudentsInfo && chatStudentsInfo.length > 0) {
+            if (chatStudentsInfo) {
                 res.send({ chatStudentsInfo });
             } else {
                 res.status(404).send("채팅 중인 학생이 없습니다.");
