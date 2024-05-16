@@ -37,7 +37,6 @@ export default function Signip() {
                 navigate("/");
             }
         } catch (error: unknown) {
-            // error가 AxiosError 타입인지 확인
             if (axios.isAxiosError(error)) {
                 alert("로그인 실패 \n" + (error.response?.data || error.message));
             } else if (error instanceof Error) {

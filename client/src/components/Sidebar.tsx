@@ -20,8 +20,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
     const userInfo = useInfoStore((state) => state.userInfo);
     const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
-    console.log(profileImgUrl);
-    console.log(userInfo);
     return (
         <>
             {isMenuOpen && (

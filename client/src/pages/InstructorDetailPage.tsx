@@ -7,7 +7,7 @@ import { Tutor } from "../types/interface";
 import ReactPlayer from "react-player";
 import room from "../assets/room.mp4";
 export default function InstructorDetailPage() {
-    const { tutorIndex } = useParams<{ tutorIndex: string }>(); // URL 파라미터에서 강사 ID 가져오기
+    const { tutorIndex } = useParams<{ tutorIndex: string }>(); 
     const [tutor, setTutor] = useState<Tutor | null>(null);
     const [profileImgUrl, setProfileImgUrl] = useState<string>("");
 
@@ -16,7 +16,6 @@ export default function InstructorDetailPage() {
             try {
                 const url = `${process.env.REACT_APP_API_SERVER}/api/tutors/${tutorIndex}`;
                 const res = await axios.get(url);
-                console.log(res.data);
                 const newProfileImgUrl =
                     process.env.REACT_APP_API_SERVER + "/" + res.data.tutorInfo.profile_img;
                 setProfileImgUrl(newProfileImgUrl);
@@ -40,7 +39,6 @@ export default function InstructorDetailPage() {
                 <div className="tutor-introduce-content">
                     <div className="tutor-video-introduce">
                         <div className="tutor-video">
-                            {/* {`${process.env.REACT_APP_API_SERVER}/${tutor?.des_video}`} */}
                             {tutor?.des_video ? (
                                 <ReactPlayer
                                     url={`${process.env.REACT_APP_API_SERVER}/${tutor?.des_video}`}

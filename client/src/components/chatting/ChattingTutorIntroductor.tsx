@@ -4,14 +4,11 @@ const ChattingTutorIntroductor: React.FC<{ room: ChatRoom; showTutorInfo: boolea
     room,
     showTutorInfo,
 }) => {
-    console.log(showTutorInfo);
-    console.log(room);
     return (
         <div className={`chatting-tutor-intro  ${showTutorInfo ? "show" : "hide"}`}>
             <ul>
                 <li className="profile-tutor-img">
                     <div className="profile-img big">
-                        {/* profileImg: "이미지경로" -> room.profileImg */}
                         <img
                             src={`${process.env.REACT_APP_API_SERVER}/${room.profileImg}`}
                             alt=""

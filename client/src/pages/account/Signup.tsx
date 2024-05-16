@@ -60,7 +60,6 @@ export default function StudentSignup({ role }: RoleProps) {
             const url = `${process.env.REACT_APP_API_SERVER}/api/check${
                 role === "student" ? "Student" : "Tutor"
             }${keyword === "id" ? "Id" : "Nickname"}?${keyword}=${value}`;
-            console.log(url);
             const res = await axios.get(url);
 
             if (res.data.available === false) {
@@ -76,7 +75,6 @@ export default function StudentSignup({ role }: RoleProps) {
 
     // 회원가입
     const signup = async (role: string, data: SignupData | FormData) => {
-        console.log("data", data);
 
         if (!isIdChecked || !isNicknameChecked)
             return alert("아이디와 닉네임 모두 중복 확인을 해주세요.");
@@ -84,7 +82,6 @@ export default function StudentSignup({ role }: RoleProps) {
         if (!isCertified) return alert("이메일 인증을 해주세요.");
 
         if (data instanceof FormData) {
-            // if (!data.get("authDocument")) return alert("인증서를 업로드해주세요.");
 
             const newFormData = new FormData();
             data.forEach((value, key) => {

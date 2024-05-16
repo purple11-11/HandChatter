@@ -53,7 +53,6 @@ const CourseReview: React.FC<CourseReviewProps> = ({ tutorIdx }) => {
             fetchTutorDetail();
         }
     }, [tutorIdx]);
-    console.log(review);
     if (review === null) {
         return <div>Loading...</div>;
     }

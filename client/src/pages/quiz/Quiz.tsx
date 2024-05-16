@@ -102,16 +102,12 @@ export default function Quiz() {
             if (isCorrect) {
                 setScore(score + 1);
             }
-            // else {
-            //     setScore(score - 1);
-            // }
             setAnswered((prevAnswered) =>
                 prevAnswered.map((item, index) => (index === currentQuiz ? true : item))
             );
         }
 
         if (currentQuiz < 9) {
-            // if (currentQuiz < fetchData.length - 1) {
             setCurrentQuiz(currentQuiz + 1);
         } else {
             alert("퀴즈가 끝났습니다.");

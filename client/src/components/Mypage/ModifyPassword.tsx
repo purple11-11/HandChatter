@@ -53,7 +53,7 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
         try {
             let res;
             if (!userInfo?.tutor_idx) {
-                const url = `${process.env.REACT_APP_API_SERVER}/api/editStudentPassword`; // Update the URL according to your API endpoint
+                const url = `${process.env.REACT_APP_API_SERVER}/api/editStudentPassword`;
                 res = await axios.patch(url, {
                     password: passwords.currentPassword,
                     newPassword: passwords.newPassword,
@@ -67,7 +67,7 @@ const ModifyPassword: React.FC<ModifyPasswordProps> = ({
                     alert(msg);
                 }
             } else {
-                const url = `${process.env.REACT_APP_API_SERVER}/api/editTutorPassword`; // Update the URL according to your API endpoint
+                const url = `${process.env.REACT_APP_API_SERVER}/api/editTutorPassword`; 
                 res = await axios.patch(url, {
                     password: passwords.currentPassword,
                     newPassword: passwords.newPassword,

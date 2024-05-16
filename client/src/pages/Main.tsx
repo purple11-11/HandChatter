@@ -30,14 +30,11 @@ export default function Main() {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/api`;
             const res = await axios.get(url);
-            console.log(searchTerm);
             const filteredTutors = filterTutorsByNickname(res.data.tutorsInfo, searchTerm);
             setSearchResults(filteredTutors);
             setError("");
-            console.log(searchResults);
         } catch (error) {
             setError("검색 중 오류가 발생");
-            console.log(searchResults + "하하");
         }
     };
 

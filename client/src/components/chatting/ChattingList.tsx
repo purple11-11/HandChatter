@@ -6,13 +6,10 @@ const ChattingList: React.FC<{
     deleteRoom: (roomId: number) => void;
 }> = ({ rooms, onRoomClick, deleteRoom }) => {
     const handleClick = (roomId: number) => {
-        onRoomClick(roomId); // 클릭한 채팅방의 ID를 부모 컴포넌트에 전달
+        onRoomClick(roomId); 
     };
 
     const handleLeaveRoom = (roomId: number) => {
-        // 채팅방 나가기 동작 수행
-        // console.log("채팅방 나가기:", roomId);
-        // deleteRoom 함수를 호출하여 해당 채팅방을 나가는 동작 수행
         deleteRoom(roomId);
     };
 
@@ -23,7 +20,6 @@ const ChattingList: React.FC<{
             listRef.current.scrollLeft = listRef.current.scrollWidth;
         }
     }, [rooms]);
-    console.log(rooms);
     return (
         <>
             <ul ref={listRef}>

@@ -20,7 +20,6 @@ export default function StudentMypageLesson() {
             try {
                 const url = `${process.env.REACT_APP_API_SERVER}/api/favoritesTutor`;
                 const res = await axios.get(url);
-                console.log(res.data.favorites);
                 setSearchResults(res.data.favorites);
             } catch (error) {
                 console.error("API 호출 오류:", error);
@@ -42,15 +41,13 @@ export default function StudentMypageLesson() {
         function adjustContainerHeight() {
             if (!cardContainer || !section || !container || !cards) return;
 
-            // 카드 컨테이너의 높이를 0으로 초기화
             cardContainer.style.height = "0px";
             section.style.height = "auto";
             container.style.height = "auto";
 
-            // 각 카드의 높이를 가져와 최대 높이를 계산합니다.
             let maxHeight = 0;
             cards.forEach((card) => {
-                const element = card as HTMLElement; // HTMLElement로 캐스팅
+                const element = card as HTMLElement;
                 const cardHeight = element.offsetHeight;
 
                 maxHeight += cardHeight / 3;
@@ -65,7 +62,6 @@ export default function StudentMypageLesson() {
 
         window.addEventListener("resize", adjustContainerHeight);
 
-        // cleanup 함수 등록
         return () => {
             window.removeEventListener("resize", adjustContainerHeight);
         };

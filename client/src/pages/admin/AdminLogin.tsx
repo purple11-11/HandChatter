@@ -35,7 +35,6 @@ export default function AdminLogin() {
                 url: url,
                 data: data,
             });
-            console.log("+++++++", res.data);
             if (!res.data.isAdminLogin) {
                 alert("로그인 실패 \n" + res.data);
             } else {

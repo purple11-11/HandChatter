@@ -24,7 +24,6 @@ const TutorList: React.FC<Props> = ({ tutor }) => {
         try {
             const url = `${process.env.REACT_APP_API_SERVER}/admin/access`;
             const res = await axios.patch(url, {
-                // patchData: [{ authority: authority, id: tutorId }],
 
                 authority: authority,
                 id: tutorId,
@@ -45,7 +44,6 @@ const TutorList: React.FC<Props> = ({ tutor }) => {
             <td> {tutor.nickname}</td>
             <td>{tutor.email}</td>
             <td>
-                {/* 이거 새 페이지로 가게 하기 */}
                 <a
                     href={`${process.env.REACT_APP_API_SERVER}/${tutor.auth}`}
                     target="_blank"

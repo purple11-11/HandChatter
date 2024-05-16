@@ -37,9 +37,7 @@ export default function SignupForm({
                 formData.append("password", password);
                 formData.append("nickname", nickname);
                 formData.append("email", email);
-                // if (authDocument) {
                 formData.append("authDocument", authDocument[0]);
-                // }
                 await signup(role, formData);
             } else {
                 const newData = { id, password, nickname, email };

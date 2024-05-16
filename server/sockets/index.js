@@ -22,9 +22,7 @@ function socketHandler(server) {
 
     io.on("connection", (socket) => {
         // 소켓 연결이 이루어졌을 때
-        console.log("새로운 소켓이 연결되었습니다:", socket.id);
         socket.on("join", (data) => {
-            console.log("새로운 학생 추가");
             // 클라이언트가 튜터인지 학생인지에 따라 소켓 ID를 저장
             const { role, idx, other } = data;
             if (role === "tutor") {
@@ -33,13 +31,9 @@ function socketHandler(server) {
                 if (studentSockets[other]) socket.emit("other", studentSockets[other]);
             } else if (role === "student") {
                 studentSockets[idx] = socket.id;
-                console.log("otherIndex >> ", other);
-                console.log("otherSocket >> ", tutorSockets[other]);
-                console.log(tutorSockets);
-                if (tutorSockets[other]) console.log("otherSocket >> ", tutorSockets[other]);
+                if (tutorSockets[other]) 
                 socket.emit("other", tutorSockets[other]);
             }
-            // console.log(studentSockets);
         });
 
         socket.on("send", async (data) => {
@@ -53,15 +47,10 @@ function socketHandler(server) {
                     sender,
                     receiver,
                 });
-                console.log("새로운 메시지가 데이터베이스에 저장되었습니다:");
             } catch (error) {
                 console.error("메시지 저장 중 오류 발생:", error);
             }
 
-            console.log("total", tutorSockets);
-            console.log("tutorIdx", tutorIdx);
-            console.log(tutorSockets[tutorIdx]); // undef
-            console.log("-------");
             // 특정 튜터나 학생에게 메시지 전송
             if (sender === "tutor" && studentSockets[stuIdx]) {
                 io.to(studentSockets[stuIdx]).emit("message", { msg: msg, socketId: socket.id });
@@ -106,7 +95,6 @@ function socketHandler(server) {
 
         socket.on("disconnect", () => {
             // 클라이언트 연결 해제 시 소켓 ID를 관리하는 배열에서 제거
-            console.log("소켓이 연결 해제되었습니다:", socket.id);
 
             // tutorSockets에서 제거
             const tutorIndex = Object.values(tutorSockets).indexOf(socket.id);

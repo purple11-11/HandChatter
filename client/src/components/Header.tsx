@@ -3,18 +3,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import axios from "axios";
-import { useInfoStore } from "../store/store"; // Importing the store
+import { useInfoStore } from "../store/store"; 
 import menuIconWhite from "../assets/menu-icon-white.png";
 import cancleIcon from "../assets/cancle-icon.png";
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
-    // Using Zustand store
     const isLogin = useInfoStore((state) => state.isLogin);
     const userInfo = useInfoStore((state) => state.userInfo);
     const getInfo = useInfoStore((state) => state.getInfo);
-    // getInfo();
     const profileImgUrl = useInfoStore((state) => state.profileImgUrl);
     const logout = useInfoStore((state) => state.logout);
     let mypageIndex = userInfo?.tutor_idx ? userInfo.tutor_idx : userInfo?.stu_idx;
@@ -42,7 +40,6 @@ const Header = () => {
     useEffect(() => {
         getInfo();
     }, []);
-    console.log(isLogin, userInfo, profileImgUrl);
 
     const handleOutsideClick = () => {
         setIsMenuOpen(false); // 사이드바 닫기
