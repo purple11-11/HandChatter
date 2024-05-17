@@ -37,7 +37,7 @@ export default function Footer() {
                         <p>Our Team</p>
                         <ul>
                             <li>윤영인</li>
-                            <li>최수연</li>
+                            <li>추수연</li>
                             <li>김시연</li>
                             <li>권순모</li>
                             <li>이기혁</li>
