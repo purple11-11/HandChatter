@@ -1,5 +1,5 @@
 <div align="center">
-<img src="" alt="sesachub logo" width="200px"/>
+<img src="" alt="handchatter logo" width="200px"/>
 
 ## \<Hand Chatter>에서 내가 원하는 강사를 찾아 수화를 배워보세요!
 
@@ -36,14 +36,14 @@ PW : test123@
 
 ### Install
 
-```json
+```
     $ git clone https://github.com/purple11-11/HandChatter.git
     $ cd HandChatter
 ```
 
 ### Client
 
-```json
+```
     $ cd client
     $ npm install
     $ npm start
@@ -51,10 +51,10 @@ PW : test123@
 
 ### Server
 
-```json
-	$ cd server
-	$ npm install
-	$ npm run dev
+```
+   $ cd server
+   $ npm install
+   $ npm run dev
 ```
 
 <br>
