@@ -15,7 +15,7 @@
 
 ### 작업 기간 : 2024.04.19 ~ 2024.05.07 (약 2주 반)
 
-### 배포 링크 : https://handchatter/site
+### 배포 링크 : https://handchatter.site
 
 ```
 학생 로그인
