@@ -1,7 +1,9 @@
 <div align="center">
-<img src="" alt="handchatter logo" width="200px"/>
+<img src="https://github.com/purple11-11/HandChatter/assets/125553827/75b0cf71-8627-4bc6-afa1-f7a8cc6c1b74" alt="handchatter logo" width="200px"/>
 
-## \<Hand Chatter>에서 내가 원하는 강사를 찾아 수화를 배워보세요!
+
+
+## \<Hand Chatter>에서 내가 원하는 강사를 찾아 수어를 배워보세요!
 
 팀 작업 규칙, 컨벤션, 산출물(ERD, FIGMA, API 리스트 등)은 [![wiki](http://img.shields.io/badge/-GitHub%20WiKi-black?style=flat&logo=github&logoColor=white&link=https://github.com/purple11-11/HandChatter/wiki)](https://github.com/purple11-11/HandChatter/wiki)를 확인해 주세요.
 
@@ -74,13 +76,13 @@ PW : test123@
 ## 1. 기획 의도
 
 -   수어 API와 WebRTC 기술을 활용한 청각 장애인 일자리 창출
--   시간과 장소에 구애받지 않는 온라인 1:1 수화 학습 및 강의 플랫폼
+-   시간과 장소에 구애받지 않는 온라인 1:1 수어 학습 및 강의 플랫폼
 
 ## 2. 서비스 타겟
 
 -   취미 생활 또는 일자리가 필요한 청각 장애인
--   수화를 배우고 싶은 사람
--   평소 수화에 관심이 있던 사람
+-   수어를 배우고 싶은 사람
+-   평소 수어에 관심이 있던 사람
 
 <br>
 <br>
@@ -105,7 +107,7 @@ https://github.com/purple11-11/HandChatter/assets/125553827/363011d6-6ad6-465f-8
 -   튜터는 회원 가입 시 증빙자료 첨부가 필수기 때문에 일반 로그인만 가능
 -   Nodemailer를 통해 이메일 인증 및 비밀번호 찾기 기능에 활용
 
-## 강사 상세 페이지: 찜 하기, 리뷰
+## 튜터 상세 페이지: 찜 하기, 리뷰
 
 -   찜하기 클릭 시 로그인이 되어있지 않은 상태라면 알림메시지와 함께 로그인 창으로 가도록 구현, 로그인이 되어 있다면 찜 목록에 추가되었다는 알림메시지와 함께 실제로 찜 목록에 추가되고 화면에도 색이 채워진 하트로 표시되도록 구현.
 -   해당 강사의 리뷰 정보들 중 별점 정보를 api 요청을 통해받아와서 프론트에서 평균 처리 함.
